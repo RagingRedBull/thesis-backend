@@ -1,6 +1,5 @@
 package net.prmts.app.model;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import javax.persistence.Column;

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.prmts.app.model.DetectorUnitLog;
 import net.prmts.app.model.dto.DetectorUnitLogDto;
 import net.prmts.app.service.DetectorUnitLogService;
 

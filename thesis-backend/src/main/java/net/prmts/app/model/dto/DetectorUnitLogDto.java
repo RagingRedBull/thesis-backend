@@ -1,10 +1,8 @@
 package net.prmts.app.model.dto;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 import net.prmts.app.model.DetectorUnitLog;
