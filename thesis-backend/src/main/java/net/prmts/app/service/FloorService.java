@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +45,14 @@ public class FloorService {
 	}
 	public List<Integer> findAllIds(){
 		return this.floorRepository.findAllIds();
+	}
+	public Optional<FloorDto> findById(Integer id) {
+		Optional<Floor> entity = this.floorRepository.findById(id);
+		Optional<FloorDto> dto = Optional.empty();
+		if(!entity.isEmpty()) {
+			dto = Optional.of(new FloorDto(entity.get()));
+		}
+		return dto;
 	}
 	public ResponseEntity<FloorDto> saveToImageServer(MultipartFile floorImgFile) {
 		String imgStorageUrl = imgStorageBaseUrl + ":8080/images/map/upload";
