@@ -42,6 +42,9 @@ public class FloorService {
 	public List<FloorDto> findAll(){
 		return this.floorRepository.findAll().stream().map(FloorDto::new).collect(Collectors.toList());
 	}
+	public List<Integer> findAllIds(){
+		return this.floorRepository.findAllIds();
+	}
 	public ResponseEntity<FloorDto> saveToImageServer(MultipartFile floorImgFile) {
 		String imgStorageUrl = imgStorageBaseUrl + ":8080/images/map/upload";
 		this.logger.info("IMG URL: " + imgStorageBaseUrl);

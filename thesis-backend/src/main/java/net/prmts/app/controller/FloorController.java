@@ -25,7 +25,7 @@ public class FloorController {
 	}
 	@GetMapping(path = "/map", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> getFloor(){
-		return new ResponseEntity<List<FloorDto>>(this.floorService.findAll(),HttpStatus.OK);
+		return new ResponseEntity<List<Integer>>(this.floorService.findAllIds(),HttpStatus.OK);
 	}
 	@PostMapping(path = "/map/upload")
 	public ResponseEntity<?> uploadMap(@RequestParam("mapFile")MultipartFile mapFile){
