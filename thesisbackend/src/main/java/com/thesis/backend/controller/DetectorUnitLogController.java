@@ -4,11 +4,10 @@ import com.thesis.backend.model.dto.DetectorUnitLogDto;
 import com.thesis.backend.service.DetectorUnitLogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(path = "/detector/")
 public class DetectorUnitLogController {
     DetectorUnitLogService detectorUnitLogService;
 
@@ -16,9 +15,13 @@ public class DetectorUnitLogController {
         this.detectorUnitLogService = detectorUnitLogService;
     }
 
-    @PostMapping(path = "/detector/upload", consumes = "application/json")
+    @PostMapping(path = "/upload", consumes = "application/json")
     public ResponseEntity<?> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto){
         detectorUnitLogService.persist(detectorUnitLogDto);
+        return new ResponseEntity<>("Logged!",HttpStatus.OK);
+    }
+    @GetMapping(path = "/logs", produces = "application/json")
+    public ResponseEntity<?> getAllLogsPaged(){
         return new ResponseEntity<>("Logged!",HttpStatus.OK);
     }
 }

@@ -1,22 +1,19 @@
-package com.thesis.backend.model.entity;
+package com.thesis.backend.model.dto;
 
-import javax.persistence.*;
+import com.thesis.backend.model.entity.DetectorUnit;
+import com.thesis.backend.model.entity.Floor;
+
 import java.util.List;
 
-@Entity
-@Table(name = "floors")
-public class Floor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FloorDto {
     private int id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "description")
     private String description;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "associatedFloor")
     private List<DetectorUnit> associatedDetectorUnitList;
 
-    public Floor() {
+    public FloorDto(Floor entity){
+        this.id = entity.getId();
+        this.name = entity.getDescription();
     }
 
     public int getId() {

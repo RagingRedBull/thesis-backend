@@ -2,6 +2,7 @@ package com.thesis.backend.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "sensors")
@@ -16,7 +17,8 @@ public class Sensor implements Serializable {
     private String type;
     @Column(name = "description", length = 255)
     private String description;
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<DetectorUnit> associatedDetectorUnitList;
     public Sensor() {
         /// Default Empty
     }

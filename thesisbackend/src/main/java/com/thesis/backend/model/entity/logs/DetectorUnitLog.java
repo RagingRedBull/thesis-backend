@@ -15,9 +15,9 @@ public class DetectorUnitLog implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "mac_address", length = 17)
+    @Column(name = "mac_address", length = 17, nullable = false)
     private String macAddress;
-    @Column(name = "time_recorded")
+    @Column(name = "time_recorded", nullable = false)
     private LocalDateTime timeRecorded;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "detectorUnitLog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SensorLog> sensorLogList;
