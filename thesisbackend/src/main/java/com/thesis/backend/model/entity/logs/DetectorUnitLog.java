@@ -1,7 +1,7 @@
 package com.thesis.backend.model.entity.logs;
 
 
-import com.thesis.backend.model.dto.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "detector_unit_logs")
+@Table(name = "detector_unit_log",
+        indexes = @Index(name = "time_recorded_idx", columnList = ("time_recorded DESC"))
+)
 public class DetectorUnitLog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

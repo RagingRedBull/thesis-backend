@@ -1,4 +1,4 @@
-package com.thesis.backend.model.dto;
+package com.thesis.backend.model.dto.sensor;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

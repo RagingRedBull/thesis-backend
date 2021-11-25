@@ -1,8 +1,8 @@
 package com.thesis.backend.model.util.factory;
 
-import com.thesis.backend.model.dto.DhtSensorLogDto;
-import com.thesis.backend.model.dto.MqSensorLogDto;
-import com.thesis.backend.model.dto.SensorLogDto;
+import com.thesis.backend.model.dto.sensor.DhtSensorLogDto;
+import com.thesis.backend.model.dto.sensor.MqSensorLogDto;
+import com.thesis.backend.model.dto.sensor.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.DhtSensorLog;
 import com.thesis.backend.model.entity.logs.MqSensorLog;

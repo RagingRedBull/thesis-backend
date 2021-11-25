@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type",
         discriminatorType = DiscriminatorType.STRING)
-@Table(name = "sensor_logs")
+@Table(name = "sensor_log")
 public class SensorLog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

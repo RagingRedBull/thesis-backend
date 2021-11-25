@@ -1,16 +1,16 @@
 package com.thesis.backend.model.entity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "detector_units")
+@Table(name = "detector_unit")
 public class DetectorUnit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "mac_address")
+    @Column(name = "mac_address", length = 17, nullable = false)
     private String macAddress;
+    @Column(name = "ipv4", length = 15, nullable = false)
+    private String ipV4;
     @Column(name = "name")
     private String name;
     @Column(name = "x_loc")
@@ -21,21 +21,18 @@ public class DetectorUnit {
     private Floor associatedFloor;
     @ManyToMany
     @JoinTable(
-            name = "sensors_join_detector_units",
+            name = "sensors_join_detector_unit",
             joinColumns = @JoinColumn(name = "detector_unit_id"),
             inverseJoinColumns = @JoinColumn(name = "sensor_id")
     )
-    private List<Sensor> associatedSensorList;
+    private Set<Sensor> associatedSensorSet;
 
     public DetectorUnit() {
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public DetectorUnit(String macAddress, String ipv4) {
+        this.macAddress = macAddress;
+        this.ipV4 = ipv4;
     }
 
     public String getMacAddress() {
@@ -78,11 +75,19 @@ public class DetectorUnit {
         this.associatedFloor = associatedFloor;
     }
 
-    public List<Sensor> getAssociatedSensorList() {
-        return associatedSensorList;
+    public String getIpV4() {
+        return ipV4;
     }
 
-    public void setAssociatedSensorList(List<Sensor> associatedSensorList) {
-        this.associatedSensorList = associatedSensorList;
+    public void setIpV4(String ipV4) {
+        this.ipV4 = ipV4;
+    }
+
+    public Set<Sensor> getAssociatedSensorSet() {
+        return associatedSensorSet;
+    }
+
+    public void setAssociatedSensorSet(Set<Sensor> associatedSensorSet) {
+        this.associatedSensorSet = associatedSensorSet;
     }
 }

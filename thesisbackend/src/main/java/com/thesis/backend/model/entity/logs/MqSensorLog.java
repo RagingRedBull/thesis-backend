@@ -1,6 +1,6 @@
 package com.thesis.backend.model.entity.logs;
 
-import com.thesis.backend.model.dto.MqSensorLogDto;
+import com.thesis.backend.model.dto.sensor.MqSensorLogDto;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;

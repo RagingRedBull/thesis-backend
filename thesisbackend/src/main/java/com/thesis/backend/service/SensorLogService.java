@@ -1,6 +1,6 @@
 package com.thesis.backend.service;
 
-import com.thesis.backend.model.dto.SensorLogDto;
+import com.thesis.backend.model.dto.sensor.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.util.factory.SensorLogFactory;

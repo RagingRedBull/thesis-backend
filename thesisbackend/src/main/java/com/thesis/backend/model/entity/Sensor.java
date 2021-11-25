@@ -2,10 +2,10 @@ package com.thesis.backend.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "sensors")
+@Table(name = "sensor")
 public class Sensor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +17,10 @@ public class Sensor implements Serializable {
     private String type;
     @Column(name = "description", length = 255)
     private String description;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<DetectorUnit> associatedDetectorUnitList;
-    public Sensor() {
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "associatedSensorSet")
+    private Set<DetectorUnit> associatedDetectorUnitSet;
+
+    private Sensor() {
         /// Default Empty
     }
 
@@ -60,5 +61,13 @@ public class Sensor implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<DetectorUnit> getAssociatedDetectorUnitSet() {
+        return associatedDetectorUnitSet;
+    }
+
+    public void setAssociatedDetectorUnitSet(Set<DetectorUnit> associatedDetectorUnitSet) {
+        this.associatedDetectorUnitSet = associatedDetectorUnitSet;
     }
 }

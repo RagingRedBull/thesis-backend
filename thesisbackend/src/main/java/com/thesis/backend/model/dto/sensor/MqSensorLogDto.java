@@ -1,4 +1,4 @@
-package com.thesis.backend.model.dto;
+package com.thesis.backend.model.dto.sensor;
 
 public class MqSensorLogDto extends SensorLogDto{
     private int ppmReading;

@@ -1,6 +1,6 @@
 package com.thesis.backend.service;
 
-import com.thesis.backend.model.dto.DetectorUnitDto;
+import com.thesis.backend.model.dto.detector.DetectorUnitDto;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.repository.FloorRespository;

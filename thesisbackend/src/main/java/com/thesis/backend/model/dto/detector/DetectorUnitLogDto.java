@@ -1,5 +1,6 @@
-package com.thesis.backend.model.dto;
+package com.thesis.backend.model.dto.detector;
 
+import com.thesis.backend.model.dto.sensor.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 
 import java.time.LocalDateTime;

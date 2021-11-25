@@ -9,9 +9,9 @@ public class Floor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "name")
+    @Column(name = "name", length = 20)
     private String name;
-    @Column(name = "description")
+    @Column(name = "description", length = 20)
     private String description;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "associatedFloor")
     private List<DetectorUnit> associatedDetectorUnitList;

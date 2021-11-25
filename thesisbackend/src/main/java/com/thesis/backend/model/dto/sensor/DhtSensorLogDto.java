@@ -1,4 +1,4 @@
-package com.thesis.backend.model.dto;
+package com.thesis.backend.model.dto.sensor;
 
 public class DhtSensorLogDto extends SensorLogDto{
     private float temperature;
