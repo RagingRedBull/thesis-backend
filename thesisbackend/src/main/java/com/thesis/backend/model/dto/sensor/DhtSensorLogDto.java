@@ -12,16 +12,18 @@ public class DhtSensorLogDto extends SensorLogDto{
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
+    public DhtSensorLogDto setTemperature(float temperature) {
         this.temperature = temperature;
+        return this;
     }
 
     public float getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(float humidity) {
+    public DhtSensorLogDto setHumidity(float humidity) {
         this.humidity = humidity;
+        return this;
     }
 
     @Override

@@ -1,30 +1,30 @@
-package com.thesis.backend.model.dto.sensor;
+package com.thesis.backend.model.dto.update;
+
 
 public class SensorUpdateDto {
     private int sensorId;
     private boolean toEnable;
 
-    public SensorUpdateDto(int sensorId, boolean toEnable) {
-        this.sensorId = sensorId;
-        this.toEnable = toEnable;
+    public SensorUpdateDto() {
     }
 
     public int getSensorId() {
         return sensorId;
     }
 
-    public void setSensorId(int sensorId) {
+    public SensorUpdateDto setSensorId(int sensorId) {
         this.sensorId = sensorId;
+        return this;
     }
 
     public boolean isToEnable() {
         return toEnable;
     }
 
-    public void setToEnable(boolean toEnable) {
+    public SensorUpdateDto setToEnable(boolean toEnable) {
         this.toEnable = toEnable;
+        return this;
     }
-
 
     @Override
     public String toString() {

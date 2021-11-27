@@ -70,4 +70,14 @@ public class Sensor implements Serializable {
     public void setAssociatedDetectorUnitSet(Set<DetectorUnit> associatedDetectorUnitSet) {
         this.associatedDetectorUnitSet = associatedDetectorUnitSet;
     }
+
+    @Override
+    public String toString() {
+        return "Sensor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description +
+                '}';
+    }
 }

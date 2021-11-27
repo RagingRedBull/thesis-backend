@@ -3,6 +3,8 @@ package com.thesis.backend.service;
 import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -10,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class DetectorUnitLogService {
+    private final Logger logger = LoggerFactory.getLogger(DetectorUnitLog.class);
     private DetectorUnitLogRepository detectorUnitLogRepository;
     private SensorLogService sensorLogService;
 
@@ -26,9 +29,10 @@ public class DetectorUnitLogService {
 
         //Debug purporse
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        System.out.println("LOGGED!");
-        System.out.println("Mac Address: " + detectorUnitLog.getMacAddress());
-        System.out.println("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
+
+        logger.info("INSERTING NEW LOG");
+        logger.info("Mac Address: " + detectorUnitLog.getMacAddress());
+        logger.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
 
         detectorUnitLogRepository.save(detectorUnitLog);
     }

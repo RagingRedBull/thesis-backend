@@ -1,17 +1,18 @@
 package com.thesis.backend.model.dto.sensor;
 
 public class MqSensorLogDto extends SensorLogDto{
-    private int ppmReading;
+    private int mqValue;
     public MqSensorLogDto(String type, String name) {
         super(type, name);
     }
 
-    public int getPpmReading() {
-        return ppmReading;
+    public int getMqValue() {
+        return mqValue;
     }
 
-    public void setPpmReading(int ppmReading) {
-        this.ppmReading = ppmReading;
+    public MqSensorLogDto setMqValue(int mqValue) {
+        this.mqValue = mqValue;
+        return this;
     }
 
     @Override
@@ -19,7 +20,7 @@ public class MqSensorLogDto extends SensorLogDto{
         return "MqSensorLogDto{" +
                 "type=" + super.getType() +
                 ", name=" + super.getName() +
-                ", ppmReading=" + ppmReading +
+                ", mqValue=" + mqValue +
                 '}';
     }
 }

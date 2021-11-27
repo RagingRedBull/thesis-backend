@@ -26,32 +26,36 @@ public class DetectorUnitLogDto {
         return id;
     }
 
-    public void setId(long id) {
+    public DetectorUnitLogDto setId(long id) {
         this.id = id;
+        return this;
     }
 
     public String getMacAddress() {
         return macAddress;
     }
 
-    public void setMacAddress(String macAddress) {
+    public DetectorUnitLogDto setMacAddress(String macAddress) {
         this.macAddress = macAddress;
+        return this;
     }
 
     public LocalDateTime getTimeRecorded() {
         return timeRecorded;
     }
 
-    public void setTimeRecorded(LocalDateTime timeRecorded) {
+    public DetectorUnitLogDto setTimeRecorded(LocalDateTime timeRecorded) {
         this.timeRecorded = timeRecorded;
+        return this;
     }
 
     public List<SensorLogDto> getSensorLogList() {
         return sensorLogList;
     }
 
-    public void setSensorLogList(List<SensorLogDto> sensorLogList) {
+    public DetectorUnitLogDto setSensorLogList(List<SensorLogDto> sensorLogList) {
         this.sensorLogList = sensorLogList;
+        return this;
     }
 
     @Override

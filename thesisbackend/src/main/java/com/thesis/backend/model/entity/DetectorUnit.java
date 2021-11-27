@@ -90,4 +90,17 @@ public class DetectorUnit {
     public void setAssociatedSensorSet(Set<Sensor> associatedSensorSet) {
         this.associatedSensorSet = associatedSensorSet;
     }
+
+    @Override
+    public String toString() {
+        return "DetectorUnit{" +
+                "macAddress='" + macAddress + '\'' +
+                ", ipV4='" + ipV4 + '\'' +
+                ", name='" + name + '\'' +
+                ", xpos=" + xpos +
+                ", ypos=" + ypos +
+                ", associatedFloor=" + associatedFloor +
+                ", associatedSensorSet=" + associatedSensorSet +
+                '}';
+    }
 }

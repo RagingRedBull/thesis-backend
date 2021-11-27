@@ -1,0 +1,13 @@
+package com.thesis.backend.model.util.factory;
+
+import com.thesis.backend.model.dto.update.SensorUpdateDto;
+import com.thesis.backend.model.entity.Sensor;
+
+public class SensorUpdateFactory {
+    public static SensorUpdateDto mapSensorUpdateToDto(Sensor sensor, boolean toEnable) {
+        SensorUpdateDto dto = new SensorUpdateDto();
+        dto.setSensorId(sensor.getId())
+                .setToEnable(toEnable);
+        return dto;
+    }
+}

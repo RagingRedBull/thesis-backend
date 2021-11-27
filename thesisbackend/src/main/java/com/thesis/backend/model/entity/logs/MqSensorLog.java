@@ -9,15 +9,13 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value = "MQ")
 public class MqSensorLog extends SensorLog{
-    @Column(name = "ppm_reading")
-    private int ppmReading;
+    @Column(name = "mq_value")
+    private int mqValue;
 
     public MqSensorLog(MqSensorLogDto dto, DetectorUnitLog detectorUnitLog) {
         super.setType(dto.getType());
         super.setName(dto.getName());
         super.setDetectorUnitLog(detectorUnitLog);
-        this.ppmReading = dto.getPpmReading();
+        this.mqValue = dto.getMqValue();
     }
-
-
 }
