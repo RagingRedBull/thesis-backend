@@ -4,13 +4,13 @@ import com.thesis.backend.model.dto.sensor.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 public class DetectorUnitLogDto {
     private long id;
     private String macAddress;
     private LocalDateTime timeRecorded;
-    private List<SensorLogDto> sensorLogList;
+    private Set<SensorLogDto> sensorLogSet;
 
     public DetectorUnitLogDto() {
         // Default Empty
@@ -26,36 +26,32 @@ public class DetectorUnitLogDto {
         return id;
     }
 
-    public DetectorUnitLogDto setId(long id) {
+    public void setId(long id) {
         this.id = id;
-        return this;
     }
 
     public String getMacAddress() {
         return macAddress;
     }
 
-    public DetectorUnitLogDto setMacAddress(String macAddress) {
+    public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
-        return this;
     }
 
     public LocalDateTime getTimeRecorded() {
         return timeRecorded;
     }
 
-    public DetectorUnitLogDto setTimeRecorded(LocalDateTime timeRecorded) {
+    public void setTimeRecorded(LocalDateTime timeRecorded) {
         this.timeRecorded = timeRecorded;
-        return this;
     }
 
-    public List<SensorLogDto> getSensorLogList() {
-        return sensorLogList;
+    public Set<SensorLogDto> getSensorLogSet() {
+        return sensorLogSet;
     }
 
-    public DetectorUnitLogDto setSensorLogList(List<SensorLogDto> sensorLogList) {
-        this.sensorLogList = sensorLogList;
-        return this;
+    public void setSensorLogSet(Set<SensorLogDto> sensorLogSet) {
+        this.sensorLogSet = sensorLogSet;
     }
 
     @Override
@@ -64,7 +60,7 @@ public class DetectorUnitLogDto {
                 "id=" + id +
                 ", macAddress='" + macAddress + '\'' +
                 ", timeRecorded=" + timeRecorded +
-                ", sensorLogList=" + sensorLogList +
+                ", sensorLogList=" + sensorLogSet +
                 '}';
     }
 }

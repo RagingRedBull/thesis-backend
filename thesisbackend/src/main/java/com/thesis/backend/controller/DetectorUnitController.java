@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/detector")
 public class DetectorUnitController {
     Logger logger = LoggerFactory.getLogger(DetectorUnitController.class);
-    private DetectorUnitService detectorUnitService;
-    private SensorService sensorService;
+    private final DetectorUnitService detectorUnitService;
+    private final SensorService sensorService;
 
     public DetectorUnitController(DetectorUnitService detectorUnitService, SensorService sensorService) {
         this.detectorUnitService = detectorUnitService;
@@ -56,8 +56,8 @@ public class DetectorUnitController {
             ObjectWriter writer = mapper.writer().withRootName("sensorSet");
             responseBody =
                     writer.writeValueAsString(sensorService.builSensorSetUpdateDto(connectedDetectorUnit.getAssociatedSensorSet()
-                    , true));
-            logger.info("SENDING SESNSOR OF " + connectedDetectorUnit.getMacAddress());
+                            , true));
+            logger.info("SENDING SENSOR OF " + connectedDetectorUnit.getMacAddress());
             logger.info("Sensor List: " + connectedDetectorUnit.getAssociatedSensorSet().toString());
             logger.info("Response Body: " + responseBody);
         }
@@ -68,7 +68,6 @@ public class DetectorUnitController {
     public ResponseEntity<?> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
         DetectorUnit unitToUpdate;
         unitToUpdate = detectorUnitService.findOneByMacAddress(detectorUnitUpdateDto.getMacAddress());
-        logger.info("UPDATING DETECTOR UNIT: " + unitToUpdate.getMacAddress());
         if (unitToUpdate == null) {
             logger.info("ERROR: UNKNOWN MAC ADDRESS");
             return new ResponseEntity<>("UNKNOWN MAC ADDRESS", HttpStatus.NOT_FOUND);
@@ -77,6 +76,7 @@ public class DetectorUnitController {
             logger.info("EMPTY SENSOR LIST");
             return new ResponseEntity<>("EMPTY SENSOR LIST", HttpStatus.EXPECTATION_FAILED);
         }
+        logger.info("UPDATING DETECTOR UNIT: " + unitToUpdate.getMacAddress());
         detectorUnitService.updateSensorList(unitToUpdate, detectorUnitUpdateDto.getSensorUpdateDtoSet());
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }

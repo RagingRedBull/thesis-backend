@@ -9,8 +9,11 @@ import com.thesis.backend.model.entity.Sensor;
 import com.thesis.backend.repository.DetectorUnitRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -25,14 +28,15 @@ import java.util.stream.Collectors;
 @Service
 public class DetectorUnitService {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitService.class);
-    private DetectorUnitRepository detectorUnitRepository;
-    private SensorService sensorService;
+    private final DetectorUnitRepository detectorUnitRepository;
+    private final SensorService sensorService;
 
     public DetectorUnitService(DetectorUnitRepository detectorUnitRepository, SensorService sensorService) {
         this.detectorUnitRepository = detectorUnitRepository;
         this.sensorService = sensorService;
     }
 
+    @Nullable
     public DetectorUnit findOneByMacAddress(String macAddress) {
         return detectorUnitRepository.findById(macAddress)
                 .orElse(null);
@@ -42,17 +46,22 @@ public class DetectorUnitService {
         detectorUnitRepository.saveAndFlush(detectorUnit);
     }
 
+    public Page<DetectorUnit> getAllDetectorUnit(Pageable page) {
+        return detectorUnitRepository.findAll(page);
+    }
+
     public DetectorUnit updateSensorList(DetectorUnit unitToUpdate, Set<SensorUpdateDto> sensorUpdateDtoSet) throws JsonProcessingException {
         logger.info("PERFORMING UPDATE!");
         logger.info("Unit Mac Address: " + unitToUpdate.getMacAddress());
-        logger.info("New Sensor Set: " + sensorUpdateDtoSet.toString());
-        Set<Sensor> targetSensorSet = sensorService.getAllSensorsInList(getTargetSensors(sensorUpdateDtoSet));
-        Set<Sensor> sensorSetToRemove = getSensorsToRemove(targetSensorSet, sensorUpdateDtoSet);
-        unitToUpdate.getAssociatedSensorSet().removeAll(sensorSetToRemove);
+        logger.info("Sensor Update Set: " + sensorUpdateDtoSet.toString());
+        Set<Sensor> targetSensorSet =
+                sensorService.getAllSensorsInList(getSensorIdFromSensorUpdateDtoAsList(sensorUpdateDtoSet));
+        unitToUpdate.getAssociatedSensorSet().removeAll(getSensorsToRemove(targetSensorSet, sensorUpdateDtoSet));
         unitToUpdate.getAssociatedSensorSet().addAll(getSensorToAdd(targetSensorSet, sensorUpdateDtoSet));
         detectorUnitRepository.saveAndFlush(unitToUpdate);
         contactDetectorUnitToUpdate(unitToUpdate, sensorUpdateDtoSet);
-        logger.info("Updated Detector Unit Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
+        logger.info("Unit Mac Address: " + unitToUpdate.getMacAddress());
+        logger.info("Updated Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
         return unitToUpdate;
     }
 
@@ -65,7 +74,8 @@ public class DetectorUnitService {
                 .build();
         WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = webClient.post();
         WebClient.RequestBodySpec bodySpec = uriSpec.uri("/update");
-        WebClient.RequestHeadersSpec<?> headersSpec = bodySpec.bodyValue(jsonObjectWriter.writeValueAsString(sensorSet));
+        WebClient.RequestHeadersSpec<?> headersSpec =
+                bodySpec.bodyValue(jsonObjectWriter.writeValueAsString(sensorSet));
         WebClient.ResponseSpec responseSpec = headersSpec.header(
                         HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
@@ -77,13 +87,12 @@ public class DetectorUnitService {
                 .bodyToMono(String.class);
         response.subscribe(
                 logger::info,
-                error -> logger.info(error.getMessage()),
-                () -> logger.info("No response")
+                error -> logger.info(error.getMessage())
         );
         return true;
     }
 
-    private List<Integer> getTargetSensors(Set<SensorUpdateDto> sensorUpdateDtoSet) {
+    private List<Integer> getSensorIdFromSensorUpdateDtoAsList(Set<SensorUpdateDto> sensorUpdateDtoSet) {
         return sensorUpdateDtoSet.stream()
                 .map(SensorUpdateDto::getSensorId)
                 .collect(Collectors.toList());

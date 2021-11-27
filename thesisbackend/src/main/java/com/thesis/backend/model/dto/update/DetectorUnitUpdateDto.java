@@ -15,17 +15,15 @@ public class DetectorUnitUpdateDto {
         return macAddress;
     }
 
-    public DetectorUnitUpdateDto setMacAddress(String macAddress) {
+    public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
-        return this;
     }
 
     public Set<SensorUpdateDto> getSensorUpdateDtoSet() {
         return sensorUpdateDtoSet;
     }
 
-    public DetectorUnitUpdateDto setSensorUpdateDtoSet(Set<SensorUpdateDto> sensorUpdateDtoSet) {
+    public void setSensorUpdateDtoSet(Set<SensorUpdateDto> sensorUpdateDtoSet) {
         this.sensorUpdateDtoSet = sensorUpdateDtoSet;
-        return this;
     }
 }

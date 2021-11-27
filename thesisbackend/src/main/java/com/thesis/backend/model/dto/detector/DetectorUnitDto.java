@@ -28,44 +28,39 @@ public class DetectorUnitDto {
         return macAddress;
     }
 
-    public DetectorUnitDto setMacAddress(String macAddress) {
+    public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
-        return this;
     }
 
     public String getIpV4() {
         return ipV4;
     }
 
-    public DetectorUnitDto setIpV4(String ipV4) {
+    public void setIpV4(String ipV4) {
         this.ipV4 = ipV4;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public DetectorUnitDto setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public int getXpos() {
         return xpos;
     }
 
-    public DetectorUnitDto setXpos(int xpos) {
+    public void setXpos(int xpos) {
         this.xpos = xpos;
-        return this;
     }
 
     public int getYpos() {
         return ypos;
     }
 
-    public DetectorUnitDto setYpos(int ypos) {
+    public void setYpos(int ypos) {
         this.ypos = ypos;
-        return this;
     }
 }

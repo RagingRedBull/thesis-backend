@@ -1,6 +1,6 @@
 package com.thesis.backend.model.entity.logs;
 
-import com.thesis.backend.model.dto.sensor.DhtSensorLogDto;
+import com.thesis.backend.model.dto.sensor.SensorLogDto;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -18,24 +18,10 @@ public class DhtSensorLog extends SensorLog{
         //default empty
     }
 
-    public DhtSensorLog(DhtSensorLogDto dto, DetectorUnitLog detectorUnitLog) {
+    public DhtSensorLog(SensorLogDto dto, DetectorUnitLog detectorUnitLog) {
         super.setName(dto.getName());
         super.setType(dto.getType());
         super.setDetectorUnitLog(detectorUnitLog);
-        this.temperature = dto.getTemperature();
-        this.humidity = dto.getHumidity();
-    }
-
-    public DhtSensorLog(String name, String type, float temperature, float humidity) {
-        super(name, type);
-        this.temperature = temperature;
-        this.humidity = humidity;
-    }
-
-    public DhtSensorLog(String name, String type, DetectorUnitLog detectorUnitLog, float temperature, float humidity) {
-        super(name, type, detectorUnitLog);
-        this.temperature = temperature;
-        this.humidity = humidity;
     }
 
     public float getTemperature() {

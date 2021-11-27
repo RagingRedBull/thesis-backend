@@ -22,35 +22,31 @@ public class SensorDto {
         return id;
     }
 
-    public SensorDto setId(int id) {
+    public void setId(int id) {
         this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public SensorDto setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public String getType() {
         return type;
     }
 
-    public SensorDto setType(String type) {
+    public void setType(String type) {
         this.type = type;
-        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public SensorDto setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 }

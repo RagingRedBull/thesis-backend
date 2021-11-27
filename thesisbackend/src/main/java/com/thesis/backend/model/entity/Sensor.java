@@ -24,13 +24,6 @@ public class Sensor implements Serializable {
         /// Default Empty
     }
 
-    public Sensor(int id, String name, String type, String description) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.description = description;
-    }
-
     public int getId() {
         return id;
     }

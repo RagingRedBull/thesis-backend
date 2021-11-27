@@ -6,7 +6,7 @@ import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "detector_unit_log",
@@ -22,16 +22,16 @@ public class DetectorUnitLog implements Serializable {
     @Column(name = "time_recorded", nullable = false)
     private LocalDateTime timeRecorded;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "detectorUnitLog", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SensorLog> sensorLogList;
+    private Set<SensorLog> sensorLogSet;
 
     public DetectorUnitLog() {
         // Default Empty
     }
 
-    public DetectorUnitLog(String macAddress, LocalDateTime timeRecorded, List<SensorLog> sensorLogList) {
+    public DetectorUnitLog(String macAddress, LocalDateTime timeRecorded, Set<SensorLog> sensorLogList) {
         this.macAddress = macAddress;
         this.timeRecorded = timeRecorded;
-        this.sensorLogList = sensorLogList;
+        this.sensorLogSet = sensorLogList;
     }
 
     public DetectorUnitLog(DetectorUnitLogDto dto) {
@@ -64,12 +64,12 @@ public class DetectorUnitLog implements Serializable {
         this.timeRecorded = timeRecorded;
     }
 
-    public List<SensorLog> getSensorLogList() {
-        return sensorLogList;
+    public Set<SensorLog> getSensorLogSet() {
+        return sensorLogSet;
     }
 
-    public void setSensorLogList(List<SensorLog> sensorLogList) {
-        this.sensorLogList = sensorLogList;
+    public void setSensorLogSet(Set<SensorLog> sensorLogSet) {
+        this.sensorLogSet = sensorLogSet;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class DetectorUnitLog implements Serializable {
                 "id=" + id +
                 ", macAddress='" + macAddress + '\'' +
                 ", timeRecorded=" + timeRecorded +
-                ", sensorLogList=" + sensorLogList +
+                ", sensorLogList=" + sensorLogSet +
                 '}';
     }
 }

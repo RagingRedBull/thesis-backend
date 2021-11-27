@@ -1,29 +1,29 @@
 package com.thesis.backend.model.dto.sensor;
 
+import com.thesis.backend.model.entity.logs.SensorLog;
+
 public class DhtSensorLogDto extends SensorLogDto{
     private float temperature;
     private float humidity;
 
-    public DhtSensorLogDto(String type, String name) {
-        super(type, name);
+    public DhtSensorLogDto(SensorLog entity) {
+        super(entity.getType(), entity.getName());
     }
 
     public float getTemperature() {
         return temperature;
     }
 
-    public DhtSensorLogDto setTemperature(float temperature) {
+    public void setTemperature(float temperature) {
         this.temperature = temperature;
-        return this;
     }
 
     public float getHumidity() {
         return humidity;
     }
 
-    public DhtSensorLogDto setHumidity(float humidity) {
+    public void setHumidity(float humidity) {
         this.humidity = humidity;
-        return this;
     }
 
     @Override

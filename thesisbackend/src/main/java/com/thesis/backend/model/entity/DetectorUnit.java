@@ -43,6 +43,14 @@ public class DetectorUnit {
         this.macAddress = macAddress;
     }
 
+    public String getIpV4() {
+        return ipV4;
+    }
+
+    public void setIpV4(String ipV4) {
+        this.ipV4 = ipV4;
+    }
+
     public String getName() {
         return name;
     }
@@ -73,14 +81,6 @@ public class DetectorUnit {
 
     public void setAssociatedFloor(Floor associatedFloor) {
         this.associatedFloor = associatedFloor;
-    }
-
-    public String getIpV4() {
-        return ipV4;
-    }
-
-    public void setIpV4(String ipV4) {
-        this.ipV4 = ipV4;
     }
 
     public Set<Sensor> getAssociatedSensorSet() {

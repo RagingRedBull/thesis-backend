@@ -33,26 +33,23 @@ public class SensorLogDto {
         return id;
     }
 
-    public SensorLogDto setId(long id) {
+    public void setId(long id) {
         this.id = id;
-        return this;
     }
 
     public String getType() {
         return type;
     }
 
-    public SensorLogDto setType(String type) {
+    public void setType(String type) {
         this.type = type;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public SensorLogDto setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 }

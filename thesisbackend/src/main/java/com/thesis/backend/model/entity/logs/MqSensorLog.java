@@ -12,10 +12,21 @@ public class MqSensorLog extends SensorLog{
     @Column(name = "mq_value")
     private int mqValue;
 
-    public MqSensorLog(MqSensorLogDto dto, DetectorUnitLog detectorUnitLog) {
+    public MqSensorLog() {
+
+    }
+
+    public MqSensorLog(MqSensorLogDto dto) {
         super.setType(dto.getType());
         super.setName(dto.getName());
-        super.setDetectorUnitLog(detectorUnitLog);
         this.mqValue = dto.getMqValue();
+    }
+
+    public int getMqValue() {
+        return mqValue;
+    }
+
+    public void setMqValue(int mqValue) {
+        this.mqValue = mqValue;
     }
 }

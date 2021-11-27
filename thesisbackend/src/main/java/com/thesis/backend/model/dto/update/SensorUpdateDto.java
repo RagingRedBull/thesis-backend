@@ -12,25 +12,23 @@ public class SensorUpdateDto {
         return sensorId;
     }
 
-    public SensorUpdateDto setSensorId(int sensorId) {
+    public void setSensorId(int sensorId) {
         this.sensorId = sensorId;
-        return this;
     }
 
     public boolean isToEnable() {
         return toEnable;
     }
 
-    public SensorUpdateDto setToEnable(boolean toEnable) {
+    public void setToEnable(boolean toEnable) {
         this.toEnable = toEnable;
-        return this;
     }
 
     @Override
     public String toString() {
         return "SensorUpdateDto{" +
-                "sensorId=" + sensorId +
-                ", toEnable=" + toEnable +
+                "\nsensorId=" + sensorId +
+                ",\n toEnable=" + toEnable +
                 '}';
     }
 }

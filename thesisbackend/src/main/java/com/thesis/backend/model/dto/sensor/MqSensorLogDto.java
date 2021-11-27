@@ -1,18 +1,19 @@
 package com.thesis.backend.model.dto.sensor;
 
+import com.thesis.backend.model.entity.logs.SensorLog;
+
 public class MqSensorLogDto extends SensorLogDto{
     private int mqValue;
-    public MqSensorLogDto(String type, String name) {
-        super(type, name);
+    public MqSensorLogDto(SensorLog log) {
+        super(log.getType(), log.getName());
     }
 
     public int getMqValue() {
         return mqValue;
     }
 
-    public MqSensorLogDto setMqValue(int mqValue) {
+    public void setMqValue(int mqValue) {
         this.mqValue = mqValue;
-        return this;
     }
 
     @Override
