@@ -1,5 +1,10 @@
 package com.thesis.backend.model.entity;
 
+import com.thesis.backend.model.converter.SensorNameConverter;
+import com.thesis.backend.model.converter.SensorTypeConverter;
+import com.thesis.backend.model.enums.SensorName;
+import com.thesis.backend.model.enums.SensorType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -12,9 +17,11 @@ public class Sensor implements Serializable {
     @Column(name = "id")
     private int id;
     @Column(name = "name", length = 30)
-    private String name;
+    @Convert(converter = SensorNameConverter.class)
+    private SensorName name;
     @Column(name = "type", length = 50)
-    private String type;
+    @Convert(converter = SensorTypeConverter.class)
+    private SensorType type;
     @Column(name = "description", length = 255)
     private String description;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "associatedSensorSet")
@@ -32,19 +39,19 @@ public class Sensor implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
+    public SensorName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(SensorName name) {
         this.name = name;
     }
 
-    public String getType() {
+    public SensorType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(SensorType type) {
         this.type = type;
     }
 

@@ -4,6 +4,7 @@ import com.thesis.backend.model.entity.logs.SensorLog;
 
 public class MqSensorLogDto extends SensorLogDto{
     private int mqValue;
+
     public MqSensorLogDto(SensorLog log) {
         super(log.getType(), log.getName());
     }

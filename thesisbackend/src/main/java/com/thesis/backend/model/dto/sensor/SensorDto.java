@@ -1,11 +1,13 @@
 package com.thesis.backend.model.dto.sensor;
 
 import com.thesis.backend.model.entity.Sensor;
+import com.thesis.backend.model.enums.SensorName;
+import com.thesis.backend.model.enums.SensorType;
 
 public class SensorDto {
     private int id;
-    private String name;
-    private String type;
+    private SensorName name;
+    private SensorType type;
     private String description;
 
     public SensorDto() {
@@ -26,19 +28,19 @@ public class SensorDto {
         this.id = id;
     }
 
-    public String getName() {
+    public SensorName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(SensorName name) {
         this.name = name;
     }
 
-    public String getType() {
+    public SensorType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(SensorType type) {
         this.type = type;
     }
 
