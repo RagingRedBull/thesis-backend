@@ -28,11 +28,12 @@ public abstract class SensorLog implements Serializable {
     @JoinColumn(name = "detector_unit_log_id")
     private DetectorUnitLog detectorUnitLog;
 
-    public SensorLog() {
+    private SensorLog() {
         // Default Empty
     }
 
-    public SensorLog(SensorName name, SensorType type) {
+    public SensorLog(long id, SensorName name, SensorType type) {
+        this.id = id;
         this.name = name;
         this.type = type;
     }

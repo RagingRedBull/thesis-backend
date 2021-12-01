@@ -16,8 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -43,7 +42,7 @@ class SensorLogServiceTest {
         assertThat(sensorLog.getDetectorUnitLog(), is(notNullValue()));
         assertThat(sensorLog.getDetectorUnitLog().getMacAddress(), is("E8:DB:84:E5:06:5B"));
         assertThat(sensorLogSet.size(), is(1));
-        assertThat(sensorLog.getId(), is(1));
+        assertThat(sensorLog.getId(), is(1L));
         assertThat(sensorLog.getType(), is(SensorType.DHT));
         assertThat(sensorLog.getName(), is(SensorName.DHT11));
     }
@@ -52,37 +51,40 @@ class SensorLogServiceTest {
     void given_multiple_SensorLogDto_when_mapSensorLogDtoToEntity_then_map_multiple_entity() {
         DetectorUnitLog detectorUnitLog = buildDetectorUnitLog("E8:DB:84:E5:06:5B");
         Set<SensorLogDto> sensorLogDtoSet = buildSensorLogDtoSet(
-                buildDhtSensorLogDto(1,SensorName.DHT11, SensorType.DHT, 1F, 1F),
-                buildDhtSensorLogDto(2,SensorName.DHT22, SensorType.DHT, 1F, 1F),
-                buildMqSensorLogDto(3,SensorName.MQ7, SensorType.MQ, 1)
+                buildDhtSensorLogDto(1L,SensorName.DHT11, SensorType.DHT, 1F, 1F),
+                buildDhtSensorLogDto(2L,SensorName.DHT22, SensorType.DHT, 1F, 1F),
+                buildMqSensorLogDto(3L,SensorName.MQ7, SensorType.MQ, 1)
         );
         Set<SensorLog> sensorLogSet = sensorLogService.mapSensorLogDtoEntitySet(sensorLogDtoSet, detectorUnitLog);
         assertThat(sensorLogSet.size(), is(3));
         assertThat(sensorLogSet, hasItems(isA(SensorLog.class)));
         assertThat(sensorLogSet, hasItems(
                 allOf(
-                        hasProperty("id", is(1)),
+                        hasProperty("id", is(1L)),
                         hasProperty("name", is(SensorName.DHT11)),
                         hasProperty("type", is(SensorType.DHT)),
                         hasProperty("temperature", is(1F)),
-                        hasProperty("humidity", is(1F))
+                        hasProperty("humidity", is(1F)),
+                        hasProperty("detectorUnitLog", is(notNullValue()))
                 ), allOf(
-                        hasProperty("id", is(2)),
+                        hasProperty("id", is(2L)),
                         hasProperty("name", is(SensorName.DHT22)),
                         hasProperty("type", is(SensorType.DHT)),
                         hasProperty("temperature", is(1F)),
-                        hasProperty("humidity", is(1F))
+                        hasProperty("humidity", is(1F)),
+                        hasProperty("detectorUnitLog", is(notNullValue()))
                 ), allOf(
-                        hasProperty("id", is(3)),
+                        hasProperty("id", is(3L)),
                         hasProperty("name", is(SensorName.MQ7)),
                         hasProperty("type", is(SensorType.MQ)),
-                        hasProperty("mqValue", is(1))
+                        hasProperty("mqValue", is(1)),
+                        hasProperty("detectorUnitLog", is(notNullValue()))
                 )
         ));
     }
 
-    private Set<SensorLogDto> buildSensorLogDtoSet(SensorLogDto... sensorLogs) {
-        return new HashSet<>(Set.of(sensorLogs));
+    private LinkedHashSet<SensorLogDto> buildSensorLogDtoSet(SensorLogDto... sensorLogs) {
+        return new LinkedHashSet<>(Arrays.asList(sensorLogs));
     }
 
     private DhtSensorLogDto buildDhtSensorLogDto(long id, SensorName name, SensorType type, float temp,

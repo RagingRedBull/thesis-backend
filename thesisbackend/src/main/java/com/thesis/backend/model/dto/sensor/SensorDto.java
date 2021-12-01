@@ -1,7 +1,6 @@
 package com.thesis.backend.model.dto.sensor;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.thesis.backend.model.entity.Sensor;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
 
@@ -13,13 +12,6 @@ public class SensorDto {
     private String description;
 
     public SensorDto() {
-    }
-
-    public SensorDto(Sensor entity) {
-        this.id = entity.getId();
-        this.name = entity.getName();
-        this.type = entity.getType();
-        this.description = entity.getDescription();
     }
 
     public int getId() {

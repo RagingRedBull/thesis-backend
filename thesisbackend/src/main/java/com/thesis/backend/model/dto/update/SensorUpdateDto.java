@@ -7,7 +7,12 @@ public class SensorUpdateDto {
     private int sensorId;
     private boolean toEnable;
 
-    public SensorUpdateDto() {
+    private SensorUpdateDto() {
+    }
+
+    public SensorUpdateDto(int sensorId, boolean toEnable) {
+        this.sensorId = sensorId;
+        this.toEnable = toEnable;
     }
 
     public int getSensorId() {

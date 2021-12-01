@@ -1,7 +1,6 @@
 package com.thesis.backend.model.dto.sensor;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
 
@@ -11,10 +10,6 @@ public class MqSensorLogDto extends SensorLogDto{
 
     public MqSensorLogDto(long id, SensorType type, SensorName name) {
         super(id,type, name);
-    }
-
-    public MqSensorLogDto(SensorLog log) {
-        super(log.getId(),log.getType(), log.getName());
     }
 
     public int getMqValue() {

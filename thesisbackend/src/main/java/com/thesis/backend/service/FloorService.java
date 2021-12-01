@@ -3,6 +3,7 @@ package com.thesis.backend.service;
 import com.thesis.backend.model.dto.detector.DetectorUnitDto;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
+import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.repository.FloorRespository;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +23,16 @@ public class FloorService {
     }
 
     public List<FloorDto> findAllAsDto(){
+        FloorMapper mapper = new FloorMapper();
         return findAll().stream()
-                .map(FloorDto::new)
+                .map(mapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
     public List<FloorDto> convertListToDto(List<Floor> floorList, List<DetectorUnitDto> detectorUnitDtoList){
+        FloorMapper mapper = new FloorMapper();
         return floorList.stream()
-                .map(FloorDto::new)
+                .map(mapper::mapToDto)
                 .collect(Collectors.toList());
     }
 }

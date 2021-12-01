@@ -2,6 +2,7 @@ package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
+import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,8 @@ public class DetectorUnitLogService {
     }
 
     public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
-        return detectorUnitLogRepository.findAll(page).map(DetectorUnitLogDto::new);
+        DetectorUnitLogMapper mapper = new DetectorUnitLogMapper();
+        return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);
     }
 
     public void saveOne(DetectorUnitLogDto detectorUnitLogDto) {

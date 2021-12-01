@@ -1,18 +1,12 @@
 package com.thesis.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.thesis.backend.model.entity.Floor;
 
 @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class FloorDto {
     private int id;
     private String name;
     private String description;
-
-    public FloorDto(Floor entity){
-        this.id = entity.getId();
-        this.name = entity.getDescription();
-    }
 
     public int getId() {
         return id;

@@ -1,7 +1,6 @@
 package com.thesis.backend.model.dto.detector;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.thesis.backend.model.entity.DetectorUnit;
 
 @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class DetectorUnitDto {
@@ -13,12 +12,6 @@ public class DetectorUnitDto {
 
     public DetectorUnitDto(){
         //Default Empty
-    }
-
-    public DetectorUnitDto(DetectorUnit entity){
-        this.macAddress = entity.getMacAddress();
-        this.name = entity.getName();
-        this.xpos = entity.getXpos();
     }
 
     public DetectorUnitDto(String macAddress, String ipV4) {
