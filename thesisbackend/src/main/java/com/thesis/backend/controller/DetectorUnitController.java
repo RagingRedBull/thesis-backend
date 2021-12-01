@@ -11,13 +11,13 @@ import com.thesis.backend.service.SensorService;
 import com.thesis.backend.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/detector")
@@ -31,8 +31,15 @@ public class DetectorUnitController {
         this.sensorService = sensorService;
     }
 
+    @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllDetectorInfoByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        logger.info("RETURNING ALL DETECTOR");
+        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
+        return new ResponseEntity<>(detectorUnitService.findDetectorUnitsByPage(page), HttpStatus.OK);
+    }
+
     @PostMapping(path = "/startup", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUnitController(@RequestBody DetectorUnitDto detectorUnitDto) throws JsonProcessingException {
+    public ResponseEntity<?> onDetectorStartUp(@RequestBody DetectorUnitDto detectorUnitDto) throws JsonProcessingException {
         String macAddress = detectorUnitDto.getMacAddress();
         String ipV4 = detectorUnitDto.getIpV4();
         logger.info("Unit Startup!");
@@ -46,21 +53,20 @@ public class DetectorUnitController {
         String responseBody;
         DetectorUnit connectedDetectorUnit = detectorUnitService.findOneByMacAddress(macAddress);
         if (connectedDetectorUnit == null) {
-            connectedDetectorUnit = new DetectorUnit(macAddress, ipV4);
-            detectorUnitService.persistOne(connectedDetectorUnit);
             responseBody = "REGISTERED";
-            logger.info("Registered Unit: " + connectedDetectorUnit.getMacAddress());
-            logger.info("Current IP: " + connectedDetectorUnit.getIpV4());
+            logger.info("Registered Unit: " + detectorUnitDto.getMacAddress());
+            logger.info("Current IP: " + detectorUnitDto.getIpV4());
         } else {
             ObjectMapper mapper = new ObjectMapper();
             ObjectWriter writer = mapper.writer().withRootName("sensorSet");
             responseBody =
-                    writer.writeValueAsString(sensorService.builSensorSetUpdateDto(connectedDetectorUnit.getAssociatedSensorSet()
-                            , true));
+                    writer.writeValueAsString(sensorService.buildSensorSetUpdateDto(
+                            connectedDetectorUnit.getAssociatedSensorSet(), true));
             logger.info("SENDING SENSOR OF " + connectedDetectorUnit.getMacAddress());
-            logger.info("Sensor List: " + connectedDetectorUnit.getAssociatedSensorSet().toString());
+            logger.info("Sensor Set: " + connectedDetectorUnit.getAssociatedSensorSet().toString());
             logger.info("Response Body: " + responseBody);
         }
+        detectorUnitService.saveOne(detectorUnitDto);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 

@@ -1,7 +1,9 @@
 package com.thesis.backend.model.dto.detector;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.thesis.backend.model.entity.DetectorUnit;
 
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class DetectorUnitDto {
     private String macAddress;
     private String ipV4;

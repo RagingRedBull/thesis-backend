@@ -27,7 +27,7 @@ public class Sensor implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "associatedSensorSet")
     private Set<DetectorUnit> associatedDetectorUnitSet;
 
-    private Sensor() {
+    public Sensor() {
         /// Default Empty
     }
 

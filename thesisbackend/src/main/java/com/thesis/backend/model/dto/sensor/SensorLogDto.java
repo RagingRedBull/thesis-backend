@@ -1,5 +1,6 @@
 package com.thesis.backend.model.dto.sensor;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.thesis.backend.model.enums.SensorName;
@@ -17,7 +18,8 @@ import com.thesis.backend.model.enums.SensorType;
                 @JsonSubTypes.Type(value = MqSensorLogDto.class, name = "MQ")
         }
 )
-public class SensorLogDto {
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+public abstract class SensorLogDto {
     private long id;
     private SensorType type;
     private SensorName name;
@@ -26,7 +28,8 @@ public class SensorLogDto {
         // Default
     }
 
-    public SensorLogDto(SensorType type, SensorName name) {
+    public SensorLogDto(long id, SensorType type, SensorName name) {
+        this.id = id;
         this.type = type;
         this.name = name;
     }

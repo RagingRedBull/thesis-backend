@@ -3,6 +3,7 @@ package com.thesis.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.thesis.backend.model.dto.detector.DetectorUnitDto;
 import com.thesis.backend.model.dto.update.SensorUpdateDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Sensor;
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -42,12 +44,30 @@ public class DetectorUnitService {
                 .orElse(null);
     }
 
-    public void persistOne(DetectorUnit detectorUnit) {
-        detectorUnitRepository.saveAndFlush(detectorUnit);
+    public DetectorUnit saveOne(DetectorUnitDto detectorUnitDto) {
+        DetectorUnit detectorUnit = new DetectorUnit(detectorUnitDto.getMacAddress(), detectorUnitDto.getIpV4());
+        return detectorUnitRepository.saveAndFlush(detectorUnit);
     }
 
-    public Page<DetectorUnit> getAllDetectorUnit(Pageable page) {
-        return detectorUnitRepository.findAll(page);
+    public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
+        return detectorUnitRepository.findAll(page).map(this::mapDetectorEntityToDto);
+    }
+
+    public Set<DetectorUnitDto> buildDetectorUnitDtoSet(List<DetectorUnit> detectorUnits) {
+        return detectorUnits.stream()
+                .map(this::mapDetectorEntityToDto)
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    public DetectorUnitDto mapDetectorEntityToDto(DetectorUnit entity) {
+        System.out.println("eheh");
+        DetectorUnitDto dto = new DetectorUnitDto();
+        dto.setMacAddress(entity.getMacAddress());
+        dto.setIpV4(entity.getIpV4());
+        dto.setName(entity.getName());
+        dto.setXpos(entity.getXpos());
+        dto.setYpos(entity.getYpos());
+        return dto;
     }
 
     public DetectorUnit updateSensorList(DetectorUnit unitToUpdate, Set<SensorUpdateDto> sensorUpdateDtoSet) throws JsonProcessingException {

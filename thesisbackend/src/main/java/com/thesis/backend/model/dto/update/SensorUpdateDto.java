@@ -1,6 +1,8 @@
 package com.thesis.backend.model.dto.update;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class SensorUpdateDto {
     private int sensorId;
     private boolean toEnable;

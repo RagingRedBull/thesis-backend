@@ -1,9 +1,11 @@
 package com.thesis.backend.model.dto.sensor;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.thesis.backend.model.entity.Sensor;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
 
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class SensorDto {
     private int id;
     private SensorName name;

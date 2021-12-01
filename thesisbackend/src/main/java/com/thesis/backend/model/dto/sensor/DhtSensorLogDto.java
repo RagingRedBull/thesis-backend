@@ -1,19 +1,21 @@
 package com.thesis.backend.model.dto.sensor;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
 
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class DhtSensorLogDto extends SensorLogDto{
     private float temperature;
     private float humidity;
 
-    public DhtSensorLogDto(SensorType type, SensorName name) {
-        super(type, name);
+    public DhtSensorLogDto(long id, SensorType type, SensorName name) {
+        super(id,type, name);
     }
 
     public DhtSensorLogDto(SensorLog entity) {
-        super(entity.getType(), entity.getName());
+        super(entity.getId(),entity.getType(), entity.getName());
     }
 
     public float getTemperature() {

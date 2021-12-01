@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 public class SensorLogService {
     private final Logger logger = LoggerFactory.getLogger(SensorLogService.class);
     private final SensorLogRepository sensorLogRepository;
+    private final SensorLogFactory sensorLogFactory;
 
-    public SensorLogService(SensorLogRepository sensorLogRepository) {
+    public SensorLogService(SensorLogRepository sensorLogRepository, SensorLogFactory sensorLogFactory) {
         this.sensorLogRepository = sensorLogRepository;
+        this.sensorLogFactory = sensorLogFactory;
     }
 
     public List<SensorLog> findLogsByDetectorLogId(long id) {
@@ -27,9 +30,14 @@ public class SensorLogService {
     }
     public Set<SensorLog> mapSensorLogDtoEntitySet(Set<SensorLogDto> sensorLogDtoSet, DetectorUnitLog detectorUnitLog){
         return sensorLogDtoSet.stream()
-                .map(sensorLogDto -> SensorLogFactory.mapDtoToEntity(sensorLogDto, detectorUnitLog))
+                .map(sensorLogDto -> sensorLogFactory.mapDtoToEntity(sensorLogDto, detectorUnitLog))
                 .collect(Collectors.toSet());
     }
 
+    public Set<SensorLogDto> mapSensorLogEntityToDto(List<SensorLog> sensorLogSet) {
+        return sensorLogSet.stream()
+                .map(sensorLogFactory::mapEntityToDto)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
 
 }

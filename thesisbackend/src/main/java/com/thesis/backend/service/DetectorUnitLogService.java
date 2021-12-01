@@ -1,9 +1,7 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
-import com.thesis.backend.model.dto.sensor.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
-import com.thesis.backend.model.util.factory.SensorLogFactory;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class DetectorUnitLogService {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitLog.class);
-    private DetectorUnitLogRepository detectorUnitLogRepository;
-    private SensorLogService sensorLogService;
+    private final DetectorUnitLogRepository detectorUnitLogRepository;
+    private final SensorLogService sensorLogService;
 
     public DetectorUnitLogService(DetectorUnitLogRepository detectorUnitLogRepository,
                                   SensorLogService sensorLogService) {
@@ -29,18 +25,10 @@ public class DetectorUnitLogService {
     }
 
     public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
-        return detectorUnitLogRepository.findAll(page).map(detectorUnitLog -> {
-            DetectorUnitLogDto dto = new DetectorUnitLogDto(detectorUnitLog);
-            Set<SensorLogDto> sensorLogDtoSet =
-                    sensorLogService.findLogsByDetectorLogId(detectorUnitLog.getId()).stream()
-                    .map(SensorLogFactory::mapEntityToDto)
-                    .collect(Collectors.toSet());
-            dto.setSensorLogSet(sensorLogDtoSet);
-            return dto;
-        });
+        return detectorUnitLogRepository.findAll(page).map(DetectorUnitLogDto::new);
     }
 
-    public void persist(DetectorUnitLogDto detectorUnitLogDto) {
+    public void saveOne(DetectorUnitLogDto detectorUnitLogDto) {
         DetectorUnitLog detectorUnitLog = new DetectorUnitLog(detectorUnitLogDto);
         detectorUnitLog.setTimeRecorded(LocalDateTime.now());
         detectorUnitLog.setSensorLogSet(sensorLogService.mapSensorLogDtoEntitySet(detectorUnitLogDto.getSensorLogSet(),

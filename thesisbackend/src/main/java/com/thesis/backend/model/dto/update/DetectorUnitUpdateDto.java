@@ -1,7 +1,10 @@
 package com.thesis.backend.model.dto.update;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Set;
 
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class DetectorUnitUpdateDto {
     private String macAddress;
     private Set<SensorUpdateDto> sensorUpdateDtoSet;

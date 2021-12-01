@@ -13,7 +13,7 @@ import java.io.Serializable;
 @DiscriminatorColumn(name = "type",
         discriminatorType = DiscriminatorType.STRING)
 @Table(name = "sensor_log")
-public class SensorLog implements Serializable {
+public abstract class SensorLog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")

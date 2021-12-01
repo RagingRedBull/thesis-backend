@@ -1,15 +1,13 @@
 package com.thesis.backend.model.dto;
 
-import com.thesis.backend.model.entity.DetectorUnit;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.thesis.backend.model.entity.Floor;
 
-import java.util.Set;
-
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class FloorDto {
     private int id;
     private String name;
     private String description;
-    private Set<DetectorUnit> associatedDetectorUnitSet;
 
     public FloorDto(Floor entity){
         this.id = entity.getId();
@@ -43,12 +41,4 @@ public class FloorDto {
         return this;
     }
 
-    public Set<DetectorUnit> getAssociatedDetectorUnitSet() {
-        return associatedDetectorUnitSet;
-    }
-
-    public FloorDto setAssociatedDetectorUnitSet(Set<DetectorUnit> associatedDetectorUnitSet) {
-        this.associatedDetectorUnitSet = associatedDetectorUnitSet;
-        return this;
-    }
 }

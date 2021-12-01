@@ -9,7 +9,11 @@ import com.thesis.backend.model.entity.logs.MqSensorLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 
 public class SensorLogFactory {
-    public static SensorLog mapDtoToEntity(SensorLogDto dto, DetectorUnitLog detectorUnitLog){
+    public SensorLogFactory() {
+        //default empty
+    }
+
+    public SensorLog mapDtoToEntity(SensorLogDto dto, DetectorUnitLog detectorUnitLog){
         SensorLog log = null;
         if(dto instanceof DhtSensorLogDto){
             DhtSensorLog dhtSensorLog = new DhtSensorLog(dto, detectorUnitLog);
@@ -24,7 +28,7 @@ public class SensorLogFactory {
         return log;
     }
 
-    public static SensorLogDto mapEntityToDto(SensorLog log) {
+    public SensorLogDto mapEntityToDto(SensorLog log) {
         SensorLogDto dto = null;
         if(log instanceof DhtSensorLog) {
             DhtSensorLogDto dhtSensorLogDto = new DhtSensorLogDto(log);
