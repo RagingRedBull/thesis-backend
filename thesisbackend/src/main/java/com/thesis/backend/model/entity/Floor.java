@@ -1,7 +1,7 @@
 package com.thesis.backend.model.entity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "floors")
@@ -14,7 +14,7 @@ public class Floor {
     @Column(name = "description", length = 20)
     private String description;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "associatedFloor")
-    private List<DetectorUnit> associatedDetectorUnitList;
+    private Set<DetectorUnit> associatedDetectorUnitSet;
 
     public Floor() {
     }
@@ -43,11 +43,21 @@ public class Floor {
         this.description = description;
     }
 
-    public List<DetectorUnit> getAssociatedDetectorUnitList() {
-        return associatedDetectorUnitList;
+    public Set<DetectorUnit> getAssociatedDetectorUnitSet() {
+        return associatedDetectorUnitSet;
     }
 
-    public void setAssociatedDetectorUnitList(List<DetectorUnit> associatedDetectorUnitList) {
-        this.associatedDetectorUnitList = associatedDetectorUnitList;
+    public void setAssociatedDetectorUnitSet(Set<DetectorUnit> associatedDetectorUnitSet) {
+        this.associatedDetectorUnitSet = associatedDetectorUnitSet;
+    }
+
+    @Override
+    public String toString() {
+        return "Floor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", associatedDetectorUnitSet=" + associatedDetectorUnitSet +
+                '}';
     }
 }

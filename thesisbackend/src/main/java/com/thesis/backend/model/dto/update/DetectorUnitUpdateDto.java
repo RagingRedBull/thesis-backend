@@ -1,9 +1,10 @@
-package com.thesis.backend.model.dto.detector;
+package com.thesis.backend.model.dto.update;
 
-import com.thesis.backend.model.dto.sensor.SensorUpdateDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Set;
 
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class DetectorUnitUpdateDto {
     private String macAddress;
     private Set<SensorUpdateDto> sensorUpdateDtoSet;

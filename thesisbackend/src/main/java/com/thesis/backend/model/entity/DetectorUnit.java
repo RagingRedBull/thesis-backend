@@ -1,11 +1,13 @@
 package com.thesis.backend.model.entity;
 
+import org.springframework.data.domain.Persistable;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "detector_unit")
-public class DetectorUnit {
+public class DetectorUnit implements Persistable<String> {
     @Id
     @Column(name = "mac_address", length = 17, nullable = false)
     private String macAddress;
@@ -27,6 +29,9 @@ public class DetectorUnit {
     )
     private Set<Sensor> associatedSensorSet;
 
+    @Transient
+    private boolean isUpdate;
+
     public DetectorUnit() {
     }
 
@@ -35,12 +40,26 @@ public class DetectorUnit {
         this.ipV4 = ipv4;
     }
 
-    public String getMacAddress() {
+    @Override
+    public String getId() {
         return macAddress;
+    }
+
+    @Override
+    public boolean isNew() {
+        return !isUpdate;
     }
 
     public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
+    }
+
+    public String getIpV4() {
+        return ipV4;
+    }
+
+    public void setIpV4(String ipV4) {
+        this.ipV4 = ipV4;
     }
 
     public String getName() {
@@ -75,19 +94,33 @@ public class DetectorUnit {
         this.associatedFloor = associatedFloor;
     }
 
-    public String getIpV4() {
-        return ipV4;
-    }
-
-    public void setIpV4(String ipV4) {
-        this.ipV4 = ipV4;
-    }
-
     public Set<Sensor> getAssociatedSensorSet() {
         return associatedSensorSet;
     }
 
     public void setAssociatedSensorSet(Set<Sensor> associatedSensorSet) {
         this.associatedSensorSet = associatedSensorSet;
+    }
+
+    public void setUpdate(boolean update) {
+        isUpdate = update;
+    }
+
+    @PrePersist
+    @PostLoad
+    void markAsUpdate() {
+        this.isUpdate = true;
+    }
+    @Override
+    public String toString() {
+        return "DetectorUnit{" +
+                "macAddress='" + macAddress + '\'' +
+                ", ipV4='" + ipV4 + '\'' +
+                ", name='" + name + '\'' +
+                ", xpos=" + xpos +
+                ", ypos=" + ypos +
+                ", associatedFloor=" + associatedFloor +
+                ", associatedSensorSet=" + associatedSensorSet +
+                '}';
     }
 }

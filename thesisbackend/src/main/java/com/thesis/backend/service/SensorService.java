@@ -1,9 +1,10 @@
 package com.thesis.backend.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thesis.backend.model.dto.update.SensorUpdateDto;
 import com.thesis.backend.model.entity.Sensor;
 import com.thesis.backend.repository.SensorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,18 +13,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class SensorService {
-    private SensorRepository sensorRepository;
+    private final Logger logger = LoggerFactory.getLogger(SensorService.class);
+    private final SensorRepository sensorRepository;
 
     public SensorService(SensorRepository sensorRepository) {
         this.sensorRepository = sensorRepository;
     }
 
-    public String serializeListOfIds(Set<Sensor> sensorList) throws JsonProcessingException {
-        List<Integer> sensorIdList = sensorList.stream().map(Sensor::getId).collect(Collectors.toList());
-        return new ObjectMapper().writeValueAsString(sensorIdList);
+    public Set<SensorUpdateDto> buildSensorSetUpdateDto(Set<Sensor> sensorSet, boolean toEnable) {
+        Set<SensorUpdateDto> sensorUpdateDtoSet = sensorSet.stream()
+                .map(sensor -> new SensorUpdateDto(sensor.getId(), toEnable))
+                .collect(Collectors.toSet());
+        logger.info(sensorUpdateDtoSet.toString());
+        return sensorUpdateDtoSet;
     }
-
-    public List<Sensor> getAllSensorsInList(List<Integer> sensorIdLIst){
+    public Set<Sensor> getAllSensorsInList(List<Integer> sensorIdLIst){
        return sensorRepository.findByIdIn(sensorIdLIst);
     }
 }

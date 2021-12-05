@@ -1,9 +1,13 @@
 package com.thesis.backend.model.dto.detector;
 
-import com.thesis.backend.model.entity.DetectorUnit;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class DetectorUnitDto {
+    @JsonProperty(required = true)
     private String macAddress;
+    @JsonProperty(required = true)
     private String ipV4;
     private String name;
     private int xpos;
@@ -11,12 +15,6 @@ public class DetectorUnitDto {
 
     public DetectorUnitDto(){
         //Default Empty
-    }
-
-    public DetectorUnitDto(DetectorUnit entity){
-        this.macAddress = entity.getMacAddress();
-        this.name = entity.getName();
-        this.xpos = entity.getXpos();
     }
 
     public DetectorUnitDto(String macAddress, String ipV4) {
@@ -63,5 +61,4 @@ public class DetectorUnitDto {
     public void setYpos(int ypos) {
         this.ypos = ypos;
     }
-
 }

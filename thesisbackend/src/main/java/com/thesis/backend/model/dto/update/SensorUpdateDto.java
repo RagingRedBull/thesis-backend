@@ -1,8 +1,14 @@
-package com.thesis.backend.model.dto.sensor;
+package com.thesis.backend.model.dto.update;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class SensorUpdateDto {
     private int sensorId;
     private boolean toEnable;
+
+    private SensorUpdateDto() {
+    }
 
     public SensorUpdateDto(int sensorId, boolean toEnable) {
         this.sensorId = sensorId;
@@ -25,12 +31,11 @@ public class SensorUpdateDto {
         this.toEnable = toEnable;
     }
 
-
     @Override
     public String toString() {
         return "SensorUpdateDto{" +
-                "sensorId=" + sensorId +
-                ", toEnable=" + toEnable +
+                "\nsensorId=" + sensorId +
+                ",\n toEnable=" + toEnable +
                 '}';
     }
 }
