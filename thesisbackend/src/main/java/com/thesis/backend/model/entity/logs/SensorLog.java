@@ -28,7 +28,7 @@ public abstract class SensorLog implements Serializable {
     @JoinColumn(name = "detector_unit_log_id")
     private DetectorUnitLog detectorUnitLog;
 
-    private SensorLog() {
+    protected SensorLog() {
         // Default Empty
     }
 

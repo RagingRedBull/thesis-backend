@@ -10,9 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashSet;
@@ -22,8 +22,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {SensorServiceTestConfig.class})
-@WebAppConfiguration()
+@Import(SensorServiceTestConfig.class)
+@WebMvcTest(SensorService.class)
 class SensorServiceTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -35,7 +35,7 @@ class SensorServiceTest {
     }
 
     @Test
-    void given_one_sensor_when_buildingSensorSetUpdateDto_then_return_SensorUpdateDtoSet_with_one_element() {
+    void givenOneSensor_whenBuildingSensorSetUpdateDto_thenReturnSensorUpdateDtoSetWithOneElement() {
         Set<SensorUpdateDto> sensorUpdateDtoSet = sensorService.buildSensorSetUpdateDto(buildSensorSet(
                         buildSensorDetails(1, SensorType.DHT, SensorName.DHT11)
                 ), true
@@ -47,7 +47,7 @@ class SensorServiceTest {
     }
 
     @Test
-    void given_multiple_sensors_when_buildingSensorSetUpdateDto_then_return_SensorUpdateDtoSet_with_multiple_elements() {
+    void givenMultipleSensors_whenBuildingSensorSetUpdateDto_thenReturnSensorUpdateDtoSetWithMultipleElements() {
         Set<SensorUpdateDto> sensorUpdateDtoSet = sensorService.buildSensorSetUpdateDto(buildSensorSet(
                         buildSensorDetails(1, SensorType.DHT, SensorName.DHT11),
                         buildSensorDetails(2, SensorType.DHT, SensorName.DHT22),

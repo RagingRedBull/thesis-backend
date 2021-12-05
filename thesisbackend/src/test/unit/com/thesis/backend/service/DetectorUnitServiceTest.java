@@ -1,14 +1,21 @@
 package com.thesis.backend.service;
 
-import com.thesis.backend.config.DetectorUnitServiceConfig;
+import com.thesis.backend.config.DetectorUnitServiceTestConfig;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 @ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = {DetectorUnitServiceConfig.class})
-@WebAppConfiguration
+@Import(DetectorUnitServiceTestConfig.class)
+@WebMvcTest(DetectorUnitService.class)
 class DetectorUnitServiceTest {
+    @Autowired
+    private DetectorUnitService detectorUnitService;
 
+    @Test
+    void given() {
+    }
 }

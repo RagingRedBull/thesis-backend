@@ -1,14 +1,11 @@
 package com.thesis.backend.service;
 
-import com.thesis.backend.model.dto.detector.DetectorUnitDto;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
-import com.thesis.backend.model.util.mapper.FloorMapper;
+import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.model.util.mapper.FloorEntityMapper;
 import com.thesis.backend.repository.FloorRespository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FloorService {
@@ -18,21 +15,11 @@ public class FloorService {
         this.floorRespository = floorRespository;
     }
 
-    public List<Floor> findAll(){
-        return floorRespository.findAll();
+    public Floor saveOne(FloorDto dto) {
+        EntityMapper<Floor, FloorDto> mapper = new FloorEntityMapper();
+        Floor entity = mapper.mapToEntity(dto);
+        entity = floorRespository.saveAndFlush(entity);
+        return entity;
     }
 
-    public List<FloorDto> findAllAsDto(){
-        FloorMapper mapper = new FloorMapper();
-        return findAll().stream()
-                .map(mapper::mapToDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<FloorDto> convertListToDto(List<Floor> floorList, List<DetectorUnitDto> detectorUnitDtoList){
-        FloorMapper mapper = new FloorMapper();
-        return floorList.stream()
-                .map(mapper::mapToDto)
-                .collect(Collectors.toList());
-    }
 }

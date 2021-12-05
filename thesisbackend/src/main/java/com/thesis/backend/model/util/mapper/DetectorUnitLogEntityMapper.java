@@ -3,9 +3,9 @@ package com.thesis.backend.model.util.mapper;
 import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 
-public class DetectorUnitLogMapper implements Mapper<DetectorUnitLog, DetectorUnitLogDto> {
+public class DetectorUnitLogEntityMapper implements EntityMapper<DetectorUnitLog, DetectorUnitLogDto> {
 
-    public DetectorUnitLogMapper() {
+    public DetectorUnitLogEntityMapper() {
     }
 
 

@@ -2,7 +2,7 @@ package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
-import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
+import com.thesis.backend.model.util.mapper.DetectorUnitLogEntityMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class DetectorUnitLogService {
     }
 
     public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
-        DetectorUnitLogMapper mapper = new DetectorUnitLogMapper();
+        DetectorUnitLogEntityMapper mapper = new DetectorUnitLogEntityMapper();
         return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);
     }
 
@@ -42,7 +42,7 @@ public class DetectorUnitLogService {
         logger.info("INSERTING NEW LOG");
         logger.info("Mac Address: " + detectorUnitLog.getMacAddress());
         logger.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
-
-        detectorUnitLogRepository.save(detectorUnitLog);
+        detectorUnitLog = detectorUnitLogRepository.save(detectorUnitLog);
+        logger.info("ROW ID: " + detectorUnitLog.getId());
     }
 }

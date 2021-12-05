@@ -1,11 +1,13 @@
 package com.thesis.backend.model.entity;
 
+import org.springframework.data.domain.Persistable;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "detector_unit")
-public class DetectorUnit {
+public class DetectorUnit implements Persistable<String> {
     @Id
     @Column(name = "mac_address", length = 17, nullable = false)
     private String macAddress;
@@ -27,6 +29,9 @@ public class DetectorUnit {
     )
     private Set<Sensor> associatedSensorSet;
 
+    @Transient
+    private boolean isUpdate;
+
     public DetectorUnit() {
     }
 
@@ -35,8 +40,14 @@ public class DetectorUnit {
         this.ipV4 = ipv4;
     }
 
-    public String getMacAddress() {
+    @Override
+    public String getId() {
         return macAddress;
+    }
+
+    @Override
+    public boolean isNew() {
+        return !isUpdate;
     }
 
     public void setMacAddress(String macAddress) {
@@ -91,6 +102,15 @@ public class DetectorUnit {
         this.associatedSensorSet = associatedSensorSet;
     }
 
+    public void setUpdate(boolean update) {
+        isUpdate = update;
+    }
+
+    @PrePersist
+    @PostLoad
+    void markAsUpdate() {
+        this.isUpdate = true;
+    }
     @Override
     public String toString() {
         return "DetectorUnit{" +

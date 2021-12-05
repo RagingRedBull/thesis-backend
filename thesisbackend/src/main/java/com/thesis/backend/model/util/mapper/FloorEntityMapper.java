@@ -3,7 +3,7 @@ package com.thesis.backend.model.util.mapper;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 
-public class FloorMapper implements Mapper<Floor, FloorDto> {
+public class FloorEntityMapper implements EntityMapper<Floor, FloorDto> {
 
     @Override
     public FloorDto mapToDto(Floor entity) {

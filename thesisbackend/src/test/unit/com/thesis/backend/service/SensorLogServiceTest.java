@@ -11,19 +11,22 @@ import com.thesis.backend.model.enums.SensorType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {SensorLogServiceTestConfig.class})
-@WebAppConfiguration(value = "")
+@Import(SensorLogServiceTestConfig.class)
+@WebMvcTest(SensorLogService.class)
 class SensorLogServiceTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -31,7 +34,7 @@ class SensorLogServiceTest {
     private SensorLogService sensorLogService;
 
     @Test
-    void given_one_SensorLogDto_when_mapSensorLogDtoToEntity_then_map_one_entity() {
+    void givenOneSensorLogDto_whenMapSensorLogDtoToEntity_thenMapOneEntity() {
         DetectorUnitLog detectorUnitLog = buildDetectorUnitLog("E8:DB:84:E5:06:5B");
         Set<SensorLogDto> sensorLogDtoSet = buildSensorLogDtoSet(
                 buildDhtSensorLogDto(1,SensorName.DHT11, SensorType.DHT, 1f, 1f)
@@ -48,7 +51,7 @@ class SensorLogServiceTest {
     }
 
     @Test
-    void given_multiple_SensorLogDto_when_mapSensorLogDtoToEntity_then_map_multiple_entity() {
+    void givenMultipleSensorLogDto_whenMapSensorLogDtoToEntity_thenMapMultipleEntity() {
         DetectorUnitLog detectorUnitLog = buildDetectorUnitLog("E8:DB:84:E5:06:5B");
         Set<SensorLogDto> sensorLogDtoSet = buildSensorLogDtoSet(
                 buildDhtSensorLogDto(1L,SensorName.DHT11, SensorType.DHT, 1F, 1F),

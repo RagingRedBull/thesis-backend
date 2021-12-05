@@ -2,6 +2,7 @@ package com.thesis.backend.model.entity.logs;
 
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -15,6 +16,11 @@ public class DhtSensorLog extends SensorLog {
     @Column(name = "humidity")
     private float humidity;
 
+    private DhtSensorLog() {
+
+    }
+
+    @PersistenceConstructor
     public DhtSensorLog(long id, SensorType type, SensorName name) {
         super(id, name, type);
     }

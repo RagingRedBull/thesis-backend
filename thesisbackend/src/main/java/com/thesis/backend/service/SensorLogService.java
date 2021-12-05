@@ -3,7 +3,7 @@ package com.thesis.backend.service;
 import com.thesis.backend.model.dto.sensor.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
-import com.thesis.backend.model.util.mapper.SensorLogMapper;
+import com.thesis.backend.model.util.mapper.SensorLogEntityMapper;
 import com.thesis.backend.repository.SensorLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class SensorLogService {
         return sensorLogRepository.findByDetectorUnitLog(id);
     }
     public Set<SensorLog> mapSensorLogDtoEntitySet(Set<SensorLogDto> sensorLogDtoSet, DetectorUnitLog detectorUnitLog){
-        SensorLogMapper mapper = new SensorLogMapper();
+        SensorLogEntityMapper mapper = new SensorLogEntityMapper();
         return sensorLogDtoSet.stream()
                 .map(sensorLogDto -> {
                     SensorLog log = mapper.mapToEntity(sensorLogDto);
@@ -38,7 +38,7 @@ public class SensorLogService {
     }
 
     public Set<SensorLogDto> mapSensorLogEntityToDto(List<SensorLog> sensorLogSet) {
-        SensorLogMapper mapper = new SensorLogMapper();
+        SensorLogEntityMapper mapper = new SensorLogEntityMapper();
         return sensorLogSet.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
