@@ -6,6 +6,7 @@ import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.SensorLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,14 +30,14 @@ public class LogsController {
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllLogsPaged(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber, @RequestParam int pageSize) {
         logger.info("GETTING PAGE # " + pageNumber + " WITH SIZE OF " + pageSize);
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "timeRecorded"));
         return new ResponseEntity<>(detectorUnitLogService.findDetectorLogsByPage(page), HttpStatus.OK);
     }
 
     @GetMapping(path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getSensorsOfDetectorUnit(@RequestParam long detectorUnitLogId) {
+    public ResponseEntity<Set<SensorLogDto>> getSensorsOfDetectorUnit(@RequestParam long detectorUnitLogId) {
         logger.info("GETTING SENSOR INFO of DetectorLog: " + detectorUnitLogId);
         Set<SensorLogDto> sensorLogDtos =
                 sensorLogService.mapSensorLogEntityToDto(sensorLogService.findLogsByDetectorLogId(detectorUnitLogId));
@@ -44,10 +45,9 @@ public class LogsController {
     }
 
     @PostMapping(path = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
+    public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
         logger.info(detectorUnitLogDto.toString());
         detectorUnitLogService.saveOne(detectorUnitLogDto);
-        return new ResponseEntity<>("LOGGED!", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

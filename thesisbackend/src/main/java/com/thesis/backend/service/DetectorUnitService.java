@@ -96,7 +96,6 @@ public class DetectorUnitService {
                 bodySpec.bodyValue(jsonObjectWriter.writeValueAsString(sensorSet));
         WebClient.ResponseSpec responseSpec = headersSpec.header(
                         HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .ifNoneMatch("*")
                 .ifModifiedSince(ZonedDateTime.now())

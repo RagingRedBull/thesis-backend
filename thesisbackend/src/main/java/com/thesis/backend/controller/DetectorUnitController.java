@@ -10,6 +10,7 @@ import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.SensorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,14 +34,14 @@ public class DetectorUnitController {
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllDetectorInfoByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    public ResponseEntity<Page<DetectorUnitDto>> getAllDetectorInfoByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
         logger.info("RETURNING ALL DETECTOR");
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
         return new ResponseEntity<>(detectorUnitService.findDetectorUnitsByPage(page), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{macAddress}")
-    public ResponseEntity<?> getDetectorInfo(@PathVariable String macAddress) throws JsonProcessingException {
+    public ResponseEntity<String> getSensorSetOfDetectorUnit(@PathVariable String macAddress) throws JsonProcessingException {
         logger.info(macAddress);
         Optional<DetectorUnit> entity = detectorUnitService.findOneByMacAddress(macAddress);
         if (entity.isEmpty()) {
@@ -50,14 +51,14 @@ public class DetectorUnitController {
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
+    public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
         EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
         DetectorUnit entity = detectorUnitService.saveOne(detectorUnitDto);
         return new ResponseEntity<>(mapper.mapToDto(entity).getMacAddress(), HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
+    public ResponseEntity<String> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
         Optional<DetectorUnit> entityWrapper =
                 detectorUnitService.findOneByMacAddress(detectorUnitUpdateDto.getMacAddress());
         if (entityWrapper.isEmpty()) {
