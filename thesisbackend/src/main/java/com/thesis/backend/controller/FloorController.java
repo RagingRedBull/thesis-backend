@@ -1,11 +1,15 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.FloorDto;
+import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.service.FloorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/floor")
@@ -17,16 +21,27 @@ public class FloorController {
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<?> getAll(@RequestParam int pageNumber, @RequestParam int pageSize){
+    public ResponseEntity<?> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
         return new ResponseEntity<>("eheh", HttpStatus.OK);
     }
+
     @GetMapping(path = "/{floorId}", produces = "application/json")
     public ResponseEntity<?> getOne(int floorId) {
-        return new ResponseEntity<>("single floor", HttpStatus.OK);
+        Optional<Floor> floor = floorService.findOnById(floorId);
+        if (floor.isEmpty()) {
+            return new ResponseEntity<>("Floor object with id " + floorId
+                    + " can not be found.", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(floor.get(), HttpStatus.OK);
+        }
     }
 
-    @PostMapping(path = "/new", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestBody FloorDto floorDto) {
+    @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addFloor(@RequestPart MultipartFile file, @RequestPart FloorDto floorDto) {
+        if (file.isEmpty() || null == floorDto) {
+            return new ResponseEntity<>("Missing Parameter", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
         return null;
     }
 }

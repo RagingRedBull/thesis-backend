@@ -46,8 +46,7 @@ public class DetectorUnitService {
     }
 
     @Transactional
-    public DetectorUnit saveOne(DetectorUnitDto detectorUnitDto) {
-        DetectorUnit detectorUnit = new DetectorUnit(detectorUnitDto.getMacAddress(), detectorUnitDto.getIpV4());
+    public DetectorUnit saveOne(DetectorUnit detectorUnit) {
         return detectorUnitRepository.saveAndFlush(detectorUnit);
     }
 
