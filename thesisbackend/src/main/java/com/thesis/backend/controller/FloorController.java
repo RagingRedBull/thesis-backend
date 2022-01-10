@@ -3,12 +3,14 @@ package com.thesis.backend.controller;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.service.FloorService;
+import org.apache.tika.Tika;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
@@ -37,11 +39,13 @@ public class FloorController {
     }
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestPart MultipartFile file, @RequestPart FloorDto floorDto) {
-        if (file.isEmpty() || null == floorDto) {
-            return new ResponseEntity<>("Missing Parameter", HttpStatus.UNPROCESSABLE_ENTITY);
+    public ResponseEntity<?> addFloor(@RequestPart MultipartFile file, @RequestPart FloorDto floorDto) throws IOException {
+        Tika tika = new Tika();
+        if (tika.detect(file.getInputStream()).contains("images/")){
+            
+        } else {
+            return new ResponseEntity<>("Invalid Parameter", HttpStatus.UNPROCESSABLE_ENTITY);
         }
-
         return null;
     }
 }
