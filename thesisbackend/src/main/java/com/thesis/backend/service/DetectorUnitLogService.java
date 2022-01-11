@@ -30,7 +30,7 @@ public class DetectorUnitLogService {
         return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);
     }
 
-    public void saveOne(DetectorUnitLogDto detectorUnitLogDto) {
+    public DetectorUnitLog saveOne(DetectorUnitLogDto detectorUnitLogDto) {
         DetectorUnitLog detectorUnitLog = new DetectorUnitLog(detectorUnitLogDto);
         detectorUnitLog.setTimeRecorded(LocalDateTime.now());
         detectorUnitLog.setSensorLogSet(sensorLogService.mapSensorLogDtoEntitySet(detectorUnitLogDto.getSensorLogSet(),
@@ -44,5 +44,6 @@ public class DetectorUnitLogService {
         logger.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
         detectorUnitLog = detectorUnitLogRepository.save(detectorUnitLog);
         logger.info("ROW ID: " + detectorUnitLog.getId());
+        return detectorUnitLog;
     }
 }

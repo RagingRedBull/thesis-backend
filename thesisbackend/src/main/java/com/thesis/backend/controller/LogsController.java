@@ -2,6 +2,7 @@ package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.sensor.SensorLogDto;
+import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.SensorLogService;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class LogsController {
     @PostMapping(path = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
         logger.info(detectorUnitLogDto.toString());
-        detectorUnitLogService.saveOne(detectorUnitLogDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        DetectorUnitLog log = detectorUnitLogService.saveOne(detectorUnitLogDto);
+        return new ResponseEntity<>("Uploaded!" + "\n" + "Row ID: " + log.getId(), HttpStatus.OK);
     }
 }

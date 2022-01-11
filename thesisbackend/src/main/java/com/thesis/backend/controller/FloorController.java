@@ -41,10 +41,12 @@ public class FloorController {
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addFloor(@RequestPart MultipartFile file, @RequestPart FloorDto floorDto) throws IOException {
         Tika tika = new Tika();
-        if (tika.detect(file.getInputStream()).contains("images/")){
-            
+        if (file != null && floorDto != null){
+            if(tika.detect(file.getInputStream()).contains("images/")){
+
+            }
         } else {
-            return new ResponseEntity<>("Invalid Parameter", HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>("Invalid Parameter/s", HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return null;
     }

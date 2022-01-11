@@ -5,8 +5,6 @@ import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorEntityMapper;
 import com.thesis.backend.repository.FloorRespository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,8 +12,7 @@ import java.util.Optional;
 
 @Service
 public class FloorService {
-    @Value("${}")
-    private String dataDirPath;
+
     private FloorRespository floorRespository;
 
     public FloorService(FloorRespository floorRespository) {

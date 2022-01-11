@@ -47,31 +47,31 @@ public class LogsControllerIntegrationTest {
                 .andExpect(jsonPath("$.pageable.pageSize").value(is(10)));
     }
 
-    @Test
-    public void givenDetectorUnitLogId_whenGetSensorOfDetectorUnit_thenReturnSensorLogDtoAndStatusIsOk() throws Exception {
-        params = new LinkedMultiValueMap<>();
-        params.add("detectorUnitLogId", String.valueOf(1000L));
-        mockMvc.perform(get("/log/sensor")
-                        .params(params))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").value(hasSize(3)))
-                .andExpect(jsonPath("$.[0].id").value(is(2999)))
-                .andExpect(jsonPath("$.[0].type").value(is("DHT")))
-                .andExpect(jsonPath("$.[0].name").value(is("DHT-22")))
-                .andExpect(jsonPath("$.[0].temperature").value(is(33.3)))
-                .andExpect(jsonPath("$.[0].humidity").value(is(68.8)))
-                .andExpect(jsonPath("$.[1].id").value(is(2998)))
-                .andExpect(jsonPath("$.[1].type").value(is("DHT")))
-                .andExpect(jsonPath("$.[1].name").value(is("DHT-11")))
-                .andExpect(jsonPath("$.[1].temperature").value(is(33.3)))
-                .andExpect(jsonPath("$.[1].humidity").value(is(67.0)))
-                .andExpect(jsonPath("$.[2].id").value(is(3000)))
-                .andExpect(jsonPath("$.[2].type").value(is("MQ")))
-                .andExpect(jsonPath("$.[2].name").value(is("MQ-2")))
-                .andExpect(jsonPath("$.[2].mqValue").value(is(775)));
-    }
+//    @Test
+//    public void givenDetectorUnitLogId_whenGetSensorOfDetectorUnit_thenReturnSensorLogDtoAndStatusIsOk() throws Exception {
+//        params = new LinkedMultiValueMap<>();
+//        params.add("detectorUnitLogId", String.valueOf(1000L));
+//        mockMvc.perform(get("/log/sensor")
+//                        .params(params))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$").isArray())
+//                .andExpect(jsonPath("$").value(hasSize(3)))
+//                .andExpect(jsonPath("$.[0].id").value(is(2999)))
+//                .andExpect(jsonPath("$.[0].type").value(is("DHT")))
+//                .andExpect(jsonPath("$.[0].name").value(is("DHT-22")))
+//                .andExpect(jsonPath("$.[0].temperature").value(is(33.3)))
+//                .andExpect(jsonPath("$.[0].humidity").value(is(68.8)))
+//                .andExpect(jsonPath("$.[1].id").value(is(2998)))
+//                .andExpect(jsonPath("$.[1].type").value(is("DHT")))
+//                .andExpect(jsonPath("$.[1].name").value(is("DHT-11")))
+//                .andExpect(jsonPath("$.[1].temperature").value(is(33.3)))
+//                .andExpect(jsonPath("$.[1].humidity").value(is(67.0)))
+//                .andExpect(jsonPath("$.[2].id").value(is(3000)))
+//                .andExpect(jsonPath("$.[2].type").value(is("MQ")))
+//                .andExpect(jsonPath("$.[2].name").value(is("MQ-2")))
+//                .andExpect(jsonPath("$.[2].mqValue").value(is(775)));
+//    }
     @Test
     public void givenDetectorUnitLogDto_whenUploadLog_thenPersistOne() {
 
