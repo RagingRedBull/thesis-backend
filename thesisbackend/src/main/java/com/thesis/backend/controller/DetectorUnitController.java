@@ -24,7 +24,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/detector")
 public class DetectorUnitController {
-    Logger logger = LoggerFactory.getLogger(DetectorUnitController.class);
+    private final Logger logger = LoggerFactory.getLogger(DetectorUnitController.class);
     private final DetectorUnitService detectorUnitService;
     private final SensorService sensorService;
 

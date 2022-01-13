@@ -1,18 +1,21 @@
 package com.thesis.backend.config;
 
-import org.springframework.web.WebApplicationInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.annotation.PostConstruct;
 
-public class AppInitializer implements WebApplicationInitializer {
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        String osName = System.getProperty("os.name");
-        if (osName.contains("Linux")){
-            servletContext.setInitParameter("spring.profiles.active", "linux");
-        } else {
-            servletContext.setInitParameter("spring.profiles.active", "windows");
-        }
+@Configuration
+public class AppInitializer{
+    @Autowired
+    private Environment environment;
+    private final Logger logger = LoggerFactory.getLogger(AppInitializer.class);
+
+    @PostConstruct
+    public void init() {
+        logger.info(environment.getProperty("image.data-dir"));
     }
 }

@@ -4,6 +4,9 @@ import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.service.FloorService;
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +19,19 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/floor")
 public class FloorController {
-    private FloorService floorService;
+    private final Logger logger = LoggerFactory.getLogger(FloorController.class);
+    private final FloorService floorService;
+    private final Environment env;
 
-    public FloorController(FloorService floorService) {
+    public FloorController(FloorService floorService, Environment environment){
         this.floorService = floorService;
+        this.env = environment;
     }
 
     @GetMapping(path = "/all")
     public ResponseEntity<?> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        return new ResponseEntity<>("eheh", HttpStatus.OK);
+        logger.info("Getting Floors with Page Size: " + pageSize + " of Page: " + (pageNumber-1));
+        return new ResponseEntity<>(env.getProperty("image.data-dir"), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{floorId}", produces = "application/json")
@@ -48,6 +55,6 @@ public class FloorController {
         } else {
             return new ResponseEntity<>("Invalid Parameter/s", HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return null;
+        return new ResponseEntity<>(env.getProperty(""), HttpStatus.OK);
     }
 }
