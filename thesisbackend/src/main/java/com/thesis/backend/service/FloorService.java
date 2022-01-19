@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 @Service
-public class FloorService {
+public class FloorService implements EntityService<Floor, FloorDto>{
 
     private FloorRespository floorRespository;
 
@@ -19,15 +19,24 @@ public class FloorService {
         this.floorRespository = floorRespository;
     }
 
-    public Optional<Floor> findOnById(int id) {
-         return floorRespository.findById(id);
+    @Override
+    public Optional<Floor> findOneByPrimaryKey(FloorDto floorDto) {
+        return floorRespository.findById(floorDto.getId());
     }
 
-    public Floor saveOne(MultipartFile file, FloorDto dto) {
+    @Override
+    public Floor saveOne(FloorDto floorDto) {
         EntityMapper<Floor, FloorDto> mapper = new FloorEntityMapper();
-        Floor entity = mapper.mapToEntity(dto);
+        Floor entity = mapper.mapToEntity(floorDto);
         entity = floorRespository.saveAndFlush(entity);
         return entity;
     }
 
+    public Optional<Floor> findOnById(int id) {
+         return floorRespository.findById(id);
+    }
+
+    private String saveFile(MultipartFile floorPlan) {
+        return null;
+    }
 }

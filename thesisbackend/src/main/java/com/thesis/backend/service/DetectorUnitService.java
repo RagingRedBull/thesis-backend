@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
@@ -31,8 +30,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
-public class DetectorUnitService {
+public class DetectorUnitService implements EntityService<DetectorUnit, DetectorUnitDto> {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitService.class);
+    private final EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
     private final DetectorUnitRepository detectorUnitRepository;
     private final SensorService sensorService;
 
@@ -41,17 +41,17 @@ public class DetectorUnitService {
         this.sensorService = sensorService;
     }
 
-    public Optional<DetectorUnit> findOneByMacAddress(String macAddress) {
-        return detectorUnitRepository.findById(macAddress);
+    @Override
+    public Optional<DetectorUnit> findOneByPrimaryKey(DetectorUnitDto detectorUnitDto) {
+        return detectorUnitRepository.findById(detectorUnitDto.getMacAddress());
     }
 
-    @Transactional
-    public DetectorUnit saveOne(DetectorUnit detectorUnit) {
-        return detectorUnitRepository.saveAndFlush(detectorUnit);
+    @Override
+    public DetectorUnit saveOne(DetectorUnitDto detectorUnitDto) {
+        return detectorUnitRepository.saveAndFlush(mapper.mapToEntity(detectorUnitDto));
     }
 
     public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
-        EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
 
@@ -82,6 +82,7 @@ public class DetectorUnitService {
                 writer.writeValueAsString(sensorService.buildSensorSetUpdateDto(
                         detectorUnit.getAssociatedSensorSet(), true));
     }
+
     private boolean contactDetectorUnitToUpdate(DetectorUnit detectorUnit, Set<SensorUpdateDto> sensorSet) throws JsonProcessingException {
         ObjectMapper jsonObjectMapper = new ObjectMapper();
         ObjectWriter jsonObjectWriter = jsonObjectMapper.writer().withRootName("sensorSet");
