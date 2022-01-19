@@ -3,11 +3,12 @@ package com.thesis.backend.model.entity;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "detector_unit")
-public class DetectorUnit implements Persistable<String> {
+public class DetectorUnit implements Persistable<String>, Serializable {
     @Id
     @Column(name = "mac_address", length = 17, nullable = false)
     private String macAddress;
@@ -19,8 +20,6 @@ public class DetectorUnit implements Persistable<String> {
     private int xpos;
     @Column(name = "y_loc")
     private int ypos;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Floor associatedFloor;
     @ManyToMany
     @JoinTable(
             name = "sensors_join_detector_unit",
@@ -28,6 +27,9 @@ public class DetectorUnit implements Persistable<String> {
             inverseJoinColumns = @JoinColumn(name = "sensor_id")
     )
     private Set<Sensor> associatedSensorSet;
+    @ManyToOne
+    @JoinColumn(name = "compartment_id")
+    private Compartment compartment;
 
     @Transient
     private boolean isUpdate;
@@ -86,20 +88,20 @@ public class DetectorUnit implements Persistable<String> {
         this.ypos = ypos;
     }
 
-    public Floor getAssociatedFloor() {
-        return associatedFloor;
-    }
-
-    public void setAssociatedFloor(Floor associatedFloor) {
-        this.associatedFloor = associatedFloor;
-    }
-
     public Set<Sensor> getAssociatedSensorSet() {
         return associatedSensorSet;
     }
 
     public void setAssociatedSensorSet(Set<Sensor> associatedSensorSet) {
         this.associatedSensorSet = associatedSensorSet;
+    }
+
+    public Compartment getCompartment() {
+        return compartment;
+    }
+
+    public void setCompartment(Compartment compartment) {
+        this.compartment = compartment;
     }
 
     public void setUpdate(boolean update) {
@@ -119,8 +121,8 @@ public class DetectorUnit implements Persistable<String> {
                 ", name='" + name + '\'' +
                 ", xpos=" + xpos +
                 ", ypos=" + ypos +
-                ", associatedFloor=" + associatedFloor +
                 ", associatedSensorSet=" + associatedSensorSet +
+                ", compartment=" + compartment +
                 '}';
     }
 }

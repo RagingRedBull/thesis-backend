@@ -1,25 +1,26 @@
 package com.thesis.backend.model.dto.update;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.thesis.backend.model.dto.detector.DetectorUnitDto;
 
 import java.util.Set;
 
 @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class DetectorUnitUpdateDto {
-    private String macAddress;
+    private DetectorUnitDto detectorUnitDto;
     private Set<SensorUpdateDto> sensorUpdateDtoSet;
 
-    public DetectorUnitUpdateDto(String macAddress, Set<SensorUpdateDto> sensorUpdateDtoList) {
-        this.macAddress = macAddress;
-        this.sensorUpdateDtoSet = sensorUpdateDtoList;
+    public DetectorUnitUpdateDto(DetectorUnitDto detectorUnitDto, Set<SensorUpdateDto> sensorUpdateDtoSet) {
+        this.detectorUnitDto = detectorUnitDto;
+        this.sensorUpdateDtoSet = sensorUpdateDtoSet;
     }
 
-    public String getMacAddress() {
-        return macAddress;
+    public DetectorUnitDto getDetectorUnitDto() {
+        return detectorUnitDto;
     }
 
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
+    public void setDetectorUnitDto(DetectorUnitDto detectorUnitDto) {
+        this.detectorUnitDto = detectorUnitDto;
     }
 
     public Set<SensorUpdateDto> getSensorUpdateDtoSet() {

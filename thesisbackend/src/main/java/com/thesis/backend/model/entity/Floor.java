@@ -1,11 +1,12 @@
 package com.thesis.backend.model.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "floors")
-public class Floor {
+public class Floor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -13,9 +14,10 @@ public class Floor {
     private String name;
     @Column(name = "description", length = 20)
     private String description;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "associatedFloor")
-    private Set<DetectorUnit> associatedDetectorUnitSet;
-
+    @Column(name = "image_name", unique = true)
+    private String imageName;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "floor")
+    private Set<Compartment> compartments;
     public Floor() {
     }
 
@@ -43,13 +45,6 @@ public class Floor {
         this.description = description;
     }
 
-    public Set<DetectorUnit> getAssociatedDetectorUnitSet() {
-        return associatedDetectorUnitSet;
-    }
-
-    public void setAssociatedDetectorUnitSet(Set<DetectorUnit> associatedDetectorUnitSet) {
-        this.associatedDetectorUnitSet = associatedDetectorUnitSet;
-    }
 
     @Override
     public String toString() {
@@ -57,7 +52,6 @@ public class Floor {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", associatedDetectorUnitSet=" + associatedDetectorUnitSet +
                 '}';
     }
 }

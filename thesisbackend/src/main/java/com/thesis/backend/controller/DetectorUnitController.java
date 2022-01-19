@@ -10,6 +10,7 @@ import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.SensorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/detector")
 public class DetectorUnitController {
-    Logger logger = LoggerFactory.getLogger(DetectorUnitController.class);
+    private final Logger logger = LoggerFactory.getLogger(DetectorUnitController.class);
     private final DetectorUnitService detectorUnitService;
     private final SensorService sensorService;
 
@@ -33,34 +34,39 @@ public class DetectorUnitController {
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllDetectorInfoByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    public ResponseEntity<Page<DetectorUnitDto>> getAllDetectorInfoByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
         logger.info("RETURNING ALL DETECTOR");
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
         return new ResponseEntity<>(detectorUnitService.findDetectorUnitsByPage(page), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{macAddress}")
-    public ResponseEntity<?> getDetectorInfo(@PathVariable String macAddress) throws JsonProcessingException {
-        logger.info(macAddress);
-        Optional<DetectorUnit> entity = detectorUnitService.findOneByMacAddress(macAddress);
-        if (entity.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> getSensorSetOfDetectorUnit(@RequestParam DetectorUnitDto detectorUnitDto) throws JsonProcessingException {
+        logger.info(detectorUnitDto.getMacAddress());
+        Optional<DetectorUnit> entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto);
+        if (entity.isPresent()) {
+            if (detectorUnitDto.getIpV4().equals(entity.get().getIpV4())) {
+                return new ResponseEntity<>(detectorUnitService.buildSensorSetDto(entity.get()), HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<>(detectorUnitService.buildSensorSetDto(entity.get()), HttpStatus.OK);
+        return new ResponseEntity<>("Detector Unit does not exist.", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
+    public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
         EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
-        DetectorUnit entity = detectorUnitService.saveOne(detectorUnitDto);
-        return new ResponseEntity<>(mapper.mapToDto(entity).getMacAddress(), HttpStatus.CREATED);
+        DetectorUnit entity;
+        Optional<DetectorUnit> optionalDetectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitDto);
+        optionalDetectorUnit.ifPresent(detectorUnit -> detectorUnitDto.setIpV4(detectorUnit.getIpV4()));
+        detectorUnitService.saveOne(detectorUnitDto);
+        return new ResponseEntity<>(detectorUnitDto.toString(), HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
-        Optional<DetectorUnit> entityWrapper =
-                detectorUnitService.findOneByMacAddress(detectorUnitUpdateDto.getMacAddress());
-        if (entityWrapper.isEmpty()) {
+    public ResponseEntity<String> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
+        Optional<DetectorUnit> entity =
+                detectorUnitService.findOneByPrimaryKey(detectorUnitUpdateDto.getDetectorUnitDto());
+        if (entity.isEmpty()) {
             logger.info("ERROR: UNKNOWN MAC ADDRESS");
             return new ResponseEntity<>("UNKNOWN MAC ADDRESS", HttpStatus.NOT_FOUND);
         }
@@ -68,9 +74,9 @@ public class DetectorUnitController {
             logger.info("EMPTY SENSOR LIST");
             return new ResponseEntity<>("EMPTY SENSOR LIST", HttpStatus.EXPECTATION_FAILED);
         }
-        DetectorUnit entity = entityWrapper.get();
-        logger.info("UPDATING DETECTOR UNIT: " + entity.getId());
-        if (detectorUnitService.updateSensorList(entity, detectorUnitUpdateDto.getSensorUpdateDtoSet())
+        DetectorUnit detectorUnit = entity.get();
+        logger.info("UPDATING DETECTOR UNIT: " + detectorUnit.getId());
+        if (detectorUnitService.updateSensorList(detectorUnit, detectorUnitUpdateDto.getSensorUpdateDtoSet())
         ) {
             return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
         }
