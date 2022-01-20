@@ -10,6 +10,7 @@ import com.thesis.backend.model.entity.Sensor;
 import com.thesis.backend.model.util.mapper.DetectorUnitEntityMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.DetectorUnitRepository;
+import com.thesis.backend.service.interfaces.EntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,6 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -73,7 +73,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return isSuccessful;
     }
 
-    public String buildSensorSetDto(DetectorUnit detectorUnit) throws JsonProcessingException {
+    public String buildSensorSetJSON(DetectorUnit detectorUnit) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer().withRootName("sensorSet");
         logger.info("SENDING SENSOR OF " + detectorUnit.getId());
@@ -139,19 +139,5 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return targetSensorSet.stream()
                 .filter(filterByIdToAdd)
                 .collect(Collectors.toSet());
-    }
-
-    private Set<DetectorUnitDto> mapEntityToDto(Set<DetectorUnit> entitySet) {
-        EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
-        return entitySet.stream()
-                .map(mapper::mapToDto)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
-    private Set<DetectorUnit> mapDtoToEntity(Set<DetectorUnitDto> dtoSet) {
-        EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
-        return dtoSet.stream()
-                .map(mapper::mapToEntity)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }

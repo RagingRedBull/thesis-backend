@@ -52,7 +52,7 @@ public class DetectorUnitController {
         Optional<DetectorUnit> entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto);
         if (entity.isPresent()) {
             if (detectorUnitDto.getIpV4().equals(entity.get().getIpV4())) {
-                return new ResponseEntity<>(detectorUnitService.buildSensorSetDto(entity.get()), HttpStatus.OK);
+                return new ResponseEntity<>(detectorUnitService.buildSensorSetJSON(entity.get()), HttpStatus.OK);
             }
         }
         return new ResponseEntity<>("Detector Unit does not exist.", HttpStatus.NOT_FOUND);

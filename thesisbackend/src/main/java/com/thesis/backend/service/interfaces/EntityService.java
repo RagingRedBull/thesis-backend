@@ -1,4 +1,4 @@
-package com.thesis.backend.service;
+package com.thesis.backend.service.interfaces;
 
 import javax.transaction.Transactional;
 import java.util.Optional;

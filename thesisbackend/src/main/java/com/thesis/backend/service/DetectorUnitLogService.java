@@ -4,6 +4,7 @@ import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogEntityMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
+import com.thesis.backend.service.interfaces.EntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,9 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
-public class DetectorUnitLogService {
+public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto> {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitLog.class);
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
@@ -25,11 +27,12 @@ public class DetectorUnitLogService {
         this.sensorLogService = sensorLogService;
     }
 
-    public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
-        DetectorUnitLogEntityMapper mapper = new DetectorUnitLogEntityMapper();
-        return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);
+    @Override
+    public Optional<DetectorUnitLog> findOneByPrimaryKey(DetectorUnitLogDto detectorUnitLogDto) {
+        return detectorUnitLogRepository.findById(detectorUnitLogDto.getId());
     }
 
+    @Override
     public DetectorUnitLog saveOne(DetectorUnitLogDto detectorUnitLogDto) {
         DetectorUnitLog detectorUnitLog = new DetectorUnitLog(detectorUnitLogDto);
         detectorUnitLog.setTimeRecorded(LocalDateTime.now());
@@ -45,5 +48,10 @@ public class DetectorUnitLogService {
         detectorUnitLog = detectorUnitLogRepository.save(detectorUnitLog);
         logger.info("ROW ID: " + detectorUnitLog.getId());
         return detectorUnitLog;
+    }
+
+    public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
+        DetectorUnitLogEntityMapper mapper = new DetectorUnitLogEntityMapper();
+        return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);
     }
 }

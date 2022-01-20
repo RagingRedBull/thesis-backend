@@ -5,13 +5,14 @@ import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorEntityMapper;
 import com.thesis.backend.repository.FloorRespository;
+import com.thesis.backend.service.interfaces.EntityService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
 @Service
-public class FloorService implements EntityService<Floor, FloorDto>{
+public class FloorService implements EntityService<Floor, FloorDto> {
 
     private FloorRespository floorRespository;
 
