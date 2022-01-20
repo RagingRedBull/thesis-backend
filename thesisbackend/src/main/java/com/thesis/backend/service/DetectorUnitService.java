@@ -90,7 +90,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
                 .baseUrl("http://" + detectorUnit.getIpV4())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
-        WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = webClient.post();
+        WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = webClient.put();
         WebClient.RequestBodySpec bodySpec = uriSpec.uri("/update");
         WebClient.RequestHeadersSpec<?> headersSpec =
                 bodySpec.bodyValue(jsonObjectWriter.writeValueAsString(sensorSet));

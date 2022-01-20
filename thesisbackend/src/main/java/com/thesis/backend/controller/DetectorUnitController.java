@@ -34,14 +34,20 @@ public class DetectorUnitController {
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<DetectorUnitDto>> getAllDetectorInfoByPage(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    public ResponseEntity<Page<DetectorUnitDto>> getAllDetectorInfoByPage(@RequestParam int pageNumber,
+                                                                          @RequestParam int pageSize) {
         logger.info("RETURNING ALL DETECTOR");
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
         return new ResponseEntity<>(detectorUnitService.findDetectorUnitsByPage(page), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{macAddress}")
-    public ResponseEntity<String> getSensorSetOfDetectorUnit(@RequestParam DetectorUnitDto detectorUnitDto) throws JsonProcessingException {
+    public ResponseEntity<String> getSensorSetOfDetectorUnit(@PathVariable String macAddress,
+                                                             @RequestParam(name = "ipV4") String ipV4)
+            throws JsonProcessingException {
+        DetectorUnitDto detectorUnitDto = new DetectorUnitDto();
+        detectorUnitDto.setMacAddress(macAddress);
+        detectorUnitDto.setIpV4(ipV4);
         logger.info(detectorUnitDto.getMacAddress());
         Optional<DetectorUnit> entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto);
         if (entity.isPresent()) {
