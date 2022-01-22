@@ -1,5 +1,6 @@
 package com.thesis.backend.controller;
 
+import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,25 +14,33 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @RestController
 public class ImageResourcesController {
     private final Logger logger = LoggerFactory.getLogger(ImageResourcesController.class);
+    private final FileService imageFileService;
+
+    public ImageResourcesController(FileService imageFileService) {
+        this.imageFileService = imageFileService;
+    }
+
     @GetMapping(path = "/images/{imageId}")
     @ResponseBody
-    public ResponseEntity<Resource> serveImage(@PathVariable String imageId) throws IOException {
-        String loc = "H:\\testFolder\\" + imageId;
-        String fileMediaType;
-        Resource resource = new FileSystemResource(loc);
+    public ResponseEntity<Resource> serveImage(@PathVariable String imageId) {
         Tika tika = new Tika();
         try {
-            fileMediaType = tika.detect(resource.getInputStream());
+            Resource resource = imageFileService.load(imageId);
             return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(fileMediaType))
+                    .contentType(MediaType.parseMediaType(
+                            tika.detect(resource.getInputStream())
+                    ))
                     .body(resource);
-        } catch (IOException ioException) {
+        } catch (FileNotFoundException fileNotFoundException) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IOException ioException) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

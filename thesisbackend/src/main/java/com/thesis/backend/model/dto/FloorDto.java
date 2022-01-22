@@ -8,7 +8,7 @@ public class FloorDto {
     private int id;
     private String name;
     private String description;
-    private MultipartFile image;
+    private String imageUrl;
 
     public int getId() {
         return id;
@@ -34,11 +34,11 @@ public class FloorDto {
         this.description = description;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
