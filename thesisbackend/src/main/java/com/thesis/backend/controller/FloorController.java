@@ -1,8 +1,7 @@
 package com.thesis.backend.controller;
 
-import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
-import com.thesis.backend.model.util.wrapper.FloorWrapper;
+import com.thesis.backend.model.util.wrapper.FloorPayload;
 import com.thesis.backend.service.FloorService;
 import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -51,12 +49,12 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestBody FloorWrapper wrapper) throws IOException {
+    public ResponseEntity<?> addFloor(@ModelAttribute FloorPayload payload) throws IOException {
         Tika tika = new Tika();
-        if (wrapper.getFile() != null && wrapper.getDto() != null){
-            if(tika.detect(wrapper.getFile().getInputStream()).contains("images/")){
+        if (payload.getFile() != null && payload.getDto() != null){
+            if(tika.detect(payload.getFile().getInputStream()).contains("images/")){
 //                floorService.saveOne(floorDto);
-                fileService.save(wrapper.getFile());
+                fileService.save(payload.getFile());
             }
         } else {
             return new ResponseEntity<>("Invalid Parameter/s", HttpStatus.UNPROCESSABLE_ENTITY);

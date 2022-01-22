@@ -3,7 +3,7 @@ package com.thesis.backend.model.util.wrapper;
 import com.thesis.backend.model.dto.FloorDto;
 import org.springframework.web.multipart.MultipartFile;
 
-public class FloorWrapper {
+public class FloorPayload {
     private MultipartFile file;
     private FloorDto dto;
 
