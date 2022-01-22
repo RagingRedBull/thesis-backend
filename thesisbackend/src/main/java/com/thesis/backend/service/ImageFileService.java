@@ -22,26 +22,25 @@ import java.util.Objects;
 @Service
 public class ImageFileService implements FileService {
     private final Logger logger = LoggerFactory.getLogger(ImageFileService.class);
+
     @Override
     public Resource load(String fileName) throws FileNotFoundException {
         String path = "/var/lib/prmts/images/" + fileName;
         Resource resource = new FileSystemResource(path);
-        if(resource.exists() && resource.isFile()){
-            return resource;
+        if (resource.exists() && resource.isFile()) {
+            return resource;    
         } else {
             throw new FileNotFoundException();
         }
     }
 
     @Override
-    public String   save(MultipartFile file) throws IOException {
-        if (file == null) {
-            return "";
-        }
+    public String save(MultipartFile file) throws IOException {
+        String fileName = LocalDateTime.now() + "_" + file.getOriginalFilename();
         Path saveDir = Paths.get("/var/lib/prmts/images/");
-        Files.copy(file.getInputStream(), saveDir.resolve(LocalDateTime.now()+"-"+file.getOriginalFilename()),
+        Files.copy(file.getInputStream(), saveDir.resolve(fileName),
                 StandardCopyOption.REPLACE_EXISTING);
         logger.info("Image at: " + saveDir.toString());
-        return saveDir +file.getOriginalFilename();
+        return saveDir + file.getOriginalFilename();
     }
 }
