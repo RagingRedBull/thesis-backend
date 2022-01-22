@@ -2,6 +2,7 @@ package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
+import com.thesis.backend.model.util.wrapper.FloorWrapper;
 import com.thesis.backend.service.FloorService;
 import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
@@ -50,12 +51,12 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestParam MultipartFile file, @RequestParam FloorDto floorDto) throws IOException {
+    public ResponseEntity<?> addFloor(@RequestBody FloorWrapper wrapper) throws IOException {
         Tika tika = new Tika();
-        if (file != null && floorDto != null){
-            if(tika.detect(file.getInputStream()).contains("images/")){
+        if (wrapper.getFile() != null && wrapper.getDto() != null){
+            if(tika.detect(wrapper.getFile().getInputStream()).contains("images/")){
 //                floorService.saveOne(floorDto);
-                fileService.save(file);
+                fileService.save(wrapper.getFile());
             }
         } else {
             return new ResponseEntity<>("Invalid Parameter/s", HttpStatus.UNPROCESSABLE_ENTITY);
