@@ -54,7 +54,7 @@ public class FloorController {
     public ResponseEntity<?> addFloor(@RequestParam MultipartFile file) throws IOException {
         Tika tika = new Tika();
         logger.info("File name: " + file.getOriginalFilename());
-        logger.info("Tika Type: " + tika.detect(file.getInputStream()));
+        logger.info("Tika Type: " + tika.detect(file.getOriginalFilename()));
         logger.info("Is File Empty: " + file.getResource().getFile().isFile());
         return new ResponseEntity<>("DEBUG", HttpStatus.OK);
     }

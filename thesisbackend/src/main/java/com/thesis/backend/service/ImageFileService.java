@@ -28,7 +28,7 @@ public class ImageFileService implements FileService {
         String path = "/var/lib/prmts/images/" + fileName;
         Resource resource = new FileSystemResource(path);
         if (resource.exists() && resource.isFile()) {
-            return resource;    
+            return resource;
         } else {
             throw new FileNotFoundException();
         }
