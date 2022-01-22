@@ -49,7 +49,7 @@ public class FloorController {
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestPart MultipartFile file, @RequestPart FloorDto floorDto) throws IOException {
+    public ResponseEntity<?> addFloor(@RequestParam MultipartFile file, @RequestParam FloorDto floorDto) throws IOException {
         Tika tika = new Tika();
         if (file != null && floorDto != null){
             if(tika.detect(file.getInputStream()).contains("images/")){
