@@ -37,8 +37,8 @@ public class ImageFileService implements FileService {
     @Override
     public String save(MultipartFile file) throws IOException {
         String fileName = LocalDateTime.now() + "_" + file.getOriginalFilename();
-        Path saveDir = Paths.get("/var/lib/prmts/images/");
-        Files.copy(file.getInputStream(), saveDir.resolve(fileName),
+        Path saveDir = Paths.get("/var/lib/prmts/images/" + fileName);
+        Files.copy(file.getInputStream(), saveDir,
                 StandardCopyOption.REPLACE_EXISTING);
         logger.info("Image at: " + saveDir.toString());
         return saveDir + file.getOriginalFilename();

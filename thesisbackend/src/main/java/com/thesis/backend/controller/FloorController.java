@@ -55,7 +55,7 @@ public class FloorController {
         Tika tika = new Tika();
         logger.info("File name: " + file.getOriginalFilename());
         logger.info("Tika Type: " + tika.detect(file.getOriginalFilename()));
-        logger.info("Is File Empty: " + file.getResource().getFile().isFile());
+        fileService.save(file);
         return new ResponseEntity<>("DEBUG", HttpStatus.OK);
     }
 }
