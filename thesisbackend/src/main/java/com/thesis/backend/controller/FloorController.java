@@ -51,21 +51,14 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> addFloor(FloorDto dto, @RequestParam MultipartFile file) throws IOException {
-        if(dto != null) {
-            logger.info(dto.getName());
-            logger.info(dto.getDescription());
-        } else {
-            logger.info("DTO does not exist");
-        }
+    public ResponseEntity<?> addFloor(@RequestParam MultipartFile file) throws IOException {
         if (!file.isEmpty()){
             logger.info("Image was sent");
         } else {
             logger.info("image does not exist");
         }
         Tika tika = new Tika();
-        if (file.isEmpty() && dto != null){
+        if (file.isEmpty()){
             if(tika.detect(file.getInputStream()).contains("images/")){
 //                floorService.saveOne(floorDto);
                 fileService.save(file);
