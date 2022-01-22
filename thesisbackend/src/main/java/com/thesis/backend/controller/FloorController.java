@@ -50,6 +50,17 @@ public class FloorController {
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addFloor(@ModelAttribute FloorPayload payload) throws IOException {
+        if(payload.getDto() != null) {
+            logger.info(payload.getDto().getName());
+            logger.info(payload.getDto().getDescription());
+        } else {
+            logger.info("DTO does not exist");
+        }
+        if (!payload.getFile().isEmpty()){
+            logger.info("Image was sent");
+        } else {
+            logger.info("image does not exist");
+        }
         Tika tika = new Tika();
         if (payload.getFile() != null && payload.getDto() != null){
             if(tika.detect(payload.getFile().getInputStream()).contains("images/")){
