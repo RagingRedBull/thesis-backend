@@ -3,6 +3,7 @@ package com.thesis.backend.controller;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.service.FloorService;
+import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,17 +22,19 @@ import java.util.Optional;
 public class FloorController {
     private final Logger logger = LoggerFactory.getLogger(FloorController.class);
     private final FloorService floorService;
+    private final FileService fileService;
     private final Environment env;
 
-    public FloorController(FloorService floorService, Environment environment){
+    public FloorController(FloorService floorService, FileService fileService, Environment env) {
         this.floorService = floorService;
-        this.env = environment;
+        this.fileService = fileService;
+        this.env = env;
     }
 
     @GetMapping(path = "/all")
     public ResponseEntity<?> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
         logger.info("Getting Floors with Page Size: " + pageSize + " of Page: " + (pageNumber-1));
-        return new ResponseEntity<>(env.getProperty("image.data-dir"), HttpStatus.OK);
+        return new ResponseEntity<>(System.getProperty("catalina.home"), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{floorId}", produces = "application/json")
@@ -45,12 +48,13 @@ public class FloorController {
         }
     }
 
-    @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/new", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addFloor(@RequestPart MultipartFile file, @RequestPart FloorDto floorDto) throws IOException {
         Tika tika = new Tika();
         if (file != null && floorDto != null){
             if(tika.detect(file.getInputStream()).contains("images/")){
-
+//                floorService.saveOne(floorDto);
+                fileService.save(file);
             }
         } else {
             return new ResponseEntity<>("Invalid Parameter/s", HttpStatus.UNPROCESSABLE_ENTITY);
