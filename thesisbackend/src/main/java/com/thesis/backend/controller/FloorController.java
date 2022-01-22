@@ -51,6 +51,7 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public ResponseEntity<?> addFloor(FloorDto dto, @RequestParam MultipartFile file) throws IOException {
         if(dto != null) {
             logger.info(dto.getName());
