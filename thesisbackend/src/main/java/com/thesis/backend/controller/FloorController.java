@@ -58,7 +58,7 @@ public class FloorController {
             logger.info("image does not exist");
         }
         Tika tika = new Tika();
-        if (file.isEmpty()){
+        if (!file.isEmpty()){
             if(tika.detect(file.getInputStream()).contains("images/")){
 //                floorService.saveOne(floorDto);
                 fileService.save(file);
