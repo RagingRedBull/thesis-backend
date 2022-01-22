@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -33,9 +34,12 @@ public class ImageFileService implements FileService {
     }
 
     @Override
-    public String save(MultipartFile file) throws IOException {
+    public String   save(MultipartFile file) throws IOException {
+        if (file == null) {
+            return "";
+        }
         Path saveDir = Paths.get("/var/lib/prmts/images/");
-        Files.copy(file.getInputStream(), saveDir.resolve(Objects.requireNonNull(file.getOriginalFilename())),
+        Files.copy(file.getInputStream(), saveDir.resolve(LocalDateTime.now()+"-"+file.getOriginalFilename()),
                 StandardCopyOption.REPLACE_EXISTING);
         logger.info("Image at: " + saveDir.toString());
         return saveDir +file.getOriginalFilename();

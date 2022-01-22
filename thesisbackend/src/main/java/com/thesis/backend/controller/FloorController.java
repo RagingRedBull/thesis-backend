@@ -52,18 +52,10 @@ public class FloorController {
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addFloor(@RequestParam MultipartFile file) throws IOException {
-        if (!file.isEmpty()){
-            logger.info("Image was sent");
-        } else {
-            logger.info("image does not exist");
-        }
         Tika tika = new Tika();
-        if (!file.isEmpty()){
-//                floorService.saveOne(floorDto);
-                fileService.save(file);
-        } else {
-            return new ResponseEntity<>("Invalid Parameter/s", HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        return new ResponseEntity<>(env.getProperty(""), HttpStatus.OK);
+        logger.info("File name: " + file.getOriginalFilename());
+        logger.info("Tika Type: " + tika.detect(file.getInputStream()));
+        logger.info("Is File Empty: " + file.getResource().getFile().isFile());
+        return new ResponseEntity<>("DEBUG", HttpStatus.OK);
     }
 }
