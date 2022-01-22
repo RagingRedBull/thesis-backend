@@ -1,5 +1,6 @@
 package com.thesis.backend.controller;
 
+import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.wrapper.FloorPayload;
 import com.thesis.backend.service.FloorService;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -49,23 +51,23 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@ModelAttribute FloorPayload payload) throws IOException {
-        if(payload.getDto() != null) {
-            logger.info(payload.getDto().getName());
-            logger.info(payload.getDto().getDescription());
+    public ResponseEntity<?> addFloor(FloorDto dto, @RequestParam MultipartFile file) throws IOException {
+        if(dto != null) {
+            logger.info(dto.getName());
+            logger.info(dto.getDescription());
         } else {
             logger.info("DTO does not exist");
         }
-        if (!payload.getFile().isEmpty()){
+        if (!file.isEmpty()){
             logger.info("Image was sent");
         } else {
             logger.info("image does not exist");
         }
         Tika tika = new Tika();
-        if (payload.getFile() != null && payload.getDto() != null){
-            if(tika.detect(payload.getFile().getInputStream()).contains("images/")){
+        if (file.isEmpty() && dto != null){
+            if(tika.detect(file.getInputStream()).contains("images/")){
 //                floorService.saveOne(floorDto);
-                fileService.save(payload.getFile());
+                fileService.save(file);
             }
         } else {
             return new ResponseEntity<>("Invalid Parameter/s", HttpStatus.UNPROCESSABLE_ENTITY);
