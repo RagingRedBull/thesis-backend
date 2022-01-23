@@ -51,11 +51,13 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestParam MultipartFile file) throws IOException {
+    public ResponseEntity<?> addFloor(@RequestBody FloorPayload payload)
+            throws IOException {
         Tika tika = new Tika();
-        logger.info("File Name: " + file.getOriginalFilename());
-        logger.info("Tika Type: " + tika.detect(file.getInputStream()));
-        fileService.save(file);
+        logger.info("File Name: " + payload.getFile().getOriginalFilename());
+        logger.info("Tika Type: " + tika.detect(payload.getFile().getInputStream()));
+        logger.info(payload.getDto().toString());
+        fileService.save(payload.getFile());
         return new ResponseEntity<>("DEBUG", HttpStatus.OK);
     }
 }
