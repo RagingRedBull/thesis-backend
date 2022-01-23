@@ -53,8 +53,8 @@ public class FloorController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addFloor(@RequestParam MultipartFile file) throws IOException {
         Tika tika = new Tika();
-        logger.info("File name: " + file.getOriginalFilename());
-        logger.info("Tika Type: " + tika.detect(file.getOriginalFilename()));
+        logger.info("File Name: " + file.getOriginalFilename());
+        logger.info("Tika Type: " + tika.detect(file.getInputStream()));
         fileService.save(file);
         return new ResponseEntity<>("DEBUG", HttpStatus.OK);
     }

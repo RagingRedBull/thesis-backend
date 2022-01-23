@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class ImageFileService implements FileService {
@@ -36,11 +37,12 @@ public class ImageFileService implements FileService {
 
     @Override
     public String save(MultipartFile file) throws IOException {
-        String fileName = LocalDateTime.now() + "_" + file.getOriginalFilename();
+        UUID uuid = UUID.randomUUID();
+        String fileName = uuid + "_" + file.getOriginalFilename();
         Path saveDir = Paths.get("/var/lib/prmts/images/" + fileName);
         Files.copy(file.getInputStream(), saveDir,
                 StandardCopyOption.REPLACE_EXISTING);
-        logger.info("Image at: " + saveDir.toString());
+        logger.info("Image at: " + saveDir);
         return saveDir + file.getOriginalFilename();
     }
 }
