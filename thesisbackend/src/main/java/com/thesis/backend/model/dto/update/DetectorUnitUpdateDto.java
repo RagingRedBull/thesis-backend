@@ -30,4 +30,12 @@ public class DetectorUnitUpdateDto {
     public void setSensorUpdateDtoSet(Set<SensorUpdateDto> sensorUpdateDtoSet) {
         this.sensorUpdateDtoSet = sensorUpdateDtoSet;
     }
+
+    @Override
+    public String toString() {
+        return "DetectorUnitUpdateDto{" +
+                "detectorUnitDto=" + detectorUnitDto +
+                ", sensorUpdateDtoSet=" + sensorUpdateDtoSet +
+                '}';
+    }
 }

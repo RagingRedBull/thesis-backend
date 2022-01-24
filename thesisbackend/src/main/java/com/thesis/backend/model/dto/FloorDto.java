@@ -1,14 +1,18 @@
 package com.thesis.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.web.multipart.MultipartFile;
 
 @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 public class FloorDto {
     private int id;
+    @JsonProperty(required = true)
     private String name;
+    @JsonProperty(required = true)
     private String description;
-    private MultipartFile image;
+    @JsonProperty(required = true)
+    private String imageUrl;
 
     public int getId() {
         return id;
@@ -34,11 +38,11 @@ public class FloorDto {
         this.description = description;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
