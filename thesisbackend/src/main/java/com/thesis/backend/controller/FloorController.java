@@ -23,13 +23,9 @@ import java.util.Optional;
 public class FloorController {
     private final Logger logger = LoggerFactory.getLogger(FloorController.class);
     private final FloorService floorService;
-    private final FileService fileService;
-    private final Environment env;
 
-    public FloorController(FloorService floorService, FileService fileService, Environment env) {
+    public FloorController(FloorService floorService) {
         this.floorService = floorService;
-        this.fileService = fileService;
-        this.env = env;
     }
 
     @GetMapping(path = "/all")
@@ -51,13 +47,9 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestBody FloorPayload payload)
-            throws IOException {
-        Tika tika = new Tika();
-        logger.info("File Name: " + payload.getFile().getOriginalFilename());
-        logger.info("Tika Type: " + tika.detect(payload.getFile().getInputStream()));
-        logger.info(payload.getDto().toString());
-        fileService.save(payload.getFile());
-        return new ResponseEntity<>("DEBUG", HttpStatus.OK);
+    public ResponseEntity<?> addFloor(@RequestBody FloorDto floorDto)
+            {
+        floorService.saveOne(floorDto);
+        return new ResponseEntity<>(floorDto, HttpStatus.OK);
     }
 }

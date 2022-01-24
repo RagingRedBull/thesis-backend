@@ -9,15 +9,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @RestController
+@RequestMapping(path = "/images")
 public class ImageResourcesController {
     private final Logger logger = LoggerFactory.getLogger(ImageResourcesController.class);
     private final FileService imageFileService;
@@ -26,7 +25,7 @@ public class ImageResourcesController {
         this.imageFileService = imageFileService;
     }
 
-    @GetMapping(path = "/images/{imageId}")
+    @GetMapping(path = "/{imageId}")
     @ResponseBody
     public ResponseEntity<Resource> serveImage(@PathVariable String imageId) {
         Tika tika = new Tika();
@@ -41,6 +40,18 @@ public class ImageResourcesController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IOException ioException) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE ,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> uploadImage(MultipartFile file) throws IOException {
+        Tika tika = new Tika();
+        if (! tika.detect(file.getInputStream()).equals("images")) {
+            return new ResponseEntity<>("Invalid file!", HttpStatus.UNPROCESSABLE_ENTITY);
+        } else {
+            String fileLoc = imageFileService.save(file);
+            return new ResponseEntity<>(fileLoc, HttpStatus.OK);
         }
     }
 }
