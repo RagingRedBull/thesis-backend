@@ -43,6 +43,6 @@ public class ImageFileService implements FileService {
         Files.copy(file.getInputStream(), saveDir,
                 StandardCopyOption.REPLACE_EXISTING);
         logger.info("Image at: " + saveDir);
-        return saveDir + file.getOriginalFilename();
+        return fileName;
     }
 }

@@ -1,5 +1,6 @@
 package com.thesis.backend.controller;
 
+import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
@@ -43,15 +44,16 @@ public class ImageResourcesController {
         }
     }
 
-    @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE ,
+    @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> uploadImage(MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadImage(MultipartFile file) throws IOException {
         Tika tika = new Tika();
-        if (! tika.detect(file.getInputStream()).contains("image")) {
+        if (!tika.detect(file.getInputStream()).contains("image")) {
             return new ResponseEntity<>("Invalid file!", HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
-            String fileLoc = imageFileService.save(file);
-            return ResponseEntity.ok(fileLoc);
+            FloorDto dto = new FloorDto();
+            dto.setImageUrl(imageFileService.save(file));
+            return ResponseEntity.ok(dto);
         }
     }
 }
