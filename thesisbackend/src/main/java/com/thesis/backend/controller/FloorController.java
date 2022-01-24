@@ -45,7 +45,7 @@ public class FloorController {
         }
     }
 
-    @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+    @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addFloor(@RequestBody FloorDto floorDto)
             {
