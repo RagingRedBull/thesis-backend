@@ -47,11 +47,11 @@ public class ImageResourcesController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> uploadImage(MultipartFile file) throws IOException {
         Tika tika = new Tika();
-        if (! tika.detect(file.getInputStream()).equals("images")) {
+        if (! tika.detect(file.getInputStream()).contains("image")) {
             return new ResponseEntity<>("Invalid file!", HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
             String fileLoc = imageFileService.save(file);
-            return new ResponseEntity<>(fileLoc, HttpStatus.OK);
+            return ResponseEntity.ok(fileLoc);
         }
     }
 }
