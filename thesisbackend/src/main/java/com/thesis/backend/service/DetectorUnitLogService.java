@@ -11,12 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
-public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto> {
+public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitLog.class);
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
@@ -28,8 +29,13 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     }
 
     @Override
-    public Optional<DetectorUnitLog> findOneByPrimaryKey(DetectorUnitLogDto detectorUnitLogDto) {
-        return detectorUnitLogRepository.findById(detectorUnitLogDto.getId());
+    public DetectorUnitLog findOneByPrimaryKey(Long primaryKey) {
+        Optional<DetectorUnitLog> wrapper = detectorUnitLogRepository.findById(primaryKey);
+        if (wrapper.isEmpty()) {
+            throw new EntityNotFoundException();
+        } else {
+            return wrapper.get();
+        }
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
+import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.model.util.mapper.FloorEntityMapper;
 import com.thesis.backend.model.util.wrapper.FloorPayload;
 import com.thesis.backend.service.FloorService;
 import com.thesis.backend.service.interfaces.FileService;
@@ -35,14 +37,10 @@ public class FloorController {
     }
 
     @GetMapping(path = "/{floorId}", produces = "application/json")
-    public ResponseEntity<?> getOne(int floorId) {
-        Optional<Floor> floor = floorService.findOnById(floorId);
-        if (floor.isEmpty()) {
-            return new ResponseEntity<>("Floor object with id " + floorId
-                    + " can not be found.", HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(floor.get(), HttpStatus.OK);
-        }
+    public ResponseEntity<FloorDto> getOne(int floorId) {
+        EntityMapper<Floor, FloorDto> mapper = new FloorEntityMapper();
+        FloorDto dto = mapper.mapToDto(floorService.findOneByPrimaryKey(floorId));
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,

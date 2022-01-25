@@ -19,8 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping(path = "/detector")
 public class DetectorUnitController {
@@ -49,40 +47,24 @@ public class DetectorUnitController {
         detectorUnitDto.setMacAddress(macAddress);
         detectorUnitDto.setIpV4(ipV4);
         logger.info(detectorUnitDto.getMacAddress());
-        Optional<DetectorUnit> entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto);
-        if (entity.isPresent()) {
-            if (detectorUnitDto.getIpV4().equals(entity.get().getIpV4())) {
-                return new ResponseEntity<>(detectorUnitService.buildSensorSetJSON(entity.get()), HttpStatus.OK);
-            }
-        }
+        detectorUnitService.buildSensorSetJSON(detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress()));
         return new ResponseEntity<>("Detector Unit does not exist.", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
         EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
-        DetectorUnit entity;
-        Optional<DetectorUnit> optionalDetectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitDto);
-        optionalDetectorUnit.ifPresent(detectorUnit -> detectorUnitDto.setIpV4(detectorUnit.getIpV4()));
+        DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
+        if (entity != null) {
+            detectorUnitDto.setIpV4(entity.getIpV4());
+        }
         detectorUnitService.saveOne(detectorUnitDto);
         return new ResponseEntity<>(detectorUnitDto.toString(), HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
-        Optional<DetectorUnit> entity =
-                detectorUnitService.findOneByPrimaryKey(detectorUnitUpdateDto.getDetectorUnitDto());
-        if (entity.isEmpty()) {
-            logger.info("ERROR: UNKNOWN MAC ADDRESS");
-            return new ResponseEntity<>("UNKNOWN MAC ADDRESS", HttpStatus.NOT_FOUND);
-        }
-        if (detectorUnitUpdateDto.getSensorUpdateDtoSet().isEmpty()) {
-            logger.info("EMPTY SENSOR LIST");
-            return new ResponseEntity<>("EMPTY SENSOR LIST", HttpStatus.EXPECTATION_FAILED);
-        }
-        DetectorUnit detectorUnit = entity.get();
-        logger.info("UPDATING DETECTOR UNIT: " + detectorUnit.getId());
-        if (detectorUnitService.updateSensorList(detectorUnit, detectorUnitUpdateDto.getSensorUpdateDtoSet())
+        if (detectorUnitService.updateSensorList(detectorUnitUpdateDto)
         ) {
             return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
         }

@@ -9,10 +9,11 @@ import com.thesis.backend.service.interfaces.EntityService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
-public class FloorService implements EntityService<Floor, FloorDto> {
+public class FloorService implements EntityService<Floor, FloorDto, Integer> {
 
     private FloorRepository floorRepository;
 
@@ -21,8 +22,13 @@ public class FloorService implements EntityService<Floor, FloorDto> {
     }
 
     @Override
-    public Optional<Floor> findOneByPrimaryKey(FloorDto floorDto) {
-        return floorRepository.findById(floorDto.getId());
+    public Floor findOneByPrimaryKey(Integer primaryKey) {
+        Optional<Floor> wrapper = floorRepository.findById(primaryKey);
+        if (wrapper.isEmpty()) {
+            throw new EntityNotFoundException();
+        } else {
+            return wrapper.get();
+        }
     }
 
     @Override
@@ -33,7 +39,4 @@ public class FloorService implements EntityService<Floor, FloorDto> {
         return entity;
     }
 
-    public Optional<Floor> findOnById(int id) {
-         return floorRepository.findById(id);
-    }
 }
