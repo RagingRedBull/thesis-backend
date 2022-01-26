@@ -62,7 +62,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
 
-    public boolean updateSensorList(DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException,
+    public void updateSensorList(DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException,
             EntityNotFoundException {
         DetectorUnit unitToUpdate = findOneByPrimaryKey(detectorUnitUpdateDto.getDetectorUnitDto().getMacAddress());
         boolean isSuccessful = false;
@@ -78,11 +78,11 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
                 targetSensorSet, detectorUnitUpdateDto.getSensorUpdateDtoSet()));
         if (contactDetectorUnitToUpdate(unitToUpdate, detectorUnitUpdateDto.getSensorUpdateDtoSet())) {
             detectorUnitRepository.saveAndFlush(unitToUpdate);
-            isSuccessful = true;
             logger.info("Unit Mac Address: " + unitToUpdate.getId());
             logger.info("Updated Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
+        } else {
+
         }
-        return isSuccessful;
     }
 
     public String buildSensorSetJSON(DetectorUnit detectorUnit) throws JsonProcessingException {
