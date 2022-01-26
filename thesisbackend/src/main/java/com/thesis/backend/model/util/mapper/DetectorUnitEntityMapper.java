@@ -12,7 +12,7 @@ public class DetectorUnitEntityMapper implements EntityMapper<DetectorUnit, Dete
     @Override
     public DetectorUnitDto mapToDto(DetectorUnit entity) {
         DetectorUnitDto dto = new DetectorUnitDto();
-        dto.setMacAddress(entity.getId());
+        dto.setMacAddress(entity.getMacAddress());
         dto.setIpV4(entity.getIpV4());
         dto.setName(entity.getName());
         dto.setXpos(entity.getXpos());
