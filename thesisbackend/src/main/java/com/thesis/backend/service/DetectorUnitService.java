@@ -78,7 +78,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
                 targetSensorSet, detectorUnitUpdateDto.getSensorUpdateDtoSet()));
         if (contactDetectorUnitToUpdate(unitToUpdate, detectorUnitUpdateDto.getSensorUpdateDtoSet())) {
             detectorUnitRepository.saveAndFlush(unitToUpdate);
-            logger.info("Unit Mac Address: " + unitToUpdate.getId());
+            logger.info("Unit Mac Address: " + unitToUpdate.getMacAddress());
             logger.info("Updated Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
         } else {
 
@@ -88,7 +88,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public String buildSensorSetJSON(DetectorUnit detectorUnit) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer().withRootName("sensorSet");
-        logger.info("SENDING SENSOR OF " + detectorUnit.getId());
+        logger.info("SENDING SENSOR OF " + detectorUnit.getMacAddress());
         logger.info("Sensor Set: " + detectorUnit.getAssociatedSensorSet().toString());
         return
                 writer.writeValueAsString(sensorService.buildSensorSetUpdateDto(

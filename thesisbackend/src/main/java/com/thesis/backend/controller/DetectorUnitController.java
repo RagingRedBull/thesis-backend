@@ -49,8 +49,8 @@ public class DetectorUnitController {
         detectorUnitDto.setMacAddress(macAddress);
         detectorUnitDto.setIpV4(ipV4);
         logger.info(detectorUnitDto.getMacAddress());
-        detectorUnitService.buildSensorSetJSON(detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress()));
-        return new ResponseEntity<>("Detector Unit does not exist.", HttpStatus.NOT_FOUND);
+        String sensorSetJson = detectorUnitService.buildSensorSetJSON(detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress()));
+        return new ResponseEntity<>(sensorSetJson, HttpStatus.OK);
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
