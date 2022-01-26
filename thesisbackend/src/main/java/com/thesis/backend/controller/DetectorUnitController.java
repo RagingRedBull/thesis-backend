@@ -55,6 +55,7 @@ public class DetectorUnitController {
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
+        logger.info("DTO: " + detectorUnitDto.toString());
         try{
             DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
             detectorUnitDto.setIpV4(entity.getIpV4());
