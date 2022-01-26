@@ -32,14 +32,16 @@ public class LogsController {
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        logger.info("GETTING PAGE # " + pageNumber + " WITH SIZE OF " + pageSize);
+        logger.info("Request Entity: Page of Detector Unit LOGS");
+        logger.info("Requested Size: " + pageSize);
+        logger.info("Requested Page No: " + pageNumber);
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "timeRecorded"));
         return new ResponseEntity<>(detectorUnitLogService.findDetectorLogsByPage(page), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<SensorLogDto>> getSensorsOfDetectorUnit(@RequestParam long detectorUnitLogId) {
-        logger.info("GETTING SENSOR INFO of DetectorLog: " + detectorUnitLogId);
+    @GetMapping(path = "/{detectorUnitLogId}/sensors", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<SensorLogDto>> getSensorsOfDetectorUnit(@PathVariable long detectorUnitLogId) {
+        logger.info("Requested Sensors with Log ID: " + detectorUnitLogId);
         Set<SensorLogDto> sensorLogDtos =
                 sensorLogService.mapSensorLogEntityToDto(sensorLogService.findLogsByDetectorLogId(detectorUnitLogId));
         return new ResponseEntity<>(sensorLogDtos, HttpStatus.OK);

@@ -36,7 +36,9 @@ public class DetectorUnitController {
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitDto>> getAllDetectorInfoByPage(@RequestParam int pageNumber,
                                                                           @RequestParam int pageSize) {
-        logger.info("RETURNING ALL DETECTOR");
+        logger.info("Entity: Paged Detector Units");
+        logger.info("Requested Size: " + pageSize);
+        logger.info("Requested Page No: " + pageNumber);
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
         return new ResponseEntity<>(detectorUnitService.findDetectorUnitsByPage(page), HttpStatus.OK);
     }
@@ -59,10 +61,10 @@ public class DetectorUnitController {
         try{
             DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
             detectorUnitDto.setIpV4(entity.getIpV4());
-            logger.info("Updating Ip --> " + detectorUnitDto.getMacAddress() +
-                    " -- > " + detectorUnitDto.getIpV4());
+            logger.info("Updating Ip from: " + detectorUnitDto.getMacAddress() +
+                    " to: " + detectorUnitDto.getIpV4());
         } catch (EntityNotFoundException e) {
-            logger.info("Registering Unit --> " + detectorUnitDto.getMacAddress());
+            logger.info("Registering Unit: " + detectorUnitDto.getMacAddress());
         }
         detectorUnitService.saveOne(detectorUnitDto);
         return new ResponseEntity<>(detectorUnitDto.toString(), HttpStatus.CREATED);

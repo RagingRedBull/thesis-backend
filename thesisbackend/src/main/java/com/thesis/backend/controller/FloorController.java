@@ -11,6 +11,7 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +32,17 @@ public class FloorController {
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<?> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        logger.info("Getting Floors with Page Size: " + pageSize + " of Page: " + (pageNumber-1));
-        return new ResponseEntity<>(System.getProperty("catalina.home"), HttpStatus.OK);
+    public ResponseEntity<Page<FloorDto>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        logger.info("Page Size: " + pageSize);
+        logger.info("Page: " + (pageNumber-1));
+        return new ResponseEntity<>(floorService.getAllFloorByPage(pageNumber,pageSize), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{floorId}", produces = "application/json")
     public ResponseEntity<FloorDto> getOne(int floorId) {
         EntityMapper<Floor, FloorDto> mapper = new FloorEntityMapper();
         FloorDto dto = mapper.mapToDto(floorService.findOneByPrimaryKey(floorId));
+        logger.info("Floor ID " + dto.getId() + " found.");
         return ResponseEntity.ok(dto);
     }
 
