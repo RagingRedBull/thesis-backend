@@ -18,6 +18,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping(path = "/images")
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class ImageResourcesController {
     private final Logger logger = LoggerFactory.getLogger(ImageResourcesController.class);
     private final FileService imageFileService;
