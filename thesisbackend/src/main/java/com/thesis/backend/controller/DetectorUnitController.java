@@ -19,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
+
 @RestController
 @RequestMapping(path = "/detector")
 public class DetectorUnitController {
@@ -53,10 +55,13 @@ public class DetectorUnitController {
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
-        EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
-        DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
-        if (entity != null) {
+        try{
+            DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
             detectorUnitDto.setIpV4(entity.getIpV4());
+            logger.info("Updating Ip --> " + detectorUnitDto.getMacAddress() +
+                    " -- > " + detectorUnitDto.getIpV4());
+        } catch (EntityNotFoundException e) {
+            logger.info("Registering Unit --> " + detectorUnitDto.getMacAddress());
         }
         detectorUnitService.saveOne(detectorUnitDto);
         return new ResponseEntity<>(detectorUnitDto.toString(), HttpStatus.CREATED);
@@ -64,10 +69,7 @@ public class DetectorUnitController {
 
     @PatchMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
-        if (detectorUnitService.updateSensorList(detectorUnitUpdateDto)
-        ) {
-            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("FAILED", HttpStatus.INTERNAL_SERVER_ERROR);
+        detectorUnitService.updateSensorList(detectorUnitUpdateDto);
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 }
