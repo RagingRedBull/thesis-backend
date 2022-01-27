@@ -48,7 +48,7 @@ public class FloorController {
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFloor(@RequestBody FloorDto floorDto)
+    public ResponseEntity<FloorDto> addFloor(@RequestBody FloorDto floorDto)
             {
         floorService.saveOne(floorDto);
         return new ResponseEntity<>(floorDto, HttpStatus.OK);

@@ -1,7 +1,9 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.controller.FloorController;
+import com.thesis.backend.exception.InvalidFileTypeException;
 import com.thesis.backend.service.interfaces.FileService;
+import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -36,7 +38,11 @@ public class ImageFileService implements FileService {
     }
 
     @Override
-    public String save(MultipartFile file) throws IOException {
+    public String save(MultipartFile file) throws IOException, InvalidFileTypeException {
+        Tika tika = new Tika();
+        if (! tika.detect(file.getInputStream()).contains(("image"))) {
+            throw new InvalidFileTypeException("Invalid File Type!");
+        }
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + file.getOriginalFilename();
         Path saveDir = Paths.get("/var/lib/prmts/images/" + fileName);

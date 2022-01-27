@@ -1,5 +1,6 @@
 package com.thesis.backend.controller;
 
+import com.thesis.backend.exception.InvalidFileTypeException;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
@@ -18,7 +19,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping(path = "/images")
-@CrossOrigin(origins = {"http://localhost:3000", "*"})
 public class ImageResourcesController {
     private final Logger logger = LoggerFactory.getLogger(ImageResourcesController.class);
     private final FileService imageFileService;
@@ -41,8 +41,7 @@ public class ImageResourcesController {
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @CrossOrigin(origins = {"http://localhost:3000", "*"})
-    public ResponseEntity<FloorDto> uploadImage(MultipartFile file) throws IOException {
+    public ResponseEntity<FloorDto> uploadImage(MultipartFile file) throws IOException, InvalidFileTypeException {
         FloorDto dto = new FloorDto();
         dto.setImageUrl(imageFileService.save(file));
         return ResponseEntity.ok(dto);
