@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    password:
+    url: jdbc:mariadb://IP_HERE:3306/thesis_dev
+    username:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+server:
+  address: 0.0.0.0
+  servlet:
+    context-path: /prmts
+  error:
+    include-stacktrace: never
