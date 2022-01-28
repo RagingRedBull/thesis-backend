@@ -15,7 +15,13 @@ import java.util.List;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
+        http
+                .cors()
+                .and()
+                .headers()
+                .xssProtection().and()
+                .contentSecurityPolicy("script-src 'self'").and()
+                .and()
                 .csrf().disable()
                 .authorizeRequests().anyRequest().permitAll();
     }
