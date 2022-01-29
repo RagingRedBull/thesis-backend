@@ -1,11 +1,9 @@
 package com.thesis.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.thesis.backend.model.dto.detector.DetectorUnitDto;
+import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
 import com.thesis.backend.model.entity.DetectorUnit;
-import com.thesis.backend.model.util.mapper.DetectorUnitEntityMapper;
-import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.SensorService;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.thesis.backend.model.dto.detector;
+package com.thesis.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

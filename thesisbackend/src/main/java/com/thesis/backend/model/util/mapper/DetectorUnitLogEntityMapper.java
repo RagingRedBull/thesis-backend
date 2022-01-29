@@ -1,6 +1,6 @@
 package com.thesis.backend.model.util.mapper;
 
-import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 
 public class DetectorUnitLogEntityMapper implements EntityMapper<DetectorUnitLog, DetectorUnitLogDto> {

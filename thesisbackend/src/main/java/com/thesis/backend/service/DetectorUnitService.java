@@ -3,7 +3,7 @@ package com.thesis.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.thesis.backend.model.dto.detector.DetectorUnitDto;
+import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
 import com.thesis.backend.model.dto.update.SensorUpdateDto;
 import com.thesis.backend.model.entity.DetectorUnit;

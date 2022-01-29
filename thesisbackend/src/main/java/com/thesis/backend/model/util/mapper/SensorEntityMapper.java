@@ -1,6 +1,6 @@
 package com.thesis.backend.model.util.mapper;
 
-import com.thesis.backend.model.dto.sensor.SensorDto;
+import com.thesis.backend.model.dto.logs.SensorDto;
 import com.thesis.backend.model.entity.Sensor;
 
 public class SensorEntityMapper implements EntityMapper<Sensor, SensorDto> {

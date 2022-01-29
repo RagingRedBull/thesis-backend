@@ -1,6 +1,6 @@
 package com.thesis.backend.service;
 
-import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogEntityMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;

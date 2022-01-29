@@ -1,6 +1,6 @@
 package com.thesis.backend.model.util.mapper;
 
-import com.thesis.backend.model.dto.detector.DetectorUnitDto;
+import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 
 public class DetectorUnitEntityMapper implements EntityMapper<DetectorUnit, DetectorUnitDto> {

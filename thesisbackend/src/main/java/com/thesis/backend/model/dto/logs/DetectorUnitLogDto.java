@@ -1,9 +1,9 @@
-package com.thesis.backend.model.dto.detector;
+package com.thesis.backend.model.dto.logs;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.thesis.backend.model.dto.sensor.SensorLogDto;
+import com.thesis.backend.model.dto.logs.SensorLogDto;
 
 import java.time.LocalDateTime;
 import java.util.Set;

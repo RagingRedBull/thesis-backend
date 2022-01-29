@@ -1,7 +1,7 @@
 package com.thesis.backend.controller;
 
-import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
-import com.thesis.backend.model.dto.sensor.SensorLogDto;
+import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.SensorLogService;

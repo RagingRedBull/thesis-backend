@@ -1,9 +1,9 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.config.SensorLogServiceTestConfig;
-import com.thesis.backend.model.dto.sensor.DhtSensorLogDto;
-import com.thesis.backend.model.dto.sensor.MqSensorLogDto;
-import com.thesis.backend.model.dto.sensor.SensorLogDto;
+import com.thesis.backend.model.dto.logs.DhtSensorLogDto;
+import com.thesis.backend.model.dto.logs.MqSensorLogDto;
+import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.enums.SensorName;
