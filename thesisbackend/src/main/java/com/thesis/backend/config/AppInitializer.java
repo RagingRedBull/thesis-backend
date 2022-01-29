@@ -17,5 +17,7 @@ public class AppInitializer{
     @PostConstruct
     public void init() {
         logger.info(environment.getProperty("server.images.linux-data-dir"));
+        logger.info(environment.getProperty("spring.servlet.multipart.max-file-size"));
+        logger.info(environment.getProperty("spring.servlet.multipart.max-request-size"));
     }
 }

@@ -1,4 +1,4 @@
-package com.thesis.backend.exception;
+package com.thesis.backend.exception.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

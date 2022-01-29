@@ -1,5 +1,7 @@
-package com.thesis.backend.exception;
+package com.thesis.backend.exception.handler;
 
+import com.thesis.backend.exception.InvalidFileTypeException;
+import com.thesis.backend.exception.response.ApiErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;

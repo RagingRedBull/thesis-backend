@@ -1,4 +1,4 @@
-package com.thesis.backend.exception;
+package com.thesis.backend.exception.response;
 
 public class ApiError {
     private String object;
