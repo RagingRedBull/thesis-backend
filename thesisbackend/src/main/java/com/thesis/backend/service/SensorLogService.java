@@ -31,7 +31,8 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
     public SensorLog findOneByPrimaryKey(Long primaryKey) {
         Optional<SensorLog> wrapper = sensorLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            throw new EntityNotFoundException();
+            logger.error("No Sensor Log with ID: " + primaryKey);
+            throw new EntityNotFoundException("No Sensor Log with ID: " + primaryKey);
         } else {
             return wrapper.get();
         }

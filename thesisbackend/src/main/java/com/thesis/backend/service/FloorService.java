@@ -30,7 +30,7 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
     public Floor findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException{
         Optional<Floor> wrapper = floorRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("No Floor with ID: " + primaryKey);
         } else {
             return wrapper.get();
         }

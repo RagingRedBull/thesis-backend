@@ -32,7 +32,8 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     public DetectorUnitLog findOneByPrimaryKey(Long primaryKey) {
         Optional<DetectorUnitLog> wrapper = detectorUnitLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            throw new EntityNotFoundException();
+            logger.error("No Detector Unit Log with ID: " + primaryKey);
+            throw new EntityNotFoundException("No Detector Unit Log with ID: " + primaryKey);
         } else {
             return wrapper.get();
         }

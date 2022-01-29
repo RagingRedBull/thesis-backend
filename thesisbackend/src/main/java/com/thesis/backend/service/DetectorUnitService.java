@@ -47,7 +47,8 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public DetectorUnit findOneByPrimaryKey(String primaryKey) throws EntityNotFoundException{
         Optional<DetectorUnit> wrapper = detectorUnitRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            throw new EntityNotFoundException();
+            logger.error("No Detector Unit with Mac Address: " + primaryKey);
+            throw new EntityNotFoundException("No Detector Unit with Mac Address: " + primaryKey);
         } else {
             return wrapper.get();
         }
