@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/log")
+@RequestMapping(path = "/log")
 public class LogsController {
     private final Logger logger = LoggerFactory.getLogger(LogsController.class);
     private DetectorUnitLogService detectorUnitLogService;
@@ -35,13 +35,9 @@ public class LogsController {
         this.detectorUnitLogService = detectorUnitLogService;
         this.sensorLogService = sensorLogService;
     }
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam(required = false) Integer pageNumber,
-                                                                    @RequestParam(required = false) Integer pageSize) {
-        if (pageNumber == null || pageSize == null) {
-            pageNumber = 0;
-            pageSize = 10;
-        }
+    @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber,
+                                                                    @RequestParam int pageSize) {
         logger.info("Request Entity: Page of Detector Unit LOGS");
         logger.info("Requested Size: " + pageSize);
         logger.info("Requested Page No: " + pageNumber);
@@ -59,7 +55,7 @@ public class LogsController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
     @GetMapping(path = "/{detectorUnitLogId}/sensors", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<SensorLogDto>> getSensorsOfDetectorUnit(@PathVariable long detectorUnitLogId) {
+    public ResponseEntity<Set<SensorLogDto>> getSensorLogsByDetectorUnitLog(@PathVariable long detectorUnitLogId) {
         logger.info("Requested Sensors with Log ID: " + detectorUnitLogId);
         Set<SensorLogDto> sensorLogDtos =
                 sensorLogService.mapSensorLogEntityToDto(sensorLogService.findLogsByDetectorLogId(detectorUnitLogId));
