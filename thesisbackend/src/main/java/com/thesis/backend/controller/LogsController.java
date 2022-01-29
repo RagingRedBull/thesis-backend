@@ -1,13 +1,12 @@
 package com.thesis.backend.controller;
 
-import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
-import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
-import com.thesis.backend.model.util.mapper.DetectorUnitEntityMapper;
+import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogEntityMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.model.util.mapper.SensorLogEntityMapper;
 import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.SensorLogService;
 import org.slf4j.Logger;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/log")
@@ -51,8 +51,11 @@ public class LogsController {
     @GetMapping(path = "/{detectorUnitLogId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DetectorUnitLogDto> getOneById(@PathVariable long detectorUnitLogId)
             throws EntityNotFoundException {
-        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> mapper = new DetectorUnitLogEntityMapper();
-        DetectorUnitLogDto dto = mapper.mapToDto(detectorUnitLogService.findOneByPrimaryKey(detectorUnitLogId));
+        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> detectorLogMapper = new DetectorUnitLogEntityMapper();
+        EntityMapper<SensorLog,SensorLogDto> sensorMapper = new SensorLogEntityMapper();
+        DetectorUnitLog log = detectorUnitLogService.findOneByPrimaryKey(detectorUnitLogId);
+        DetectorUnitLogDto dto = detectorLogMapper.mapToDto(log);
+        dto.setSensorLogSet(log.getSensorLogSet().stream().map(sensorMapper::mapToDto).collect(Collectors.toSet()));
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
     @GetMapping(path = "/{detectorUnitLogId}/sensors", produces = MediaType.APPLICATION_JSON_VALUE)
