@@ -10,9 +10,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.persistence.EntityNotFoundException;
+
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class PrmtsExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException entityNotFoundException) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.NOT_FOUND);
+        apiErrorResponse.setMessage(entityNotFoundException.getLocalizedMessage());
+        return buildResponseEntity(apiErrorResponse);
+    }
     @ExceptionHandler(InvalidFileTypeException.class)
     protected ResponseEntity<Object> handleInvalidFileType(InvalidFileTypeException invalidFileTypeException) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY);
