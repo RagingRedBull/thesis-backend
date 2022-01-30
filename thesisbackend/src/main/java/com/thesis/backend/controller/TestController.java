@@ -3,6 +3,7 @@ package com.thesis.backend.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping(path = "/user")
-    public ResponseEntity<String> currentUserInformation() {
-        return new ResponseEntity<>("nice", HttpStatus.OK);
+    public ResponseEntity<String> currentUserInformation(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return new ResponseEntity<>(userDetails.getAuthorities().toString(), HttpStatus.OK);
     }
 }
