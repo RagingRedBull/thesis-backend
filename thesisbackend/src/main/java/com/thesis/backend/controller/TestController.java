@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping(path = "/user")
-    public ResponseEntity<String> currentUserInformation(Authentication auth) {
-        return new ResponseEntity<>(auth.getAuthorities().toString(), HttpStatus.OK);
+    public ResponseEntity<String> currentUserInformation() {
+        return new ResponseEntity<>("nice", HttpStatus.OK);
     }
 }
