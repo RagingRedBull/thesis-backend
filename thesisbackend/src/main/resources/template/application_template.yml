@@ -23,3 +23,4 @@ keycloak:
   realm:
   resource:
   public-client:
+  bearer-only:
