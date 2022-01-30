@@ -53,10 +53,6 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/images/new")
                 .hasRole("admin")
-                .anyRequest()
-                .permitAll()
-                .and()
-                .authorizeRequests()
                 .antMatchers(HttpMethod.GET)
                 .permitAll();
     }
