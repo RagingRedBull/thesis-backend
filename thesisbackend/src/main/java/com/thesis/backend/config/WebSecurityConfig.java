@@ -52,8 +52,10 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/images/new")
-                .hasAnyRole("ROLE_admin", "ROLE_building-admin")
-                .antMatchers(HttpMethod.GET)
+                .hasAnyRole("admin", "building-admin")
+                .antMatchers("/test*")
+                .authenticated()
+                .antMatchers(HttpMethod.GET, "/floor*", "/log*", "/images*")
                 .permitAll();
     }
 }
