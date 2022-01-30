@@ -18,3 +18,8 @@ server:
     context-path: /prmts
   error:
     include-stacktrace: never
+keycloak:
+  auth-server-url:
+  realm:
+  resource:
+  public-client:
