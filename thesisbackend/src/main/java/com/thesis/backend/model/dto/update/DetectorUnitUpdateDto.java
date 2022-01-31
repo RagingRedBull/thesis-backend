@@ -1,7 +1,7 @@
 package com.thesis.backend.model.dto.update;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.thesis.backend.model.dto.detector.DetectorUnitDto;
+import com.thesis.backend.model.dto.DetectorUnitDto;
 
 import java.util.Set;
 

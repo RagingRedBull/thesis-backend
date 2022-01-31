@@ -1,4 +1,4 @@
-package com.thesis.backend.model.dto.detector;
+package com.thesis.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -60,5 +60,16 @@ public class DetectorUnitDto {
 
     public void setYpos(int ypos) {
         this.ypos = ypos;
+    }
+
+    @Override
+    public String toString() {
+        return "DetectorUnitDto{\n" +
+                "macAddress='" + macAddress + '\'' +
+                "\n, ipV4='" + ipV4 + '\'' +
+                "\n, name='" + name + '\'' +
+                "\n, xpos=" + xpos +
+                "\n, ypos=" + ypos +
+                "n" + '}';
     }
 }

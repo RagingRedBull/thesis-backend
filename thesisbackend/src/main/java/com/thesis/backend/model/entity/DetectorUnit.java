@@ -52,6 +52,10 @@ public class DetectorUnit implements Persistable<String>, Serializable {
         return !isUpdate;
     }
 
+    public String getMacAddress() {
+        return macAddress;
+    }
+
     public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
     }

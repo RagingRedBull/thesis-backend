@@ -1,6 +1,6 @@
 package com.thesis.backend.model.util.mapper;
 
-import com.thesis.backend.model.dto.detector.DetectorUnitDto;
+import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 
 public class DetectorUnitEntityMapper implements EntityMapper<DetectorUnit, DetectorUnitDto> {
@@ -12,7 +12,7 @@ public class DetectorUnitEntityMapper implements EntityMapper<DetectorUnit, Dete
     @Override
     public DetectorUnitDto mapToDto(DetectorUnit entity) {
         DetectorUnitDto dto = new DetectorUnitDto();
-        dto.setMacAddress(entity.getId());
+        dto.setMacAddress(entity.getMacAddress());
         dto.setIpV4(entity.getIpV4());
         dto.setName(entity.getName());
         dto.setXpos(entity.getXpos());

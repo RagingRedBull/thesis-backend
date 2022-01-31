@@ -1,8 +1,12 @@
 package com.thesis.backend.controller;
 
-import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
-import com.thesis.backend.model.dto.sensor.SensorLogDto;
+import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
+import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.util.mapper.DetectorUnitLogEntityMapper;
+import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.model.util.mapper.SensorLogEntityMapper;
 import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.SensorLogService;
 import org.slf4j.Logger;
@@ -16,10 +20,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/log")
+@RequestMapping(path = "/log")
 public class LogsController {
     private final Logger logger = LoggerFactory.getLogger(LogsController.class);
     private DetectorUnitLogService detectorUnitLogService;
@@ -29,17 +35,28 @@ public class LogsController {
         this.detectorUnitLogService = detectorUnitLogService;
         this.sensorLogService = sensorLogService;
     }
-
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        logger.info("GETTING PAGE # " + pageNumber + " WITH SIZE OF " + pageSize);
+    public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber,
+                                                                    @RequestParam int pageSize) {
+        logger.info("Request Entity: Page of Detector Unit LOGS");
+        logger.info("Requested Size: " + pageSize);
+        logger.info("Requested Page No: " + pageNumber);
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "timeRecorded"));
         return new ResponseEntity<>(detectorUnitLogService.findDetectorLogsByPage(page), HttpStatus.OK);
     }
-
-    @GetMapping(path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<SensorLogDto>> getSensorsOfDetectorUnit(@RequestParam long detectorUnitLogId) {
-        logger.info("GETTING SENSOR INFO of DetectorLog: " + detectorUnitLogId);
+    @GetMapping(path = "/{detectorUnitLogId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DetectorUnitLogDto> getOneById(@PathVariable long detectorUnitLogId)
+            throws EntityNotFoundException {
+        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> detectorLogMapper = new DetectorUnitLogEntityMapper();
+        EntityMapper<SensorLog,SensorLogDto> sensorMapper = new SensorLogEntityMapper();
+        DetectorUnitLog log = detectorUnitLogService.findOneByPrimaryKey(detectorUnitLogId);
+        DetectorUnitLogDto dto = detectorLogMapper.mapToDto(log);
+        dto.setSensorLogSet(log.getSensorLogSet().stream().map(sensorMapper::mapToDto).collect(Collectors.toSet()));
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+    @GetMapping(path = "/{detectorUnitLogId}/sensors", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<SensorLogDto>> getSensorLogsByDetectorUnitLog(@PathVariable long detectorUnitLogId) {
+        logger.info("Requested Sensors with Log ID: " + detectorUnitLogId);
         Set<SensorLogDto> sensorLogDtos =
                 sensorLogService.mapSensorLogEntityToDto(sensorLogService.findLogsByDetectorLogId(detectorUnitLogId));
         return new ResponseEntity<>(sensorLogDtos, HttpStatus.OK);

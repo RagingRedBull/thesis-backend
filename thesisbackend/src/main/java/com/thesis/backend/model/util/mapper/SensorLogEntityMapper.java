@@ -1,8 +1,8 @@
 package com.thesis.backend.model.util.mapper;
 
-import com.thesis.backend.model.dto.sensor.DhtSensorLogDto;
-import com.thesis.backend.model.dto.sensor.MqSensorLogDto;
-import com.thesis.backend.model.dto.sensor.SensorLogDto;
+import com.thesis.backend.model.dto.logs.DhtSensorLogDto;
+import com.thesis.backend.model.dto.logs.MqSensorLogDto;
+import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DhtSensorLog;
 import com.thesis.backend.model.entity.logs.MqSensorLog;
 import com.thesis.backend.model.entity.logs.SensorLog;

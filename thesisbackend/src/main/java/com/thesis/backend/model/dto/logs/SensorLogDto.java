@@ -1,4 +1,4 @@
-package com.thesis.backend.model.dto.sensor;
+package com.thesis.backend.model.dto.logs;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,5 +1,6 @@
 package com.thesis.backend.controller;
 
+import com.thesis.backend.exception.InvalidFileTypeException;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
@@ -28,32 +29,21 @@ public class ImageResourcesController {
 
     @GetMapping(path = "/{imageId}")
     @ResponseBody
-    public ResponseEntity<Resource> serveImage(@PathVariable String imageId) {
+    public ResponseEntity<Resource> serveImage(@PathVariable String imageId) throws IOException {
         Tika tika = new Tika();
-        try {
-            Resource resource = imageFileService.load(imageId);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(
-                            tika.detect(resource.getInputStream())
-                    ))
-                    .body(resource);
-        } catch (FileNotFoundException fileNotFoundException) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IOException ioException) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Resource resource = imageFileService.load(imageId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(
+                        tika.detect(resource.getInputStream())
+                ))
+                .body(resource);
     }
 
     @PostMapping(path = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> uploadImage(MultipartFile file) throws IOException {
-        Tika tika = new Tika();
-        if (!tika.detect(file.getInputStream()).contains("image")) {
-            return new ResponseEntity<>("Invalid file!", HttpStatus.UNPROCESSABLE_ENTITY);
-        } else {
-            FloorDto dto = new FloorDto();
-            dto.setImageUrl(imageFileService.save(file));
-            return ResponseEntity.ok(dto);
-        }
+    public ResponseEntity<FloorDto> uploadImage(MultipartFile file) throws IOException, InvalidFileTypeException {
+        FloorDto dto = new FloorDto();
+        dto.setImageUrl(imageFileService.save(file));
+        return ResponseEntity.ok(dto);
     }
 }

@@ -1,7 +1,7 @@
 package com.thesis.backend.model.entity.logs;
 
 
-import com.thesis.backend.model.dto.detector.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 
 import javax.persistence.*;
 import java.io.Serializable;

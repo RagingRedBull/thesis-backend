@@ -2,6 +2,7 @@ package com.thesis.backend.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "compartment")
@@ -10,14 +11,15 @@ public class Compartment implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id")
     private int id;
-    @Column(name = "x_axis")
+    @Column(name = "x_pos")
     private float x;
-    @Column(name = "y_axis")
+    @Column(name = "y_pos")
     private float y;
     @ManyToOne
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
-
+    @OneToMany(mappedBy = "compartment")
+    private Set<DetectorUnit> detectorUnits;
     public int getId() {
         return id;
     }

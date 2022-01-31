@@ -45,6 +45,21 @@ public class Floor implements Serializable {
         this.description = description;
     }
 
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public Set<Compartment> getCompartments() {
+        return compartments;
+    }
+
+    public void setCompartments(Set<Compartment> compartments) {
+        this.compartments = compartments;
+    }
 
     @Override
     public String toString() {
