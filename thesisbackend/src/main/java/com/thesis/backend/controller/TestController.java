@@ -2,6 +2,7 @@ package com.thesis.backend.controller;
 
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.representations.AccessToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,9 +22,9 @@ public class TestController {
     public ResponseEntity<String> currentUserInformation(Authentication authentication) {
         KeycloakPrincipal<KeycloakSecurityContext> principal = (KeycloakPrincipal<KeycloakSecurityContext>)
                 authentication.getPrincipal();
-
-        return new ResponseEntity<>(principal.getKeycloakSecurityContext().getToken().getRealmAccess()
-                .getRoles().toString(), HttpStatus.OK);
+        AccessToken token = principal.getKeycloakSecurityContext().getToken();
+        return new ResponseEntity<>(token.getRealmAccess().getRoles().toString()
+                + token.getName(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/logout")
