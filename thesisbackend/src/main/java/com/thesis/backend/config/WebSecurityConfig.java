@@ -42,15 +42,15 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .cors()
-                .and()
-                .headers()
-                .xssProtection().and()
-                .contentSecurityPolicy("script-src 'self'").and()
+        http.cors()
                 .and()
                 .csrf().disable()
-                .authorizeRequests()
-                .anyRequest().authenticated();
+                .headers()
+                .xssProtection()
+                .and()
+                .contentSecurityPolicy("script-src 'self'");
+        http.authorizeRequests()
+                .anyRequest()
+                .authenticated();
     }
 }
