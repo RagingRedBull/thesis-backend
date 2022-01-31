@@ -50,11 +50,5 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .xssProtection()
                 .and()
                 .contentSecurityPolicy("script-src 'self'");
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/detector/**", "/floor/**", "/images/**",
-                        "/log*").permitAll();
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST).authenticated()
-                .antMatchers("/test/**").authenticated();
     }
 }
