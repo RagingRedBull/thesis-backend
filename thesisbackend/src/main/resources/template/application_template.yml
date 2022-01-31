@@ -24,3 +24,5 @@ keycloak:
   resource:
   public-client:
   bearer-only:
+  credentials:
+    secret:
