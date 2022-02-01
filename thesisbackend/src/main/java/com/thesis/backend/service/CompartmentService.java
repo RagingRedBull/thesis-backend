@@ -2,9 +2,11 @@ package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.CompartmentDto;
 import com.thesis.backend.model.entity.Compartment;
+import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.CompartmentMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.CompartmentRepository;
+import com.thesis.backend.repository.FloorRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class CompartmentService implements EntityService<Compartment, CompartmentDto,Integer> {
     private CompartmentRepository compartmentRepository;
+    private FloorRepository floorRepository;
 
-    public CompartmentService(CompartmentRepository compartmentRepository) {
+    public CompartmentService(CompartmentRepository compartmentRepository, FloorRepository floorRepository) {
         this.compartmentRepository = compartmentRepository;
+        this.floorRepository = floorRepository;
     }
 
     @Override
@@ -33,8 +37,11 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
 
     @Override
     public Compartment saveOne(CompartmentDto compartmentDto) {
-//        Compartment compartment =
-        return null;
+        EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
+        Floor floor = floorRepository.getById(compartmentDto.getFloorId());
+        Compartment compartment = mapper.mapToEntity(compartmentDto);
+        compartment.setFloor(floor);
+        return compartmentRepository.saveAndFlush(compartment);
     }
 
     public Set<Compartment> findCompartmentsByFloorId(int floorId) {
