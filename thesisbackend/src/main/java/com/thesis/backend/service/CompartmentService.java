@@ -1,7 +1,12 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.CompartmentDto;
+import com.thesis.backend.model.dto.KonvaDimensionsDto;
 import com.thesis.backend.model.entity.Compartment;
+import com.thesis.backend.model.entity.KonvaDimensions;
+import com.thesis.backend.model.util.mapper.CompartmentMapper;
+import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.model.util.mapper.KonvaDimensionsMapper;
 import com.thesis.backend.repository.CompartmentRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import org.springframework.stereotype.Service;
@@ -9,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CompartmentService implements EntityService<Compartment, CompartmentDto,Integer> {
@@ -36,5 +42,20 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
 
     public Set<Compartment> findCompartmentsByFloorId(int floorId) {
         return compartmentRepository.findByFloor_Id(floorId);
+    }
+
+    public Set<CompartmentDto> convertEntitySetToDto (Set<Compartment> compartments) {
+        return compartments.stream()
+                .map(this::buildCompartmentDto)
+                .collect(Collectors.toSet());
+    }
+
+    private CompartmentDto buildCompartmentDto(Compartment entity) {
+        EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
+        EntityMapper<KonvaDimensions, KonvaDimensionsDto> dimensionsMapper = new KonvaDimensionsMapper();
+        CompartmentDto dto = mapper.mapToDto(entity);
+        dimensionsMapper = new KonvaDimensionsMapper();
+        dto.setKonvaDimensionsDto(dimensionsMapper.mapToDto(entity.getDimensions()));
+        return dto;
     }
 }

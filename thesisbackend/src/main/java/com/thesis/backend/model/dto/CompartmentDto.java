@@ -9,6 +9,7 @@ public class CompartmentDto {
     private int width;
     private int depth;
     private int floorId;
+    private KonvaDimensionsDto konvaDimensionsDto;
 
     public int getId() {
         return id;
@@ -56,5 +57,13 @@ public class CompartmentDto {
 
     public void setFloorId(int floorId) {
         this.floorId = floorId;
+    }
+
+    public KonvaDimensionsDto getKonvaDimensionsDto() {
+        return konvaDimensionsDto;
+    }
+
+    public void setKonvaDimensionsDto(KonvaDimensionsDto konvaDimensionsDto) {
+        this.konvaDimensionsDto = konvaDimensionsDto;
     }
 }

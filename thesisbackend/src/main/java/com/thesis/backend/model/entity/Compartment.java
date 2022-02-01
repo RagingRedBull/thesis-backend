@@ -91,4 +91,5 @@ public class Compartment implements Serializable {
     public void setDetectorUnits(Set<DetectorUnit> detectorUnits) {
         this.detectorUnits = detectorUnits;
     }
+
 }
