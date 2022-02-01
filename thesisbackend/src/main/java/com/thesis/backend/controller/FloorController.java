@@ -4,6 +4,7 @@ import com.thesis.backend.model.dto.CompartmentDto;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.Floor;
+import com.thesis.backend.model.util.mapper.CompartmentMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.service.CompartmentService;
@@ -33,8 +34,8 @@ public class FloorController {
     @GetMapping(path = "/all")
     public ResponseEntity<Page<FloorDto>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
         logger.info("Page Size: " + pageSize);
-        logger.info("Page: " + (pageNumber-1));
-        return new ResponseEntity<>(floorService.getAllFloorByPage(pageNumber,pageSize), HttpStatus.OK);
+        logger.info("Page: " + (pageNumber - 1));
+        return ResponseEntity.ok(floorService.getAllFloorByPage(pageNumber, pageSize));
     }
 
     @GetMapping(path = "/{floorId}", produces = "application/json")
@@ -44,6 +45,7 @@ public class FloorController {
         logger.info("Floor ID " + dto.getId() + " found.");
         return ResponseEntity.ok(dto);
     }
+
     @GetMapping(path = "/{floorId}/compartment", produces = "application/json")
     public ResponseEntity<Set<CompartmentDto>> getComartpmentByFloorId(@PathVariable int floorId) {
         Set<Compartment> compartments = compartmentService.findCompartmentsByFloorId(floorId);
@@ -51,11 +53,19 @@ public class FloorController {
         return ResponseEntity.ok()
                 .body(compartmentDtos);
     }
+
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FloorDto> addFloor(@RequestBody FloorDto floorDto)
-            {
-        floorService.saveOne(floorDto);
-        return new ResponseEntity<>(floorDto, HttpStatus.OK);
+    public ResponseEntity<FloorDto> addFloor(@RequestBody FloorDto floorDto) {
+        EntityMapper<Floor, FloorDto> mapper = new FloorMapper();
+        floorDto = mapper.mapToDto(floorService.saveOne(floorDto));
+        return ResponseEntity.ok(floorDto);
+    }
+
+    @PostMapping(path = "/{floorId}/compartment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CompartmentDto> addCompartment(CompartmentDto compartmentDto) {
+        EntityMapper<Compartment, CompartmentDto> compartmentMapper = new CompartmentMapper();
+        compartmentDto = compartmentMapper.mapToDto(compartmentService.saveOne(compartmentDto));
+        return ResponseEntity.ok(compartmentDto);
     }
 }

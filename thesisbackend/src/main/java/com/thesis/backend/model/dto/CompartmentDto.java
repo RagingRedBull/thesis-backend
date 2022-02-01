@@ -8,8 +8,11 @@ public class CompartmentDto {
     private int yDimension;
     private int width;
     private int depth;
+    private int xKonva;
+    private int yKonva;
+    private int widthKonva;
+    private int heightKonva;
     private int floorId;
-    private KonvaDimensionsDto konvaDimensionsDto;
 
     public int getId() {
         return id;
@@ -51,19 +54,43 @@ public class CompartmentDto {
         this.depth = depth;
     }
 
+    public int getxKonva() {
+        return xKonva;
+    }
+
+    public void setxKonva(int xKonva) {
+        this.xKonva = xKonva;
+    }
+
+    public int getyKonva() {
+        return yKonva;
+    }
+
+    public void setyKonva(int yKonva) {
+        this.yKonva = yKonva;
+    }
+
+    public int getWidthKonva() {
+        return widthKonva;
+    }
+
+    public void setWidthKonva(int widthKonva) {
+        this.widthKonva = widthKonva;
+    }
+
+    public int getHeightKonva() {
+        return heightKonva;
+    }
+
+    public void setHeightKonva(int heightKonva) {
+        this.heightKonva = heightKonva;
+    }
+
     public int getFloorId() {
         return floorId;
     }
 
     public void setFloorId(int floorId) {
         this.floorId = floorId;
-    }
-
-    public KonvaDimensionsDto getKonvaDimensionsDto() {
-        return konvaDimensionsDto;
-    }
-
-    public void setKonvaDimensionsDto(KonvaDimensionsDto konvaDimensionsDto) {
-        this.konvaDimensionsDto = konvaDimensionsDto;
     }
 }
