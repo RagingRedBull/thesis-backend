@@ -3,7 +3,7 @@ package com.thesis.backend.model.util.mapper;
 import com.thesis.backend.model.dto.logs.SensorDto;
 import com.thesis.backend.model.entity.Sensor;
 
-public class SensorEntityMapper implements EntityMapper<Sensor, SensorDto> {
+public class SensorMapper implements EntityMapper<Sensor, SensorDto> {
     @Override
     public SensorDto mapToDto(Sensor entity) {
         SensorDto dto = new SensorDto();

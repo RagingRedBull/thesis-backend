@@ -3,23 +3,15 @@ package com.thesis.backend.controller;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.EntityMapper;
-import com.thesis.backend.model.util.mapper.FloorEntityMapper;
-import com.thesis.backend.model.util.wrapper.FloorPayload;
+import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.service.FloorService;
-import com.thesis.backend.service.interfaces.FileService;
-import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/floor")
@@ -40,7 +32,7 @@ public class FloorController {
 
     @GetMapping(path = "/{floorId}", produces = "application/json")
     public ResponseEntity<FloorDto> getOne(int floorId) {
-        EntityMapper<Floor, FloorDto> mapper = new FloorEntityMapper();
+        EntityMapper<Floor, FloorDto> mapper = new FloorMapper();
         FloorDto dto = mapper.mapToDto(floorService.findOneByPrimaryKey(floorId));
         logger.info("Floor ID " + dto.getId() + " found.");
         return ResponseEntity.ok(dto);

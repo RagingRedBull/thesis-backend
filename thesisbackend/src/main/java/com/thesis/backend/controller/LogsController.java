@@ -4,9 +4,9 @@ import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
-import com.thesis.backend.model.util.mapper.DetectorUnitLogEntityMapper;
+import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
-import com.thesis.backend.model.util.mapper.SensorLogEntityMapper;
+import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.SensorLogService;
 import org.slf4j.Logger;
@@ -47,8 +47,8 @@ public class LogsController {
     @GetMapping(path = "/{detectorUnitLogId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DetectorUnitLogDto> getOneById(@PathVariable long detectorUnitLogId)
             throws EntityNotFoundException {
-        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> detectorLogMapper = new DetectorUnitLogEntityMapper();
-        EntityMapper<SensorLog,SensorLogDto> sensorMapper = new SensorLogEntityMapper();
+        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> detectorLogMapper = new DetectorUnitLogMapper();
+        EntityMapper<SensorLog,SensorLogDto> sensorMapper = new SensorLogMapper();
         DetectorUnitLog log = detectorUnitLogService.findOneByPrimaryKey(detectorUnitLogId);
         DetectorUnitLogDto dto = detectorLogMapper.mapToDto(log);
         dto.setSensorLogSet(log.getSensorLogSet().stream().map(sensorMapper::mapToDto).collect(Collectors.toSet()));
