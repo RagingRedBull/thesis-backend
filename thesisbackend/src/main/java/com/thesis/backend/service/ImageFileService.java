@@ -3,7 +3,6 @@ package com.thesis.backend.service;
 import com.thesis.backend.exception.InvalidFileException;
 import com.thesis.backend.service.interfaces.FileService;
 import org.apache.tika.Tika;
-import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -15,7 +14,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.xml.sax.SAXException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
