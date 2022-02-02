@@ -47,7 +47,7 @@ public class FloorController {
     }
 
     @GetMapping(path = "/{floorId}/compartment", produces = "application/json")
-    public ResponseEntity<Set<CompartmentDto>> getComartpmentByFloorId(@PathVariable int floorId) {
+    public ResponseEntity<Set<CompartmentDto>> getCompartmentByFloorId(@PathVariable int floorId) {
         Set<Compartment> compartments = compartmentService.findCompartmentsByFloorId(floorId);
         Set<CompartmentDto> compartmentDtos = compartmentService.convertEntitySetToDto(compartments);
         return ResponseEntity.ok()

@@ -1,6 +1,6 @@
 package com.thesis.backend.exception.handler;
 
-import com.thesis.backend.exception.InvalidFileTypeException;
+import com.thesis.backend.exception.InvalidFileException;
 import com.thesis.backend.exception.response.ApiErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -33,8 +33,8 @@ public class PrmtsExceptionHandler extends ResponseEntityExceptionHandler {
         apiErrorResponse.setMessage(entityNotFoundException.getLocalizedMessage());
         return buildResponseEntity(apiErrorResponse);
     }
-    @ExceptionHandler(InvalidFileTypeException.class)
-    protected ResponseEntity<Object> handleInvalidFileType(InvalidFileTypeException invalidFileTypeException) {
+    @ExceptionHandler(InvalidFileException.class)
+    protected ResponseEntity<Object> handleInvalidFileType(InvalidFileException invalidFileTypeException) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY);
         apiErrorResponse.setMessage(invalidFileTypeException.getLocalizedMessage());
         return buildResponseEntity(apiErrorResponse);
