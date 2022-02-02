@@ -16,7 +16,7 @@ public class Floor implements Serializable {
     private String description;
     @Column(name = "image_name", unique = true)
     private String imageName;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "floor")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "floor")
     private Set<Compartment> compartments;
     public Floor() {
     }
