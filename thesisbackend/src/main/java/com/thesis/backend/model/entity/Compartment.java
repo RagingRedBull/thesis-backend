@@ -19,9 +19,14 @@ public class Compartment implements Serializable {
     private int width;
     @Column(name = "depth")
     private int depth;
-    @OneToOne(mappedBy = "compartment", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private KonvaDimensions dimensions;
+    @Column(name = "x_konva")
+    private int xKonva;
+    @Column(name = "y_konva")
+    private int yKonva;
+    @Column(name = "width_konva")
+    private int widthKonva;
+    @Column(name = "height_konva")
+    private int heightKonva;
     @ManyToOne
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
@@ -68,12 +73,36 @@ public class Compartment implements Serializable {
         this.depth = depth;
     }
 
-    public KonvaDimensions getDimensions() {
-        return dimensions;
+    public int getxKonva() {
+        return xKonva;
     }
 
-    public void setDimensions(KonvaDimensions dimensions) {
-        this.dimensions = dimensions;
+    public void setxKonva(int xKonva) {
+        this.xKonva = xKonva;
+    }
+
+    public int getyKonva() {
+        return yKonva;
+    }
+
+    public void setyKonva(int yKonva) {
+        this.yKonva = yKonva;
+    }
+
+    public int getWidthKonva() {
+        return widthKonva;
+    }
+
+    public void setWidthKonva(int widthKonva) {
+        this.widthKonva = widthKonva;
+    }
+
+    public int getHeightKonva() {
+        return heightKonva;
+    }
+
+    public void setHeightKonva(int heightKonva) {
+        this.heightKonva = heightKonva;
     }
 
     public Floor getFloor() {
