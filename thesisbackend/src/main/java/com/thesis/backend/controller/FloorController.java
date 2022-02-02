@@ -62,7 +62,7 @@ public class FloorController {
         return ResponseEntity.ok(floorDto);
     }
 
-    @PostMapping(path = "/{floorId}/compartment", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{floorId}/compartment/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> addCompartment(CompartmentDto compartmentDto) {
         EntityMapper<Compartment, CompartmentDto> compartmentMapper = new CompartmentMapper();
         compartmentDto = compartmentMapper.mapToDto(compartmentService.saveOne(compartmentDto));

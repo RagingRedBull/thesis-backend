@@ -14,6 +14,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.ContentHandler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,8 +46,8 @@ public class ImageFileService implements FileService {
         if (! tika.detect(file.getInputStream()).contains(("image"))) {
             throw new InvalidFileException("Invalid File Type!");
         }
-        if(isValidResolution(file.getInputStream())){
-
+        if(!isValidResolution(file.getInputStream())){
+            throw new InvalidFileException("");
         }
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + file.getOriginalFilename();
@@ -60,11 +61,10 @@ public class ImageFileService implements FileService {
     private boolean isValidResolution(InputStream fileInputStream) {
         boolean isValid = true;
         Parser parser = new AutoDetectParser();
-        BodyContentHandler handler = new BodyContentHandler();
+        ContentHandler handler = new BodyContentHandler();
         Metadata metadata = new Metadata();
-        ParseContext context = new ParseContext();
         try {
-            parser.parse(fileInputStream, handler,metadata,context);
+            parser.parse(fileInputStream, handler,metadata);
 
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
