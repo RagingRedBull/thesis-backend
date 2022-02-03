@@ -11,6 +11,8 @@ public class Compartment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+    @Column(name = "name")
+    private String name;
     @Column(name = "x_dimension")
     private int xDimension;
     @Column(name = "y_dimension")
@@ -39,6 +41,14 @@ public class Compartment implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getxDimension() {

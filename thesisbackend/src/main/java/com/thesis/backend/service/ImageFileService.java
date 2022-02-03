@@ -60,18 +60,16 @@ public class ImageFileService implements FileService {
 
     private boolean isValidResolution(InputStream fileInputStream) {
         boolean isValid = true;
+        int imgWidth;
+        int imgHeight;
         Parser parser = new AutoDetectParser();
-        ContentHandler handler = new BodyContentHandler();
+        BodyContentHandler handler = new BodyContentHandler();
         Metadata metadata = new Metadata();
+        ParseContext context = new ParseContext();
         try {
-            parser.parse(fileInputStream, handler,metadata);
-
+            parser.parse(fileInputStream, handler,metadata, context);
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
-        }
-        String[] metadataNames = metadata.names();
-        for(String name : metadataNames) {
-            System.out.println(name + ": " + metadata.get(name));
         }
         return isValid;
     }
