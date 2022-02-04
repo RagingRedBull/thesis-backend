@@ -9,12 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
@@ -56,7 +59,9 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         logger.info("ROW ID: " + detectorUnitLog.getId());
         return detectorUnitLog;
     }
-
+    public Set<DetectorUnitLog> findDetectorLogsByDetectorUnitId(Set<String> detectorUnits, Sort sort) {
+        return detectorUnitLogRepository.findFirstByMacAddressIn(detectorUnits, sort);
+    }
     public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
         DetectorUnitLogMapper mapper = new DetectorUnitLogMapper();
         return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);

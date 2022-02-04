@@ -75,4 +75,5 @@ public abstract class SensorLog implements Serializable {
     public void setDetectorUnitLog(DetectorUnitLog detectorUnitLog) {
         this.detectorUnitLog = detectorUnitLog;
     }
+
 }

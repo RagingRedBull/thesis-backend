@@ -4,6 +4,7 @@ import javax.persistence.Column;
 
 public class CompartmentDto {
     private int id;
+    private String name;
     private int xDimension;
     private int yDimension;
     private int width;
@@ -20,6 +21,14 @@ public class CompartmentDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getxDimension() {

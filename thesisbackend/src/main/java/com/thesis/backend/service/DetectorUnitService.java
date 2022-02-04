@@ -8,6 +8,7 @@ import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
 import com.thesis.backend.model.dto.update.SensorUpdateDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Sensor;
+import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.DetectorUnitRepository;
