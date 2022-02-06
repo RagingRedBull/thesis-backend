@@ -4,7 +4,7 @@ import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.util.mapper.EntityMapper;
-import com.thesis.backend.model.util.mapper.SensorLogEntityMapper;
+import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
 
     @Override
     public SensorLog saveOne(SensorLogDto sensorLogDto) {
-        EntityMapper<SensorLog, SensorLogDto> mapper = new SensorLogEntityMapper();
+        EntityMapper<SensorLog, SensorLogDto> mapper = new SensorLogMapper();
         return sensorLogRepository.save(mapper.mapToEntity(sensorLogDto));
     }
 
@@ -48,7 +48,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
         return sensorLogRepository.findByDetectorUnitLog(id);
     }
     public Set<SensorLog> mapSensorLogDtoEntitySet(Set<SensorLogDto> sensorLogDtoSet, DetectorUnitLog detectorUnitLog){
-        SensorLogEntityMapper mapper = new SensorLogEntityMapper();
+        SensorLogMapper mapper = new SensorLogMapper();
         return sensorLogDtoSet.stream()
                 .map(sensorLogDto -> {
                     SensorLog log = mapper.mapToEntity(sensorLogDto);
@@ -59,7 +59,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
     }
 
     public Set<SensorLogDto> mapSensorLogEntityToDto(List<SensorLog> sensorLogSet) {
-        SensorLogEntityMapper mapper = new SensorLogEntityMapper();
+        SensorLogMapper mapper = new SensorLogMapper();
         return sensorLogSet.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toCollection(LinkedHashSet::new));

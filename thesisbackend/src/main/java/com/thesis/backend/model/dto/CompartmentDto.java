@@ -1,39 +1,19 @@
-package com.thesis.backend.model.entity;
+package com.thesis.backend.model.dto;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Set;
+import javax.persistence.Column;
 
-@Entity
-@Table(name = "compartment")
-public class Compartment implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class CompartmentDto {
     private int id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "x_dimension")
     private int xDimension;
-    @Column(name = "y_dimension")
     private int yDimension;
-    @Column(name = "width")
     private int width;
-    @Column(name = "depth")
     private int depth;
-    @Column(name = "x_konva")
     private int xKonva;
-    @Column(name = "y_konva")
     private int yKonva;
-    @Column(name = "width_konva")
     private int widthKonva;
-    @Column(name = "height_konva")
     private int heightKonva;
-    @ManyToOne
-    @JoinColumn(name = "floor_id", nullable = false)
-    private Floor floor;
-    @OneToMany(mappedBy = "compartment")
-    private Set<DetectorUnit> detectorUnits;
+    private int floorId;
 
     public int getId() {
         return id;
@@ -115,19 +95,11 @@ public class Compartment implements Serializable {
         this.heightKonva = heightKonva;
     }
 
-    public Floor getFloor() {
-        return floor;
+    public int getFloorId() {
+        return floorId;
     }
 
-    public void setFloor(Floor floor) {
-        this.floor = floor;
-    }
-
-    public Set<DetectorUnit> getDetectorUnits() {
-        return detectorUnits;
-    }
-
-    public void setDetectorUnits(Set<DetectorUnit> detectorUnits) {
-        this.detectorUnits = detectorUnits;
+    public void setFloorId(int floorId) {
+        this.floorId = floorId;
     }
 }

@@ -3,9 +3,9 @@ package com.thesis.backend.model.util.mapper;
 import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 
-public class DetectorUnitEntityMapper implements EntityMapper<DetectorUnit, DetectorUnitDto> {
+public class DetectorUnitMapper implements EntityMapper<DetectorUnit, DetectorUnitDto> {
 
-    public DetectorUnitEntityMapper() {
+    public DetectorUnitMapper() {
 
     }
 

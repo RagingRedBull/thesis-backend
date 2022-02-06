@@ -7,7 +7,7 @@ import com.thesis.backend.model.entity.logs.DhtSensorLog;
 import com.thesis.backend.model.entity.logs.MqSensorLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 
-public class SensorLogEntityMapper implements EntityMapper<SensorLog, SensorLogDto> {
+public class SensorLogMapper implements EntityMapper<SensorLog, SensorLogDto> {
     @Override
     public SensorLogDto mapToDto(SensorLog entity) {
         SensorLogDto dto = null;

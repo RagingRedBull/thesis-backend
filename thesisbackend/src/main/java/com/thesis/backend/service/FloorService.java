@@ -3,7 +3,7 @@ package com.thesis.backend.service;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.EntityMapper;
-import com.thesis.backend.model.util.mapper.FloorEntityMapper;
+import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.repository.FloorRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import org.springframework.data.domain.Page;
@@ -11,10 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,15 +36,15 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
 
     @Override
     public Floor saveOne(FloorDto floorDto) {
-        EntityMapper<Floor, FloorDto> mapper = new FloorEntityMapper();
+        EntityMapper<Floor, FloorDto> mapper = new FloorMapper();
         Floor entity = mapper.mapToEntity(floorDto);
         entity = floorRepository.saveAndFlush(entity);
         return entity;
     }
 
     public Page<FloorDto> getAllFloorByPage (int pageNumber, int pageSize) {
-        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "timeRecorded"));
-        FloorEntityMapper mapper = new FloorEntityMapper();
+        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name"));
+        FloorMapper mapper = new FloorMapper();
         return floorRepository.findAll(page).map(mapper::mapToDto);
     }
 }
