@@ -38,7 +38,7 @@ public class DetectorUnitController {
         logger.info("Requested Size: " + pageSize);
         logger.info("Requested Page No: " + pageNumber);
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
-        return new ResponseEntity<>(detectorUnitService.findDetectorUnitsByPage(page), HttpStatus.OK);
+        return ResponseEntity.ok(detectorUnitService.findDetectorUnitsByPage(page));
     }
 
     @GetMapping(path = "/{macAddress}")
@@ -50,27 +50,21 @@ public class DetectorUnitController {
         detectorUnitDto.setIpV4(ipV4);
         logger.info(detectorUnitDto.getMacAddress());
         String sensorSetJson = detectorUnitService.buildSensorSetJSON(detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress()));
-        return new ResponseEntity<>(sensorSetJson, HttpStatus.OK);
+        return ResponseEntity.ok(sensorSetJson);
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) {
-        logger.info("DTO: " + detectorUnitDto.toString());
-        try{
-            DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
-            detectorUnitDto.setIpV4(entity.getIpV4());
-            logger.info("Updating Ip from: " + detectorUnitDto.getMacAddress() +
-                    " to: " + detectorUnitDto.getIpV4());
-        } catch (EntityNotFoundException e) {
-            logger.info("Registering Unit: " + detectorUnitDto.getMacAddress());
-        }
+    public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) throws EntityNotFoundException{
+        DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
+        detectorUnitDto.setIpV4(entity.getIpV4());
         detectorUnitService.saveOne(detectorUnitDto);
-        return new ResponseEntity<>(detectorUnitDto.toString(), HttpStatus.CREATED);
+        logger.info("DTO: " + detectorUnitDto);
+        return ResponseEntity.ok(detectorUnitDto.toString());
     }
 
     @PatchMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
         detectorUnitService.updateSensorList(detectorUnitUpdateDto);
-        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        return ResponseEntity.ok(detectorUnitUpdateDto.toString());
     }
 }

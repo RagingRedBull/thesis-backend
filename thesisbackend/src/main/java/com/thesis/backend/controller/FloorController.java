@@ -50,8 +50,7 @@ public class FloorController {
     public ResponseEntity<Set<CompartmentDto>> getCompartmentByFloorId(@PathVariable int floorId) {
         Set<Compartment> compartments = compartmentService.findCompartmentsByFloorId(floorId);
         Set<CompartmentDto> compartmentDtos = compartmentService.convertEntitySetToDto(compartments);
-        return ResponseEntity.ok()
-                .body(compartmentDtos);
+        return ResponseEntity.ok(compartmentDtos);
     }
 
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,

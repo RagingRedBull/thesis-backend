@@ -1,8 +1,12 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
+import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
+import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import org.slf4j.Logger;
@@ -18,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
@@ -65,5 +70,15 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
         DetectorUnitLogMapper mapper = new DetectorUnitLogMapper();
         return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);
+    }
+
+    public DetectorUnitLogDto buildDetectorUnitLogDto(DetectorUnitLog log) {
+        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> detectorLogMapper = new DetectorUnitLogMapper();
+        EntityMapper<SensorLog, SensorLogDto> sensorMapper = new SensorLogMapper();
+        DetectorUnitLogDto dto = detectorLogMapper.mapToDto(log);
+        dto.setSensorLogSet(log.getSensorLogSet().stream()
+                .map(sensorMapper::mapToDto)
+                .collect(Collectors.toSet()));
+        return dto;
     }
 }

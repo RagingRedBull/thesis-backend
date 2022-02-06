@@ -85,7 +85,7 @@ public class LogsController {
         Set<DetectorUnitLog> logs = detectorUnitLogService.findDetectorLogsByDetectorUnitId(detectorUnitMacAdresses
                 , Sort.by(Sort.Order.desc("timeRecorded")));
         Set<DetectorUnitLogDto> dtos = logs.stream()
-                .map(this::buildDetectorUnitLogDto)
+                .map(detectorUnitLogService::buildDetectorUnitLogDto)
                 .collect(Collectors.toSet());
         return ResponseEntity.ok(dtos);
     }
@@ -97,13 +97,5 @@ public class LogsController {
         return ResponseEntity.ok("Uploaded!" + "\n" + "Row ID: " + log.getId());
     }
 
-    private DetectorUnitLogDto buildDetectorUnitLogDto(DetectorUnitLog log) {
-        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> detectorLogMapper = new DetectorUnitLogMapper();
-        EntityMapper<SensorLog, SensorLogDto> sensorMapper = new SensorLogMapper();
-        DetectorUnitLogDto dto = detectorLogMapper.mapToDto(log);
-        dto.setSensorLogSet(log.getSensorLogSet().stream()
-                .map(sensorMapper::mapToDto)
-                .collect(Collectors.toSet()));
-        return dto;
-    }
+
 }
