@@ -53,6 +53,14 @@ public class FloorController {
         return ResponseEntity.ok(compartmentDtos);
     }
 
+    @PutMapping(path = "/{floorId}/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FloorDto> updateFloorInfo(FloorDto dto) {
+        return ResponseEntity.ok(null);
+    }
+    @PutMapping(path = "/{floorId}/compartment/update")
+    public ResponseEntity<CompartmentDto> updateCompartmentInfo(CompartmentDto dto) {
+        return ResponseEntity.ok(null);
+    }
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FloorDto> addFloor(@RequestBody FloorDto floorDto) {
@@ -62,7 +70,9 @@ public class FloorController {
     }
 
     @PostMapping(path = "/{floorId}/compartment/new", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CompartmentDto> addCompartment(CompartmentDto compartmentDto) {
+    public ResponseEntity<CompartmentDto> addCompartment(@PathVariable int floorId,
+                                                         CompartmentDto compartmentDto) {
+        compartmentDto.setFloorId(floorId);
         EntityMapper<Compartment, CompartmentDto> compartmentMapper = new CompartmentMapper();
         compartmentDto = compartmentMapper.mapToDto(compartmentService.saveOne(compartmentDto));
         return ResponseEntity.ok(compartmentDto);
