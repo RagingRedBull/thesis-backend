@@ -8,6 +8,7 @@ public class CompartmentMapper implements EntityMapper<Compartment, CompartmentD
     public CompartmentDto mapToDto(Compartment compartment) {
         CompartmentDto dto = new CompartmentDto();
         dto.setId(compartment.getId());
+        dto.setName(compartment.getName());
         dto.setxDimension(compartment.getxDimension());
         dto.setyDimension(compartment.getxDimension());
         dto.setWidth(compartment.getWidth());
@@ -23,6 +24,7 @@ public class CompartmentMapper implements EntityMapper<Compartment, CompartmentD
     public Compartment mapToEntity(CompartmentDto compartmentDto) {
         Compartment entity = new Compartment();
         entity.setId(compartmentDto.getId());
+        entity.setName(compartmentDto.getName());
         entity.setxDimension(compartmentDto.getxDimension());
         entity.setyDimension(compartmentDto.getyDimension());
         entity.setWidth(compartmentDto.getWidth());
