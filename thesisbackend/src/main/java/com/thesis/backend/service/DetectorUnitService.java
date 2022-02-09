@@ -3,6 +3,7 @@ package com.thesis.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
 import com.thesis.backend.model.dto.update.SensorUpdateDto;
@@ -49,7 +50,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         Optional<DetectorUnit> wrapper = detectorUnitRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
             logger.error("No Detector Unit with Mac Address: " + primaryKey);
-            throw new EntityNotFoundException("No Detector Unit with Mac Address: " + primaryKey);
+            throw new PrmtsEntityNotFoundException(DetectorUnit.class, primaryKey);
         } else {
             return wrapper.get();
         }

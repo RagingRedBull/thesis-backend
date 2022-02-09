@@ -1,6 +1,7 @@
 package com.thesis.backend.exception.handler;
 
 import com.thesis.backend.exception.InvalidFileException;
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.exception.response.ApiErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -27,10 +28,10 @@ public class PrmtsExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiErrorResponse);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException entityNotFoundException) {
+    @ExceptionHandler(PrmtsEntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(PrmtsEntityNotFoundException prmtsEntityNotFoundException) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.NOT_FOUND);
-        apiErrorResponse.setMessage(entityNotFoundException.getLocalizedMessage());
+        apiErrorResponse.setMessage(prmtsEntityNotFoundException.getLocalizedMessage());
         return buildResponseEntity(apiErrorResponse);
     }
     @ExceptionHandler(InvalidFileException.class)

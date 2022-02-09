@@ -1,5 +1,6 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
@@ -32,7 +33,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
         Optional<SensorLog> wrapper = sensorLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
             logger.error("No Sensor Log with ID: " + primaryKey);
-            throw new EntityNotFoundException("No Sensor Log with ID: " + primaryKey);
+            throw new PrmtsEntityNotFoundException(SensorLog.class, primaryKey);
         } else {
             return wrapper.get();
         }

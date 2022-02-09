@@ -1,7 +1,9 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
+import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
@@ -41,7 +43,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         Optional<DetectorUnitLog> wrapper = detectorUnitLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
             logger.error("No Detector Unit Log with ID: " + primaryKey);
-            throw new EntityNotFoundException("No Detector Unit Log with ID: " + primaryKey);
+            throw new PrmtsEntityNotFoundException(DetectorUnit.class, primaryKey);
         } else {
             return wrapper.get();
         }

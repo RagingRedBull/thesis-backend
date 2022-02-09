@@ -1,5 +1,6 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.EntityMapper;
@@ -28,7 +29,7 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
     public Floor findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException{
         Optional<Floor> wrapper = floorRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            throw new EntityNotFoundException("No Floor with ID: " + primaryKey);
+            throw new PrmtsEntityNotFoundException(Floor.class, primaryKey);
         } else {
             return wrapper.get();
         }
