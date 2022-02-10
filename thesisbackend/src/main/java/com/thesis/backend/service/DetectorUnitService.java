@@ -60,6 +60,11 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return detectorUnitRepository.saveAndFlush(mapper.mapToEntity(detectorUnitDto));
     }
 
+    @Override
+    public void deleteOne(String primaryKey) {
+        detectorUnitRepository.deleteById(primaryKey);
+    }
+
     public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }

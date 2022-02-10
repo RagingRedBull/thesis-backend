@@ -33,8 +33,8 @@ public class FloorController {
 
     @GetMapping(path = "/all")
     public ResponseEntity<Page<FloorDto>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        logger.info("Page Size: " + pageSize);
-        logger.info("Page: " + (pageNumber - 1));
+        logger.debug("Page Size: " + pageSize);
+        logger.debug("Page: " + (pageNumber - 1));
         return ResponseEntity.ok(floorService.getAllFloorByPage(pageNumber, pageSize));
     }
 
@@ -42,7 +42,7 @@ public class FloorController {
     public ResponseEntity<FloorDto> getOne(@PathVariable int floorId) {
         EntityMapper<Floor, FloorDto> mapper = new FloorMapper();
         FloorDto dto = mapper.mapToDto(floorService.findOneByPrimaryKey(floorId));
-        logger.info("Floor ID " + dto.getId() + " found.");
+        logger.debug("Floor ID " + dto.getId() + " found.");
         return ResponseEntity.ok(dto);
     }
 
@@ -54,11 +54,11 @@ public class FloorController {
     }
 
     @PutMapping(path = "/{floorId}/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FloorDto> updateFloorInfo(FloorDto dto) {
+    public ResponseEntity<FloorDto> updateFloorInfo(@RequestBody FloorDto dto) {
         return ResponseEntity.ok(null);
     }
     @PutMapping(path = "/{floorId}/compartment/update")
-    public ResponseEntity<CompartmentDto> updateCompartmentInfo(CompartmentDto dto) {
+    public ResponseEntity<CompartmentDto> updateCompartmentInfo(@RequestBody CompartmentDto dto) {
         return ResponseEntity.ok(null);
     }
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -69,6 +69,11 @@ public class FloorController {
         return ResponseEntity.ok(floorDto);
     }
 
+    @DeleteMapping(path = "/{floorId}/delete")
+    public ResponseEntity<Object> deleteFloor(@PathVariable int floorId) {
+        floorService.deleteOne(floorId);
+        return ResponseEntity.ok("Success");
+    }
     @PostMapping(path = "/{floorId}/compartment/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> addCompartment(@PathVariable int floorId,
                                                          CompartmentDto compartmentDto) {

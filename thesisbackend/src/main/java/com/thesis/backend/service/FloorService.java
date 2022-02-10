@@ -42,6 +42,12 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
         return entity;
     }
 
+    @Override
+    public void deleteOne(Integer primaryKey) {
+        floorRepository.deleteById(primaryKey);
+    }
+
+
     public Page<FloorDto> getAllFloorByPage (int pageNumber, int pageSize) {
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name"));
         FloorMapper mapper = new FloorMapper();

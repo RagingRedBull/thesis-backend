@@ -54,6 +54,11 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         return compartmentRepository.saveAndFlush(compartment);
     }
 
+    @Override
+    public void deleteOne(Integer primaryKey) {
+        compartmentRepository.findById(primaryKey);
+    }
+
     public Set<Compartment> findCompartmentsByFloorId(int floorId) {
         return compartmentRepository.findByFloor_Id(floorId);
     }

@@ -16,6 +16,8 @@ public class Floor implements Serializable {
     private String description;
     @Column(name = "image_name", unique = true)
     private String imageName;
+    @Column(name = "order_position")
+    private int order;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "floor")
     private Set<Compartment> compartments;
     public Floor() {
@@ -51,6 +53,14 @@ public class Floor implements Serializable {
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public Set<Compartment> getCompartments() {

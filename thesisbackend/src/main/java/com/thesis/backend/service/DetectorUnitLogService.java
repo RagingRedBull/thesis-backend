@@ -64,6 +64,12 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         logger.info("ROW ID: " + detectorUnitLog.getId());
         return detectorUnitLog;
     }
+
+    @Override
+    public void deleteOne(Long primaryKey) {
+        detectorUnitLogRepository.deleteById(primaryKey);
+    }
+
     public Set<DetectorUnitLog> findDetectorLogsByDetectorUnitId(Set<String> detectorUnits, Sort sort) {
         return detectorUnitLogRepository.findFirstByMacAddressIn(detectorUnits, sort);
     }
