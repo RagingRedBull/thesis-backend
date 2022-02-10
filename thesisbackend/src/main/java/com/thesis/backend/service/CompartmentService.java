@@ -1,5 +1,6 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.CompartmentDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.Floor;
@@ -39,7 +40,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     public Compartment findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException {
         Optional<Compartment> entity = compartmentRepository.findById(primaryKey);
         if (entity.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
         } else {
             return entity.get();
         }

@@ -66,7 +66,7 @@ public class LogsController {
 
     @GetMapping(path = "/{detectorUnitLogId}/sensors", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<SensorLogDto>> getSensorLogsByDetectorUnitLog(@PathVariable long detectorUnitLogId) {
-        logger.info("Requested Sensors with Log ID: " + detectorUnitLogId);
+        logger.debug("Requested Sensors with Log ID: " + detectorUnitLogId);
         Set<SensorLogDto> sensorLogDtos =
                 sensorLogService.mapSensorLogEntityToDto(sensorLogService.findLogsByDetectorLogId(detectorUnitLogId));
         return ResponseEntity.ok(sensorLogDtos);
@@ -74,14 +74,14 @@ public class LogsController {
 
     @GetMapping(path = "/compartment/{compartmentId}")
     public ResponseEntity<Set<DetectorUnitLogDto>> getSensorLogsByCompartment(@PathVariable int compartmentId) {
-        logger.info("Compartment Log ID: " + compartmentId);
+        logger.debug("Compartment Log ID: " + compartmentId);
         Compartment compartment = compartmentService.findOneByPrimaryKey(compartmentId);
         Set<String> detectorUnitMacAdresses = compartment.getDetectorUnits()
                 .stream()
                 .map(DetectorUnit::getMacAddress)
                 .collect(Collectors.toSet());
-        logger.info(detectorUnitMacAdresses.toString());
-        logger.info(compartment.getDetectorUnits().toString());
+        logger.debug(detectorUnitMacAdresses.toString());
+        logger.debug(compartment.getDetectorUnits().toString());
         Set<DetectorUnitLog> logs = detectorUnitLogService.findDetectorLogsByDetectorUnitId(detectorUnitMacAdresses
                 , Sort.by(Sort.Order.desc("timeRecorded")));
         Set<DetectorUnitLogDto> dtos = logs.stream()
@@ -92,9 +92,9 @@ public class LogsController {
 
     @PostMapping(path = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
-        logger.info(detectorUnitLogDto.toString());
+        logger.debug(detectorUnitLogDto.toString());
         DetectorUnitLog log = detectorUnitLogService.saveOne(detectorUnitLogDto);
-        return ResponseEntity.ok("Uploaded!" + "\n" + "Row ID: " + log.getId());
+        return ResponseEntity.ok(null);
     }
 
 
