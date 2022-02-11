@@ -11,6 +11,7 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -27,16 +28,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitLog.class);
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
-
-    public DetectorUnitLogService(DetectorUnitLogRepository detectorUnitLogRepository,
-                                  SensorLogService sensorLogService) {
-        this.detectorUnitLogRepository = detectorUnitLogRepository;
-        this.sensorLogService = sensorLogService;
-    }
 
     @Override
     public DetectorUnitLog findOneByPrimaryKey(Long primaryKey) {

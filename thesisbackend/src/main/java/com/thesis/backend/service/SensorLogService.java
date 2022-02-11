@@ -8,6 +8,7 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class SensorLogService implements EntityService<SensorLog, SensorLogDto, Long> {
     private final Logger logger = LoggerFactory.getLogger(SensorLogService.class);
     private final SensorLogRepository sensorLogRepository;
 
-    public SensorLogService(SensorLogRepository sensorLogRepository) {
-        this.sensorLogRepository = sensorLogRepository;
-    }
 
     @Override
     public SensorLog findOneByPrimaryKey(Long primaryKey) {

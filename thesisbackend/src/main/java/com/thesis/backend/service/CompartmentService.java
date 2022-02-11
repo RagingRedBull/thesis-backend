@@ -14,6 +14,7 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.CompartmentRepository;
 import com.thesis.backend.repository.FloorRepository;
 import com.thesis.backend.service.interfaces.EntityService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CompartmentService implements EntityService<Compartment, CompartmentDto,Integer> {
     private final Logger logger = LoggerFactory.getLogger(CompartmentService.class);
-    private CompartmentRepository compartmentRepository;
-    private FloorRepository floorRepository;
-
-    public CompartmentService(CompartmentRepository compartmentRepository, FloorRepository floorRepository) {
-        this.compartmentRepository = compartmentRepository;
-        this.floorRepository = floorRepository;
-    }
+    private final CompartmentRepository compartmentRepository;
+    private final FloorRepository floorRepository;
 
     @Override
     public Compartment findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException {

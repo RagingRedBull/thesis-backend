@@ -13,6 +13,7 @@ import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.service.CompartmentService;
 import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.SensorLogService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -31,17 +32,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/log")
+@RequiredArgsConstructor
 public class LogsController {
     private final Logger logger = LoggerFactory.getLogger(LogsController.class);
-    private DetectorUnitLogService detectorUnitLogService;
-    private SensorLogService sensorLogService;
-    private CompartmentService compartmentService;
-
-    public LogsController(DetectorUnitLogService detectorUnitLogService, SensorLogService sensorLogService, CompartmentService compartmentService) {
-        this.detectorUnitLogService = detectorUnitLogService;
-        this.sensorLogService = sensorLogService;
-        this.compartmentService = compartmentService;
-    }
+    private final DetectorUnitLogService detectorUnitLogService;
+    private final SensorLogService sensorLogService;
+    private final CompartmentService compartmentService;
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber,

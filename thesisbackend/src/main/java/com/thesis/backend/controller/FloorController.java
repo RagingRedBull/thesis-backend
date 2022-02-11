@@ -9,6 +9,8 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.service.CompartmentService;
 import com.thesis.backend.service.FloorService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,15 +23,11 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/floor")
+@RequiredArgsConstructor
 public class FloorController {
     private final Logger logger = LoggerFactory.getLogger(FloorController.class);
     private final FloorService floorService;
     private final CompartmentService compartmentService;
-
-    public FloorController(FloorService floorService, CompartmentService compartmentService) {
-        this.floorService = floorService;
-        this.compartmentService = compartmentService;
-    }
 
     @GetMapping(path = "/all")
     public ResponseEntity<Page<FloorDto>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {

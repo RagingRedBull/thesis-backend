@@ -7,6 +7,7 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.repository.FloorRepository;
 import com.thesis.backend.service.interfaces.EntityService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,13 +18,10 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class FloorService implements EntityService<Floor, FloorDto, Integer> {
 
-    private FloorRepository floorRepository;
-
-    public FloorService(FloorRepository floorRepository) {
-        this.floorRepository = floorRepository;
-    }
+    private final FloorRepository floorRepository;
 
     @Override
     public Floor findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException{

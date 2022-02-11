@@ -6,6 +6,7 @@ import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.SensorService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,22 +22,18 @@ import javax.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping(path = "/detector")
+@RequiredArgsConstructor
 public class DetectorUnitController {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitController.class);
     private final DetectorUnitService detectorUnitService;
     private final SensorService sensorService;
 
-    public DetectorUnitController(DetectorUnitService detectorUnitService, SensorService sensorService) {
-        this.detectorUnitService = detectorUnitService;
-        this.sensorService = sensorService;
-    }
-
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitDto>> getAllDetectorInfoByPage(@RequestParam int pageNumber,
                                                                           @RequestParam int pageSize) {
-        logger.info("Entity: Paged Detector Units");
-        logger.info("Requested Size: " + pageSize);
-        logger.info("Requested Page No: " + pageNumber);
+        logger.debug("Entity: Paged Detector Units");
+        logger.debug("Requested Size: " + pageSize);
+        logger.debug("Requested Page No: " + pageNumber);
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
         return ResponseEntity.ok(detectorUnitService.findDetectorUnitsByPage(page));
     }

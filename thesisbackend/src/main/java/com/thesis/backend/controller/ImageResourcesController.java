@@ -3,6 +3,7 @@ package com.thesis.backend.controller;
 import com.thesis.backend.exception.InvalidFileException;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.service.interfaces.FileService;
+import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +18,10 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping(path = "/images")
+@RequiredArgsConstructor
 public class ImageResourcesController {
     private final Logger logger = LoggerFactory.getLogger(ImageResourcesController.class);
     private final FileService imageFileService;
-
-    public ImageResourcesController(FileService imageFileService) {
-        this.imageFileService = imageFileService;
-    }
 
     @GetMapping(path = "/{imageId}")
     @ResponseBody

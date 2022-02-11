@@ -14,6 +14,7 @@ import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.DetectorUnitRepository;
 import com.thesis.backend.service.interfaces.EntityService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,16 +35,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class DetectorUnitService implements EntityService<DetectorUnit, DetectorUnitDto, String> {
     private final Logger logger = LoggerFactory.getLogger(DetectorUnitService.class);
     private final EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitMapper();
     private final DetectorUnitRepository detectorUnitRepository;
     private final SensorService sensorService;
 
-    public DetectorUnitService(DetectorUnitRepository detectorUnitRepository, SensorService sensorService) {
-        this.detectorUnitRepository = detectorUnitRepository;
-        this.sensorService = sensorService;
-    }
 
     @Override
     public DetectorUnit findOneByPrimaryKey(String primaryKey) throws EntityNotFoundException{
