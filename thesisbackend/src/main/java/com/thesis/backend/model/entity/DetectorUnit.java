@@ -28,7 +28,7 @@ public class DetectorUnit {
     @JoinTable(
             name = "sensors_join_detector_unit",
             joinColumns = @JoinColumn(name = "detector_unit_id"),
-            inverseJoinColumns = @JoinColumn(name = "sensor_id")
+            inverseJoinColumns = @JoinColumn(name = "sensor_id"),
     )
     private Set<Sensor> associatedSensorSet;
     @ManyToOne
