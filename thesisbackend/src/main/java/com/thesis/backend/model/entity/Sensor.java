@@ -5,14 +5,16 @@ import com.thesis.backend.model.converter.SensorTypeConverter;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "sensor")
-@Data
 public class Sensor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,5 +29,7 @@ public class Sensor implements Serializable {
     @Column(name = "description", length = 255)
     private String description;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "associatedSensorSet")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<DetectorUnit> associatedDetectorUnitSet;
 }

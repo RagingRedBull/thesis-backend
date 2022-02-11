@@ -30,6 +30,8 @@ public class DetectorUnit {
             joinColumns = @JoinColumn(name = "detector_unit_id"),
             inverseJoinColumns = @JoinColumn(name = "sensor_id")
     )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Sensor> associatedSensorSet;
     @ManyToOne
     @JoinColumn(name = "compartment_id")
