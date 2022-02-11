@@ -47,7 +47,8 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
 
     @Override
     public DetectorUnitLog saveOne(DetectorUnitLogDto detectorUnitLogDto) {
-        DetectorUnitLog detectorUnitLog = new DetectorUnitLog(detectorUnitLogDto);
+        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> mapper = new DetectorUnitLogMapper();
+        DetectorUnitLog detectorUnitLog = mapper.mapToEntity(detectorUnitLogDto);
         detectorUnitLog.setTimeRecorded(LocalDateTime.now());
         detectorUnitLog.setSensorLogSet(sensorLogService.mapSensorLogDtoEntitySet(detectorUnitLogDto.getSensorLogSet(),
                 detectorUnitLog));
