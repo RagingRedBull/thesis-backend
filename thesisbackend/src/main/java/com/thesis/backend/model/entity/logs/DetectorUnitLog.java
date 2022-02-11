@@ -3,6 +3,8 @@ package com.thesis.backend.model.entity.logs;
 
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,7 +25,8 @@ public class DetectorUnitLog implements Serializable {
     private String macAddress;
     @Column(name = "time_recorded", nullable = false)
     private LocalDateTime timeRecorded;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "detectorUnitLog", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SensorLog> sensorLogSet;
-
 }

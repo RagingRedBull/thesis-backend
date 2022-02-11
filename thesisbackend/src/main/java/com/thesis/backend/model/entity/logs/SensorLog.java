@@ -4,9 +4,7 @@ import com.thesis.backend.model.converter.SensorNameConverter;
 import com.thesis.backend.model.converter.SensorTypeConverter;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,6 +27,8 @@ public abstract class SensorLog implements Serializable {
     @Column(name = "type", insertable = false, updatable = false)
     @Convert(converter = SensorTypeConverter.class)
     protected SensorType type;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "detector_unit_log_id")
     private DetectorUnitLog detectorUnitLog;
