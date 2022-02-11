@@ -1,6 +1,8 @@
 package com.thesis.backend.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,5 +27,7 @@ public class Floor implements Serializable {
     @Column(name = "order_position")
     private int order;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Compartment> compartments;
 }

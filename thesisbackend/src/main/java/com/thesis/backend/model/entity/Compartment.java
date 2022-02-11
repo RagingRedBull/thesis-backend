@@ -1,13 +1,12 @@
 package com.thesis.backend.model.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
 @Data
-@Entity
 @Table(name = "compartment")
 public class Compartment implements Serializable {
     @Id
@@ -32,9 +31,12 @@ public class Compartment implements Serializable {
     private int widthKonva;
     @Column(name = "height_konva")
     private int heightKonva;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "compartment")
     private Set<DetectorUnit> detectorUnits;
 }

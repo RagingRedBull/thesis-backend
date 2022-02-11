@@ -1,6 +1,8 @@
 package com.thesis.backend.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -31,6 +33,8 @@ public class DetectorUnit {
     private Set<Sensor> associatedSensorSet;
     @ManyToOne
     @JoinColumn(name = "compartment_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Compartment compartment;
 
 }
