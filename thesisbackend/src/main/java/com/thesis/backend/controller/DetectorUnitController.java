@@ -45,7 +45,7 @@ public class DetectorUnitController {
         DetectorUnitDto detectorUnitDto = new DetectorUnitDto();
         detectorUnitDto.setMacAddress(macAddress);
         detectorUnitDto.setIpV4(ipV4);
-        logger.info(detectorUnitDto.getMacAddress());
+        logger.debug(detectorUnitDto.getMacAddress());
         String sensorSetJson = detectorUnitService.buildSensorSetJSON(detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress()));
         return ResponseEntity.ok(sensorSetJson);
     }
@@ -55,7 +55,7 @@ public class DetectorUnitController {
         DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
         detectorUnitDto.setIpV4(entity.getIpV4());
         detectorUnitService.saveOne(detectorUnitDto);
-        logger.info("DTO: " + detectorUnitDto);
+        logger.debug("DTO: " + detectorUnitDto);
         return ResponseEntity.ok(detectorUnitDto.toString());
     }
 

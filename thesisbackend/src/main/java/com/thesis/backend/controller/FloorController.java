@@ -52,8 +52,10 @@ public class FloorController {
     }
 
     @PutMapping(path = "/{floorId}/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FloorDto> updateFloorInfo(@RequestBody FloorDto dto) {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<FloorDto> updateFloorInfo(@PathVariable int floorId, @RequestBody FloorDto dto) {
+        EntityMapper<Floor, FloorDto> mapper = new FloorMapper();
+        Floor floor = floorService.updateOne(dto,floorId);
+        return ResponseEntity.ok(mapper.mapToDto(floor));
     }
     @PutMapping(path = "/{floorId}/compartment/update")
     public ResponseEntity<CompartmentDto> updateCompartmentInfo(@RequestBody CompartmentDto dto) {
