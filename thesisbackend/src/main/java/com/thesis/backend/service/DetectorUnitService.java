@@ -9,12 +9,12 @@ import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
 import com.thesis.backend.model.dto.update.SensorUpdateDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Sensor;
-import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.DetectorUnitRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,10 +34,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Slf4j
+@Service
 public class DetectorUnitService implements EntityService<DetectorUnit, DetectorUnitDto, String> {
-    private final Logger logger = LoggerFactory.getLogger(DetectorUnitService.class);
     private final EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitMapper();
     private final DetectorUnitRepository detectorUnitRepository;
     private final SensorService sensorService;
@@ -47,7 +47,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public DetectorUnit findOneByPrimaryKey(String primaryKey) throws EntityNotFoundException{
         Optional<DetectorUnit> wrapper = detectorUnitRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            logger.error("No Detector Unit with Mac Address: " + primaryKey);
+            log.error("No Detector Unit with Mac Address: " + primaryKey);
             throw new PrmtsEntityNotFoundException(DetectorUnit.class, primaryKey);
         } else {
             return wrapper.get();
@@ -77,9 +77,9 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
             EntityNotFoundException {
         DetectorUnit unitToUpdate = findOneByPrimaryKey(detectorUnitUpdateDto.getDetectorUnitDto().getMacAddress());
         boolean isSuccessful = false;
-        logger.info("PERFORMING UPDATE!");
-        logger.info("Unit Mac Address: " + detectorUnitUpdateDto.getDetectorUnitDto().getMacAddress());
-        logger.info("Sensor Update Set: " + detectorUnitUpdateDto.getSensorUpdateDtoSet().toString());
+        log.info("PERFORMING UPDATE!");
+        log.info("Unit Mac Address: " + detectorUnitUpdateDto.getDetectorUnitDto().getMacAddress());
+        log.info("Sensor Update Set: " + detectorUnitUpdateDto.getSensorUpdateDtoSet().toString());
         Set<Sensor> targetSensorSet =
                 sensorService.getAllSensorsInList(getSensorIdFromSensorUpdateDtoAsList(
                         detectorUnitUpdateDto.getSensorUpdateDtoSet()));
@@ -89,8 +89,8 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
                 targetSensorSet, detectorUnitUpdateDto.getSensorUpdateDtoSet()));
         if (contactDetectorUnitToUpdate(unitToUpdate, detectorUnitUpdateDto.getSensorUpdateDtoSet())) {
             detectorUnitRepository.saveAndFlush(unitToUpdate);
-            logger.info("Unit Mac Address: " + unitToUpdate.getMacAddress());
-            logger.info("Updated Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
+            log.info("Unit Mac Address: " + unitToUpdate.getMacAddress());
+            log.info("Updated Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
         } else {
 
         }
@@ -99,8 +99,8 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public String buildSensorSetJSON(DetectorUnit detectorUnit) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer().withRootName("sensorSet");
-        logger.info("SENDING SENSOR OF " + detectorUnit.getMacAddress());
-        logger.info("Sensor Set: " + detectorUnit.getAssociatedSensorSet().toString());
+        log.info("SENDING SENSOR OF " + detectorUnit.getMacAddress());
+        log.info("Sensor Set: " + detectorUnit.getAssociatedSensorSet().toString());
         return
                 writer.writeValueAsString(sensorService.buildSensorSetUpdateDto(
                         detectorUnit.getAssociatedSensorSet(), true));
@@ -126,8 +126,8 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         Mono<String> response = headersSpec.retrieve()
                 .bodyToMono(String.class);
         response.subscribe(
-                logger::info,
-                error -> logger.info(error.getMessage())
+                log::info,
+                error -> log.info(error.getMessage())
         );
         return true;
     }

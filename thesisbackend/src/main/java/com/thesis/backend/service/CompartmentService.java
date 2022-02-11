@@ -17,6 +17,7 @@ import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,10 +27,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class CompartmentService implements EntityService<Compartment, CompartmentDto,Integer> {
-    private final Logger logger = LoggerFactory.getLogger(CompartmentService.class);
     private final CompartmentRepository compartmentRepository;
     private final FloorRepository floorRepository;
 
@@ -54,12 +54,26 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
 
     @Override
     public void deleteOne(Integer primaryKey) {
-        compartmentRepository.findById(primaryKey);
+        compartmentRepository.deleteById(primaryKey);
     }
 
     @Override
     public Compartment updateOne(CompartmentDto compartmentDto, Integer primaryKey) {
-        return null;
+        Compartment compartment;
+        try {
+            compartment = compartmentRepository.getById(primaryKey);
+        } catch (EmptyResultDataAccessException resultDataAccessException) {
+            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
+        }
+        compartment.setYKonva(compartmentDto.getYKonva());
+        compartment.setXKonva(compartmentDto.getXKonva());
+        compartment.setYDimension(compartmentDto.getYDimension());
+        compartment.setXDimension(compartmentDto.getXDimension());
+        compartment.setWidthKonva(compartmentDto.getWidthKonva());
+        compartment.setHeightKonva(compartmentDto.getHeightKonva());
+        compartment.setWidth(compartmentDto.getWidth());
+        compartment.setDepth(compartmentDto.getDepth());
+        return compartmentRepository.saveAndFlush(compartment);
     }
 
     public Set<Compartment> findCompartmentsByFloorId(int floorId) {

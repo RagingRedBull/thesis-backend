@@ -12,6 +12,7 @@ import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,18 +20,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Slf4j
+@Service
 public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
-    private final Logger logger = LoggerFactory.getLogger(DetectorUnitLog.class);
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
 
@@ -38,7 +37,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     public DetectorUnitLog findOneByPrimaryKey(Long primaryKey) {
         Optional<DetectorUnitLog> wrapper = detectorUnitLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            logger.error("No Detector Unit Log with ID: " + primaryKey);
+            log.error("No Detector Unit Log with ID: " + primaryKey);
             throw new PrmtsEntityNotFoundException(DetectorUnit.class, primaryKey);
         } else {
             return wrapper.get();
@@ -56,11 +55,11 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         //Debug purporse
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        logger.info("INSERTING NEW LOG");
-        logger.info("Mac Address: " + detectorUnitLog.getMacAddress());
-        logger.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
+        log.info("INSERTING NEW LOG");
+        log.info("Mac Address: " + detectorUnitLog.getMacAddress());
+        log.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
         detectorUnitLog = detectorUnitLogRepository.save(detectorUnitLog);
-        logger.info("ROW ID: " + detectorUnitLog.getId());
+        log.info("ROW ID: " + detectorUnitLog.getId());
         return detectorUnitLog;
     }
 

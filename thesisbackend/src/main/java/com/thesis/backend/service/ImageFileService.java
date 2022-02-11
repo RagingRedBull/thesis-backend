@@ -3,6 +3,7 @@ package com.thesis.backend.service;
 import com.google.common.base.CharMatcher;
 import com.thesis.backend.exception.InvalidFileException;
 import com.thesis.backend.service.interfaces.FileService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -15,7 +16,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.xml.sax.ContentHandler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,9 +26,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class ImageFileService implements FileService {
-    private final Logger logger = LoggerFactory.getLogger(ImageFileService.class);
+    private final Logger log = LoggerFactory.getLogger(ImageFileService.class);
 
     @Override
     public Resource load(String fileName) throws FileNotFoundException {
@@ -55,7 +56,7 @@ public class ImageFileService implements FileService {
         Path saveDir = Paths.get("/var/lib/prmts/images/" + fileName);
         Files.copy(file.getInputStream(), saveDir,
                 StandardCopyOption.REPLACE_EXISTING);
-        logger.info("Image at: " + saveDir);
+        log.info("Image at: " + saveDir);
         return fileName;
     }
 
@@ -76,7 +77,7 @@ public class ImageFileService implements FileService {
                     .retainFrom(metadata.get("Image Width"))
             );
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
         if (imgHeight < 720 || imgWidth < 1280) {
             isValid = false;

@@ -9,21 +9,22 @@ import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Slf4j
+@Service
 public class SensorLogService implements EntityService<SensorLog, SensorLogDto, Long> {
-    private final Logger logger = LoggerFactory.getLogger(SensorLogService.class);
+    private final Logger log = LoggerFactory.getLogger(SensorLogService.class);
     private final SensorLogRepository sensorLogRepository;
 
 
@@ -31,7 +32,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
     public SensorLog findOneByPrimaryKey(Long primaryKey) {
         Optional<SensorLog> wrapper = sensorLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            logger.error("No Sensor Log with ID: " + primaryKey);
+            log.error("No Sensor Log with ID: " + primaryKey);
             throw new PrmtsEntityNotFoundException(SensorLog.class, primaryKey);
         } else {
             return wrapper.get();
