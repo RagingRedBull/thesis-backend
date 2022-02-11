@@ -59,7 +59,7 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
     }
 
     public Page<FloorDto> getAllFloorByPage (int pageNumber, int pageSize) {
-        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name"));
+        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "order"));
         FloorMapper mapper = new FloorMapper();
         return floorRepository.findAll(page).map(mapper::mapToDto);
     }
