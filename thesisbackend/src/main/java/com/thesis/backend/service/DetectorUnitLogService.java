@@ -69,6 +69,11 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         detectorUnitLogRepository.deleteById(primaryKey);
     }
 
+    @Override
+    public DetectorUnitLog updateOne(DetectorUnitLogDto detectorUnitLogDto, Long primaryKey) {
+        return null;
+    }
+
     public Set<DetectorUnitLog> findDetectorLogsByDetectorUnitId(Set<String> detectorUnits, Sort sort) {
         return detectorUnitLogRepository.findFirstByMacAddressIn(detectorUnits, sort);
     }

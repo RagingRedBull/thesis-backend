@@ -19,5 +19,6 @@ public class FloorDto {
     private String description;
     @JsonProperty(required = true)
     private String imageUrl;
-
+    @JsonProperty(required = true)
+    private int order;
 }

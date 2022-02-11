@@ -38,5 +38,4 @@ public class DetectorUnit {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Compartment compartment;
-
 }

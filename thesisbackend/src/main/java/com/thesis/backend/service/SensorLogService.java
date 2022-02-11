@@ -49,6 +49,11 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
         sensorLogRepository.deleteById(primaryKey);
     }
 
+    @Override
+    public SensorLog updateOne(SensorLogDto sensorLogDto, Long primaryKey) {
+        return null;
+    }
+
     public List<SensorLog> findLogsByDetectorLogId(long id) {
         return sensorLogRepository.findByDetectorUnitLog(id);
     }

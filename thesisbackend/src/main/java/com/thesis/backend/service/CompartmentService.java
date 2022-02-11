@@ -57,6 +57,11 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         compartmentRepository.findById(primaryKey);
     }
 
+    @Override
+    public Compartment updateOne(CompartmentDto compartmentDto, Integer primaryKey) {
+        return null;
+    }
+
     public Set<Compartment> findCompartmentsByFloorId(int floorId) {
         return compartmentRepository.findByFloor_Id(floorId);
     }

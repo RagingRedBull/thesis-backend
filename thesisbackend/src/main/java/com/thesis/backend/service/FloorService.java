@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
+import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
@@ -46,6 +48,15 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
         floorRepository.deleteById(primaryKey);
     }
 
+    @Override
+    public Floor updateOne(FloorDto dto, Integer primaryKey) {
+        Floor floor = floorRepository.getById(primaryKey);
+        floor.setDescription(dto.getDescription());
+        floor.setImageName(dto.getImageUrl());
+        floor.setName(dto.getName());
+        floor.setOrder(dto.getOrder());
+        return floorRepository.saveAndFlush(floor);
+    }
 
     public Page<FloorDto> getAllFloorByPage (int pageNumber, int pageSize) {
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "name"));

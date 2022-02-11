@@ -64,6 +64,11 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         detectorUnitRepository.deleteById(primaryKey);
     }
 
+    @Override
+    public DetectorUnit updateOne(DetectorUnitDto detectorUnitDto, String primaryKey) {
+        return null;
+    }
+
     public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
