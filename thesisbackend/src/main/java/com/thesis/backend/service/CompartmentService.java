@@ -1,5 +1,6 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.CompartmentDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.Floor;
@@ -13,8 +14,10 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.CompartmentRepository;
 import com.thesis.backend.repository.FloorRepository;
 import com.thesis.backend.service.interfaces.EntityService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -24,22 +27,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class CompartmentService implements EntityService<Compartment, CompartmentDto,Integer> {
-    private final Logger logger = LoggerFactory.getLogger(CompartmentService.class);
-    private CompartmentRepository compartmentRepository;
-    private FloorRepository floorRepository;
-
-    public CompartmentService(CompartmentRepository compartmentRepository, FloorRepository floorRepository) {
-        this.compartmentRepository = compartmentRepository;
-        this.floorRepository = floorRepository;
-    }
+    private final CompartmentRepository compartmentRepository;
+    private final FloorRepository floorRepository;
 
     @Override
     public Compartment findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException {
         Optional<Compartment> entity = compartmentRepository.findById(primaryKey);
         if (entity.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
         } else {
             return entity.get();
         }
@@ -51,6 +49,30 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         Floor floor = floorRepository.getById(compartmentDto.getFloorId());
         Compartment compartment = mapper.mapToEntity(compartmentDto);
         compartment.setFloor(floor);
+        return compartmentRepository.saveAndFlush(compartment);
+    }
+
+    @Override
+    public void deleteOne(Integer primaryKey) {
+        compartmentRepository.deleteById(primaryKey);
+    }
+
+    @Override
+    public Compartment updateOne(CompartmentDto compartmentDto, Integer primaryKey) {
+        Compartment compartment;
+        try {
+            compartment = compartmentRepository.getById(primaryKey);
+        } catch (EmptyResultDataAccessException resultDataAccessException) {
+            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
+        }
+        compartment.setYKonva(compartmentDto.getYKonva());
+        compartment.setXKonva(compartmentDto.getXKonva());
+        compartment.setYDimension(compartmentDto.getYDimension());
+        compartment.setXDimension(compartmentDto.getXDimension());
+        compartment.setWidthKonva(compartmentDto.getWidthKonva());
+        compartment.setHeightKonva(compartmentDto.getHeightKonva());
+        compartment.setWidth(compartmentDto.getWidth());
+        compartment.setDepth(compartmentDto.getDepth());
         return compartmentRepository.saveAndFlush(compartment);
     }
 

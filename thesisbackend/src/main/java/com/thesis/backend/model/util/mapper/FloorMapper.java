@@ -12,6 +12,7 @@ public class FloorMapper implements EntityMapper<Floor, FloorDto> {
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
         dto.setImageUrl(entity.getImageName());
+        dto.setOrder(entity.getOrder());
         return dto;
     }
 
@@ -22,6 +23,7 @@ public class FloorMapper implements EntityMapper<Floor, FloorDto> {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setImageName(dto.getImageUrl());
+        entity.setOrder(dto.getOrder());
         return entity;
     }
 }

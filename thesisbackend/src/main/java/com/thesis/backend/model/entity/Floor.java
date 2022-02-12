@@ -1,11 +1,19 @@
 package com.thesis.backend.model.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
+@Data
 @Entity
-@Table(name = "floors")
+@Table(name = "floors",
+    indexes = {
+        @Index(name = "floor_order", columnList = "order_position", unique = true)
+    })
 public class Floor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,57 +24,10 @@ public class Floor implements Serializable {
     private String description;
     @Column(name = "image_name", unique = true)
     private String imageName;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "floor")
+    @Column(name = "order_position")
+    private int order;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Compartment> compartments;
-    public Floor() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public Set<Compartment> getCompartments() {
-        return compartments;
-    }
-
-    public void setCompartments(Set<Compartment> compartments) {
-        this.compartments = compartments;
-    }
-
-    @Override
-    public String toString() {
-        return "Floor{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

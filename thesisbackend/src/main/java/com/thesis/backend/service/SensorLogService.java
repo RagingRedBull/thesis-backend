@@ -1,5 +1,6 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
@@ -7,32 +8,32 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
+@Slf4j
 @Service
 public class SensorLogService implements EntityService<SensorLog, SensorLogDto, Long> {
-    private final Logger logger = LoggerFactory.getLogger(SensorLogService.class);
+    private final Logger log = LoggerFactory.getLogger(SensorLogService.class);
     private final SensorLogRepository sensorLogRepository;
 
-    public SensorLogService(SensorLogRepository sensorLogRepository) {
-        this.sensorLogRepository = sensorLogRepository;
-    }
 
     @Override
     public SensorLog findOneByPrimaryKey(Long primaryKey) {
         Optional<SensorLog> wrapper = sensorLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            logger.error("No Sensor Log with ID: " + primaryKey);
-            throw new EntityNotFoundException("No Sensor Log with ID: " + primaryKey);
+            log.error("No Sensor Log with ID: " + primaryKey);
+            throw new PrmtsEntityNotFoundException(SensorLog.class, primaryKey);
         } else {
             return wrapper.get();
         }
@@ -42,6 +43,16 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
     public SensorLog saveOne(SensorLogDto sensorLogDto) {
         EntityMapper<SensorLog, SensorLogDto> mapper = new SensorLogMapper();
         return sensorLogRepository.save(mapper.mapToEntity(sensorLogDto));
+    }
+
+    @Override
+    public void deleteOne(Long primaryKey) {
+        sensorLogRepository.deleteById(primaryKey);
+    }
+
+    @Override
+    public SensorLog updateOne(SensorLogDto sensorLogDto, Long primaryKey) {
+        return null;
     }
 
     public List<SensorLog> findLogsByDetectorLogId(long id) {

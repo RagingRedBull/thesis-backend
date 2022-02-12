@@ -1,6 +1,7 @@
 package com.thesis.backend.exception.handler;
 
 import com.thesis.backend.exception.InvalidFileException;
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.exception.response.ApiErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import javax.persistence.EntityNotFoundException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -27,10 +26,10 @@ public class PrmtsExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiErrorResponse);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException entityNotFoundException) {
+    @ExceptionHandler(PrmtsEntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(PrmtsEntityNotFoundException prmtsEntityNotFoundException) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.NOT_FOUND);
-        apiErrorResponse.setMessage(entityNotFoundException.getLocalizedMessage());
+        apiErrorResponse.setMessage(prmtsEntityNotFoundException.getLocalizedMessage());
         return buildResponseEntity(apiErrorResponse);
     }
     @ExceptionHandler(InvalidFileException.class)
@@ -39,7 +38,12 @@ public class PrmtsExceptionHandler extends ResponseEntityExceptionHandler {
         apiErrorResponse.setMessage(invalidFileTypeException.getLocalizedMessage());
         return buildResponseEntity(apiErrorResponse);
     }
-
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<Object> handleNullPointerException(NullPointerException nullPointerException) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR);
+        apiErrorResponse.setMessage(nullPointerException.getLocalizedMessage());
+        return buildResponseEntity(apiErrorResponse);
+    }
     private ResponseEntity<Object> buildResponseEntity(ApiErrorResponse errorResponse) {
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
