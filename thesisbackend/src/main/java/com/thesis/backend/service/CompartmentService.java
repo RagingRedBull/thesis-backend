@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -77,7 +78,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     }
 
     public Set<Compartment> findCompartmentsByFloorId(int floorId) {
-        return compartmentRepository.findByFloor_Id(floorId);
+        return compartmentRepository.findByFloorId(floorId, Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Set<CompartmentDto> convertEntitySetToDto (Set<Compartment> compartments) {
