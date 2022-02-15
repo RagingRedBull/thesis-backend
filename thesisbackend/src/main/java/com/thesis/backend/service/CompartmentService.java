@@ -77,7 +77,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         return compartmentRepository.saveAndFlush(compartment);
     }
 
-    public Set<Compartment> findCompartmentsByFloorId(int floorId) {
+    public List<Compartment> findCompartmentsByFloorId(int floorId) {
         return compartmentRepository.findByFloorId(floorId, Sort.by(Sort.Direction.ASC, "id"));
     }
 

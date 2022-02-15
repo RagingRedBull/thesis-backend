@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -21,9 +23,12 @@ public class CompartmentController {
     private final CompartmentService compartmentService;
 
     @GetMapping
-    public ResponseEntity<Set<CompartmentDto>> getCompartmentsByFloorId(@RequestParam int floorId) {
-        Set<Compartment> compartments = compartmentService.findCompartmentsByFloorId(floorId);
-        Set<CompartmentDto> compartmentDtos = compartmentService.convertEntitySetToDto(compartments);
+    public ResponseEntity<List<CompartmentDto>> getCompartmentsByFloorId(@RequestParam int floorId) {
+        EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
+        List<Compartment> compartments = compartmentService.findCompartmentsByFloorId(floorId);
+        List<CompartmentDto> compartmentDtos = compartments.stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(compartmentDtos);
     }
     @PostMapping(path = "/new")
