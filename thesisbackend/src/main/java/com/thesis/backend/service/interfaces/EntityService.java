@@ -11,5 +11,5 @@ public interface EntityService<Entity, Dto, PK>{
     @Transactional
     void deleteOne(PK primaryKey);
     @Transactional
-    Entity updateOne(Dto dto, PK primaryKey);
+    Entity updateOne(Dto dto);
 }

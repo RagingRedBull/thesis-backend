@@ -59,12 +59,12 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     }
 
     @Override
-    public Compartment updateOne(CompartmentDto compartmentDto, Integer primaryKey) {
+    public Compartment updateOne(CompartmentDto compartmentDto) {
         Compartment compartment;
         try {
-            compartment = compartmentRepository.getById(primaryKey);
+            compartment = compartmentRepository.getById(compartmentDto.getFloorId());
         } catch (EmptyResultDataAccessException resultDataAccessException) {
-            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
+            throw new PrmtsEntityNotFoundException(Compartment.class, compartmentDto.getId());
         }
         compartment.setYKonva(compartmentDto.getYKonva());
         compartment.setXKonva(compartmentDto.getXKonva());

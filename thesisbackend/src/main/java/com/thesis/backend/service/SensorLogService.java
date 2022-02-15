@@ -51,7 +51,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
     }
 
     @Override
-    public SensorLog updateOne(SensorLogDto sensorLogDto, Long primaryKey) {
+    public SensorLog updateOne(SensorLogDto sensorLogDto) {
         return null;
     }
 

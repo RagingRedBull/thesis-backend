@@ -51,12 +51,12 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
     }
 
     @Override
-    public Floor updateOne(FloorDto dto, Integer primaryKey) {
+    public Floor updateOne(FloorDto dto) {
         Floor floor;
         try {
-            floor = floorRepository.getById(primaryKey);
+            floor = floorRepository.getById(dto.getId());
         } catch (EmptyResultDataAccessException resultDataAccessException) {
-            throw new PrmtsEntityNotFoundException(Floor.class, primaryKey);
+            throw new PrmtsEntityNotFoundException(Floor.class, dto.getId());
         }
         floor.setDescription(dto.getDescription());
         floor.setImageName(dto.getImageUrl());

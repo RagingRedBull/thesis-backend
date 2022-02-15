@@ -69,7 +69,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     }
 
     @Override
-    public DetectorUnitLog updateOne(DetectorUnitLogDto detectorUnitLogDto, Long primaryKey) {
+    public DetectorUnitLog updateOne(DetectorUnitLogDto detectorUnitLogDto) {
         return null;
     }
 

@@ -29,8 +29,6 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class ImageFileService implements FileService {
-    private final Logger log = LoggerFactory.getLogger(ImageFileService.class);
-
     @Override
     public Resource load(String fileName) throws FileNotFoundException {
         String path = "/var/lib/prmts/images/" + fileName;

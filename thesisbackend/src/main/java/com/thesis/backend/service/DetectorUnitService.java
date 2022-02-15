@@ -65,7 +65,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     }
 
     @Override
-    public DetectorUnit updateOne(DetectorUnitDto detectorUnitDto, String primaryKey) {
+    public DetectorUnit updateOne(DetectorUnitDto detectorUnitDto) {
         return null;
     }
 
