@@ -17,6 +17,7 @@ public class CompartmentMapper implements EntityMapper<Compartment, CompartmentD
         dto.setYKonva(compartment.getYKonva());
         dto.setHeightKonva(compartment.getHeightKonva());
         dto.setWidthKonva(compartment.getWidthKonva());
+        dto.setFloorId(compartment.getFloor().getId());
         return dto;
     }
 
