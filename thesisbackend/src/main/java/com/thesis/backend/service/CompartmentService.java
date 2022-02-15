@@ -62,7 +62,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     public Compartment updateOne(CompartmentDto compartmentDto) {
         Compartment compartment;
         try {
-            compartment = compartmentRepository.getById(compartmentDto.getFloorId());
+            compartment = compartmentRepository.getById(compartmentDto.getId());
         } catch (EmptyResultDataAccessException resultDataAccessException) {
             throw new PrmtsEntityNotFoundException(Compartment.class, compartmentDto.getId());
         }

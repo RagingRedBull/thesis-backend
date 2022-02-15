@@ -8,6 +8,8 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.service.CompartmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.server.mvc.JacksonSerializers;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,19 +33,19 @@ public class CompartmentController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(compartmentDtos);
     }
-    @PostMapping(path = "/new")
+    @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> insertOne(@RequestBody CompartmentDto compartmentDto) {
         EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
         compartmentDto = mapper.mapToDto(compartmentService.saveOne(compartmentDto));
         return ResponseEntity.ok(compartmentDto);
     }
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> getOne(@PathVariable int compartmentId) {
         EntityMapper<Compartment, CompartmentDto> entityMapper = new CompartmentMapper();
         CompartmentDto dto = entityMapper.mapToDto(compartmentService.findOneByPrimaryKey(compartmentId));
         return ResponseEntity.ok(dto);
     }
-    @PutMapping(path = "/update")
+    @PutMapping(path = "/update",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> updateOne(@RequestBody CompartmentDto compartmentDto) {
         EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
         compartmentDto = mapper.mapToDto(compartmentService.updateOne(compartmentDto));
