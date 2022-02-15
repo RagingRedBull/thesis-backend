@@ -66,6 +66,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         } catch (EmptyResultDataAccessException resultDataAccessException) {
             throw new PrmtsEntityNotFoundException(Compartment.class, compartmentDto.getId());
         }
+        compartment.setName(compartmentDto.getName());
         compartment.setYKonva(compartmentDto.getYKonva());
         compartment.setXKonva(compartmentDto.getXKonva());
         compartment.setYDimension(compartmentDto.getYDimension());
