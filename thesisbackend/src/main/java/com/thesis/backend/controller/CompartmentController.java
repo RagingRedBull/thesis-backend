@@ -55,7 +55,7 @@ public class CompartmentController {
         return ResponseEntity.ok(compartmentDto);
     }
 
-    @DeleteMapping(path = "/{id}/delete")
+    @DeleteMapping(path = "/{compartmentId}/delete")
     public ResponseEntity<Object> deleteOne(@PathVariable int compartmentId) {
         compartmentService.deleteOne(compartmentId);
         return ResponseEntity.ok("Deleted");
