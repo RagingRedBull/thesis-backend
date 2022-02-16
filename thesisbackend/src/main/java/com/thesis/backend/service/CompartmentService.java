@@ -58,7 +58,11 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     @Override
     @Transactional
     public void deleteOne(Integer primaryKey) {
-        compartmentRepository.deleteById(primaryKey);
+        try {
+            compartmentRepository.deleteById(primaryKey);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
+        }
     }
 
     @Override
