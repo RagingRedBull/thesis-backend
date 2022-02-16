@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
@@ -45,6 +46,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     }
 
     @Override
+    @Transactional
     public Compartment saveOne(CompartmentDto compartmentDto) {
         EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
         Floor floor = floorRepository.getById(compartmentDto.getFloorId());
@@ -54,6 +56,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     }
 
     @Override
+    @Transactional
     public void deleteOne(Integer primaryKey) {
         compartmentRepository.deleteById(primaryKey);
     }
