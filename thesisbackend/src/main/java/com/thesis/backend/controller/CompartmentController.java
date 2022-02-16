@@ -33,23 +33,32 @@ public class CompartmentController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(compartmentDtos);
     }
+
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> insertOne(@RequestBody CompartmentDto compartmentDto) {
         EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
         compartmentDto = mapper.mapToDto(compartmentService.saveOne(compartmentDto));
         return ResponseEntity.ok(compartmentDto);
     }
+
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> getOne(@PathVariable int compartmentId) {
         EntityMapper<Compartment, CompartmentDto> entityMapper = new CompartmentMapper();
         CompartmentDto dto = entityMapper.mapToDto(compartmentService.findOneByPrimaryKey(compartmentId));
         return ResponseEntity.ok(dto);
     }
-    @PutMapping(path = "/update",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompartmentDto> updateOne(@RequestBody CompartmentDto compartmentDto) {
         EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
         compartmentDto = mapper.mapToDto(compartmentService.updateOne(compartmentDto));
         return ResponseEntity.ok(compartmentDto);
+    }
+
+    @DeleteMapping(path = "/{id}/delete")
+    public ResponseEntity<Object> deleteOne(@PathVariable int compartmentId) {
+        compartmentService.deleteOne(compartmentId);
+        return ResponseEntity.ok("Deleted");
     }
     @GetMapping(path = "/{id}/logs")
     public ResponseEntity<CompartmentLogResponse> getCompartmentLogs(@PathVariable int compartmentId) {
