@@ -17,7 +17,11 @@ public class DetectorUnitMapper implements EntityMapper<DetectorUnit, DetectorUn
         dto.setName(entity.getName());
         dto.setXpos(entity.getXpos());
         dto.setYpos(entity.getYpos());
-        dto.setCompartmentId(entity.getCompartment().getId());
+        if(entity.getCompartment() == null) {
+            dto.setCompartmentId(null);
+        } else {
+            dto.setCompartmentId(entity.getCompartment().getId());
+        }
         return dto;
     }
 
