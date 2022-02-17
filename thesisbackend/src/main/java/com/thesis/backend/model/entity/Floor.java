@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "floors",
     indexes = {
-        @Index(name = "floor_order", columnList = "order_position", unique = true)
+        @Index(name = "floor_order", columnList = "order_position")
     })
 public class Floor implements Serializable {
     @Id
