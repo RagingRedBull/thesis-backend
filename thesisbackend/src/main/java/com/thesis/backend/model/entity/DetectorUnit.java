@@ -33,7 +33,7 @@ public class DetectorUnit {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Sensor> associatedSensorSet;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "compartment_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
