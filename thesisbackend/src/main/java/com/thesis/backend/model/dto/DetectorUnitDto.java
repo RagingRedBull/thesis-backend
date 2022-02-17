@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+@JsonInclude(value = JsonInclude.Include.ALWAYS)
 public class DetectorUnitDto {
     @JsonProperty(required = true)
     private String macAddress;
@@ -18,7 +18,7 @@ public class DetectorUnitDto {
     private String name;
     private int xpos;
     private int ypos;
-    private int compartmentId;
+    private Integer compartmentId;
 
     public DetectorUnitDto(String macAddress, String ipV4) {
         this.macAddress = macAddress;
