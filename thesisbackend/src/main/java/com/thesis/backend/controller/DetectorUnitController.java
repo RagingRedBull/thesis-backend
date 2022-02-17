@@ -64,7 +64,7 @@ public class DetectorUnitController {
         return ResponseEntity.ok(detectorUnitSensorUpdateWrapper.toString());
     }
 
-    @PatchMapping(path = "/update/compartment", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/update/compartment", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateAssociatedFloor(@RequestBody DetectorUnitCompartmentUpdateDto compartmentUpdateDto) {
         DetectorUnitDto detectorUnitDto = detectorUnitService.updateAssociatedCompartment(compartmentUpdateDto);
         return ResponseEntity.ok(detectorUnitDto);
