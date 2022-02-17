@@ -2,14 +2,13 @@ package com.thesis.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thesis.backend.model.dto.DetectorUnitDto;
-import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
+import com.thesis.backend.model.dto.update.DetectorUnitCompartmentUpdateDto;
+import com.thesis.backend.model.dto.update.DetectorUnitSensorUpdateWrapper;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.SensorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -59,9 +58,15 @@ public class DetectorUnitController {
         return ResponseEntity.ok(detectorUnitDto.toString());
     }
 
-    @PatchMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateDetectorInfo(@RequestBody DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException {
-        detectorUnitService.updateSensorList(detectorUnitUpdateDto);
-        return ResponseEntity.ok(detectorUnitUpdateDto.toString());
+    @PatchMapping(path = "/update/sensors", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateSensorList(@RequestBody DetectorUnitSensorUpdateWrapper detectorUnitSensorUpdateWrapper) throws JsonProcessingException {
+        detectorUnitService.updateSensorList(detectorUnitSensorUpdateWrapper);
+        return ResponseEntity.ok(detectorUnitSensorUpdateWrapper.toString());
+    }
+
+    @PatchMapping(path = "/update/compartment", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateAssociatedFloor(@RequestBody DetectorUnitCompartmentUpdateDto compartmentUpdateDto) {
+        DetectorUnitDto detectorUnitDto = detectorUnitService.updateAssociatedCompartment(compartmentUpdateDto);
+        return ResponseEntity.ok(detectorUnitDto);
     }
 }

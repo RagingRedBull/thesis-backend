@@ -12,11 +12,11 @@ import java.util.Set;
 @Setter
 @ToString
 @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-public class DetectorUnitUpdateDto {
+public class DetectorUnitSensorUpdateWrapper {
     private DetectorUnitDto detectorUnitDto;
     private Set<SensorUpdateDto> sensorUpdateDtoSet;
 
-    public DetectorUnitUpdateDto(DetectorUnitDto detectorUnitDto, Set<SensorUpdateDto> sensorUpdateDtoSet) {
+    public DetectorUnitSensorUpdateWrapper(DetectorUnitDto detectorUnitDto, Set<SensorUpdateDto> sensorUpdateDtoSet) {
         this.detectorUnitDto = detectorUnitDto;
         this.sensorUpdateDtoSet = sensorUpdateDtoSet;
     }
