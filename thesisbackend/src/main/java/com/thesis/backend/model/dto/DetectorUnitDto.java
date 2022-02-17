@@ -18,6 +18,7 @@ public class DetectorUnitDto {
     private String name;
     private int xpos;
     private int ypos;
+    private int compartmentId;
 
     public DetectorUnitDto(String macAddress, String ipV4) {
         this.macAddress = macAddress;

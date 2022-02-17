@@ -36,7 +36,10 @@ public class DetectorUnitController {
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
         return ResponseEntity.ok(detectorUnitService.findDetectorUnitsByPage(page));
     }
-
+    @GetMapping
+    public ResponseEntity<Object> getAllDetectorsByCompartment(@RequestParam int compartmentId) {
+        return null;
+    }
     @GetMapping(path = "/{macAddress}")
     public ResponseEntity<String> getSensorSetOfDetectorUnit(@PathVariable String macAddress,
                                                              @RequestParam(name = "ipV4") String ipV4)
