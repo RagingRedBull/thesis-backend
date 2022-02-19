@@ -73,6 +73,10 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         return null;
     }
 
+    public DetectorUnitLog findLatestLog(String macAddress) {
+        return detectorUnitLogRepository.findLatestLog(macAddress);
+    }
+
     public Set<DetectorUnitLog> findDetectorLogsByDetectorUnitId(Set<String> detectorUnits, Sort sort) {
         return detectorUnitLogRepository.findFirstByMacAddressIn(detectorUnits, sort);
     }

@@ -3,8 +3,12 @@ package com.thesis.backend.model.dto.logs;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+@Getter
+@Setter
 public class MqSensorLogDto extends SensorLogDto{
     private int mqValue;
 
@@ -12,20 +16,4 @@ public class MqSensorLogDto extends SensorLogDto{
         super(id,type, name);
     }
 
-    public int getMqValue() {
-        return mqValue;
-    }
-
-    public void setMqValue(int mqValue) {
-        this.mqValue = mqValue;
-    }
-
-    @Override
-    public String toString() {
-        return "MqSensorLogDto{" +
-                "type=" + super.getType() +
-                ", name=" + super.getName() +
-                ", mqValue=" + mqValue +
-                '}';
-    }
 }

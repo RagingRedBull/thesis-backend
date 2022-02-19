@@ -2,10 +2,19 @@ package com.thesis.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thesis.backend.model.dto.DetectorUnitDto;
+import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.dto.update.DetectorUnitCompartmentUpdateDto;
 import com.thesis.backend.model.dto.update.DetectorUnitSensorUpdateWrapper;
 import com.thesis.backend.model.entity.DetectorUnit;
+import com.thesis.backend.model.entity.logs.DetectorUnitLog;
+import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
+import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.model.util.mapper.SensorLogMapper;
+import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.DetectorUnitService;
+import com.thesis.backend.service.SensorLogService;
 import com.thesis.backend.service.SensorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +27,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -25,6 +36,8 @@ import javax.persistence.EntityNotFoundException;
 @RequestMapping(path = "/detector")
 public class DetectorUnitController {
     private final DetectorUnitService detectorUnitService;
+    private final DetectorUnitLogService detectorUnitLogService;
+    private final SensorLogService sensorLogService;
     private final SensorService sensorService;
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -52,6 +65,11 @@ public class DetectorUnitController {
         return ResponseEntity.ok(sensorSetJson);
     }
 
+    @DeleteMapping(path = "/{macAddress}/delete")
+    public ResponseEntity<Object> deleteDetectorUnit(@PathVariable String macAddress) {
+        detectorUnitService.deleteOne(macAddress);
+        return ResponseEntity.ok("Deleted");
+    }
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) throws EntityNotFoundException{
         DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
@@ -60,7 +78,18 @@ public class DetectorUnitController {
         log.debug("DTO: " + detectorUnitDto);
         return ResponseEntity.ok(detectorUnitDto.toString());
     }
-
+    @GetMapping(path = "/log/latest")
+    public ResponseEntity<DetectorUnitLogDto> getLatestLog(@RequestParam String macAddress) {
+        EntityMapper<DetectorUnitLog, DetectorUnitLogDto> mapper = new DetectorUnitLogMapper();
+        EntityMapper<SensorLog, SensorLogDto> sensorLogMapper = new SensorLogMapper();
+        DetectorUnitLog detectorUnitLog = detectorUnitLogService.findLatestLog(macAddress);
+        List<SensorLog> sensorLogs = sensorLogService.findLogsByDetectorLogId(detectorUnitLog.getId());
+        DetectorUnitLogDto dto = mapper.mapToDto(detectorUnitLog);
+        dto.setSensorLogSet(sensorLogs.stream()
+                .map(sensorLogMapper::mapToDto)
+                .collect(Collectors.toSet()));
+        return ResponseEntity.ok(dto);
+    }
     @PatchMapping(path = "/update/sensors", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateSensorList(@RequestBody DetectorUnitSensorUpdateWrapper detectorUnitSensorUpdateWrapper) throws JsonProcessingException {
         detectorUnitService.updateSensorList(detectorUnitSensorUpdateWrapper);
