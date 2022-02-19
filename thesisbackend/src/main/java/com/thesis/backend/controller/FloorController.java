@@ -1,10 +1,13 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.CompartmentDto;
+import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Compartment;
+import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.CompartmentMapper;
+import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.service.CompartmentService;
@@ -18,7 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -61,5 +66,14 @@ public class FloorController {
     public ResponseEntity<Object> deleteFloor(@PathVariable int floorId) {
         floorService.deleteOne(floorId);
         return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping(path = "/{floorId}/detectors")
+    public ResponseEntity<List<DetectorUnitDto>> getDetectorsByFloorId(@PathVariable int floorId) {
+        EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitMapper();
+        List<DetectorUnitDto> dtoList = floorService.getAllDetectorUnitsByFloor(floorId).stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
     }
 }
