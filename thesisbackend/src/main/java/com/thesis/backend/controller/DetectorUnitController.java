@@ -71,12 +71,12 @@ public class DetectorUnitController {
         return ResponseEntity.ok("Deleted");
     }
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) throws EntityNotFoundException{
+    public ResponseEntity<Object> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) throws EntityNotFoundException{
         DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
         detectorUnitDto.setIpV4(entity.getIpV4());
         detectorUnitService.saveOne(detectorUnitDto);
         log.debug("DTO: " + detectorUnitDto);
-        return ResponseEntity.ok(detectorUnitDto.toString());
+        return ResponseEntity.ok(detectorUnitDto);
     }
     @GetMapping(path = "/log/latest")
     public ResponseEntity<DetectorUnitLogDto> getLatestLog(@RequestParam String macAddress) {
