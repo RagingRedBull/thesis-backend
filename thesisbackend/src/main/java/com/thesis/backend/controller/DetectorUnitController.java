@@ -1,6 +1,7 @@
 package com.thesis.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
@@ -72,8 +73,13 @@ public class DetectorUnitController {
     }
     @PostMapping(path = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> registerNewDetectorUnit(@RequestBody DetectorUnitDto detectorUnitDto) throws EntityNotFoundException{
-        DetectorUnit entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
-        detectorUnitDto.setIpV4(entity.getIpV4());
+        DetectorUnit entity;
+        try {
+            entity = detectorUnitService.findOneByPrimaryKey(detectorUnitDto.getMacAddress());
+            detectorUnitDto.setIpV4(entity.getIpV4());
+        } catch (PrmtsEntityNotFoundException exception) {
+            log.info("Registering Unit: " + detectorUnitDto.getMacAddress());
+        }
         detectorUnitService.saveOne(detectorUnitDto);
         log.debug("DTO: " + detectorUnitDto);
         return ResponseEntity.ok(detectorUnitDto);
