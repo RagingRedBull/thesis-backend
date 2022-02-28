@@ -51,7 +51,8 @@ public class DetectorUnitController {
         return ResponseEntity.ok(detectorUnitService.findDetectorUnitsByPage(page));
     }
     @GetMapping
-    public ResponseEntity<Object> getAllDetectorsByCompartment(@RequestParam int compartmentId) {
+    public ResponseEntity<Object> getAllDetectorsByCompartment(@RequestParam(required = false) Integer compartmentId) {
+        
         return null;
     }
     @GetMapping(path = "/{macAddress}")

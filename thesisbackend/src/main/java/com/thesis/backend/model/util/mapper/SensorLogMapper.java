@@ -1,11 +1,7 @@
 package com.thesis.backend.model.util.mapper;
 
-import com.thesis.backend.model.dto.logs.DhtSensorLogDto;
-import com.thesis.backend.model.dto.logs.MqSensorLogDto;
-import com.thesis.backend.model.dto.logs.SensorLogDto;
-import com.thesis.backend.model.entity.logs.DhtSensorLog;
-import com.thesis.backend.model.entity.logs.MqSensorLog;
-import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.dto.logs.*;
+import com.thesis.backend.model.entity.logs.*;
 
 public class SensorLogMapper implements EntityMapper<SensorLog, SensorLogDto> {
     @Override
@@ -20,6 +16,14 @@ public class SensorLogMapper implements EntityMapper<SensorLog, SensorLogDto> {
             MqSensorLogDto mqSensorLogDto = new MqSensorLogDto(entity.getId(),entity.getType(),entity.getName());
             mqSensorLogDto.setMqValue((((MqSensorLog) entity).getMqValue()));
             dto = mqSensorLogDto;
+        } else if (entity instanceof FireSensorLog) {
+            FireSensorLogDto fireSensorLogDto = new FireSensorLogDto(entity.getId(),entity.getType(),entity.getName());
+            fireSensorLogDto.setHasFlame((((FireSensorLog) entity).isHasFire()));
+            dto = fireSensorLogDto;
+        } else if (entity instanceof SoundSensorLog) {
+            SoundSensorLogDto soundSensorLogDto = new SoundSensorLogDto(entity.getId(),entity.getType(),entity.getName());
+            soundSensorLogDto.setSound(((SoundSensorLog) entity).getSound());
+            dto = soundSensorLogDto;
         }
         return dto;
     }
@@ -36,6 +40,14 @@ public class SensorLogMapper implements EntityMapper<SensorLog, SensorLogDto> {
             MqSensorLog mqSensorLog = new MqSensorLog(dto.getId(), dto.getType(), dto.getName());
             mqSensorLog.setMqValue(((MqSensorLogDto) dto).getMqValue());
             entity = mqSensorLog;
+        } else if (dto instanceof FireSensorLogDto) {
+            FireSensorLog fireSensorLog = new FireSensorLog(dto.getId(), dto.getType(), dto.getName());
+            fireSensorLog.setHasFire(((FireSensorLogDto) dto).isHasFlame());
+            entity = fireSensorLog;
+        } else if (dto instanceof SoundSensorLogDto) {
+            SoundSensorLog soundSensorLog = new SoundSensorLog(dto.getId(), dto.getType(), dto.getName());
+            soundSensorLog.setSound(((SoundSensorLogDto) dto).getSound());
+            entity = soundSensorLog;
         }
         return entity;
     }

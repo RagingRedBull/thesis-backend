@@ -75,6 +75,9 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
 
+    public List<DetectorUnit> getAllDetectorUnitByCompartmentId(Integer compartmentId) {
+        return null;
+    }
     public void updateSensorList(DetectorUnitSensorUpdateWrapper detectorUnitSensorUpdateWrapper) throws JsonProcessingException,
             EntityNotFoundException {
         DetectorUnit unitToUpdate = findOneByPrimaryKey(detectorUnitSensorUpdateWrapper.getDetectorUnitDto().getMacAddress());
