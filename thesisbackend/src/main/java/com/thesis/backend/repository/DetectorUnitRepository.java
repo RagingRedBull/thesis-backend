@@ -13,6 +13,4 @@ public interface DetectorUnitRepository extends JpaRepository<DetectorUnit, Stri
             "`detector_unit`.`compartment_id` IN (SELECT `compartment`.`id` FROM `compartment` WHERE `compartment`.`floor_id`=?1);"
     , nativeQuery = true)
     List<DetectorUnit> getAllDetectorUnitsByFloorId(int floorId);
-    @Query(value = "SELECT * FROM")
-    List<DetectorUnit> getAllDetectorUnitsByCompartmentId(int compartmentId);
 }
