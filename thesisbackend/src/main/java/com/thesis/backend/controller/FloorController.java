@@ -11,6 +11,7 @@ import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.service.CompartmentService;
+import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.FloorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class FloorController {
     private final FloorService floorService;
     private final CompartmentService compartmentService;
+    private final DetectorUnitService detectorUnitService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<Page<FloorDto>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
@@ -64,6 +66,7 @@ public class FloorController {
 
     @DeleteMapping(path = "/{floorId}/delete")
     public ResponseEntity<Object> deleteFloor(@PathVariable int floorId) {
+
         floorService.deleteOne(floorId);
         return ResponseEntity.ok("Success");
     }
@@ -71,7 +74,7 @@ public class FloorController {
     @GetMapping(path = "/{floorId}/detectors")
     public ResponseEntity<List<DetectorUnitDto>> getDetectorsByFloorId(@PathVariable int floorId) {
         EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitMapper();
-        List<DetectorUnitDto> dtoList = floorService.getAllDetectorUnitsByFloor(floorId).stream()
+        List<DetectorUnitDto> dtoList = detectorUnitService.getAllDetectorUnitsByFloorId(floorId).stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);

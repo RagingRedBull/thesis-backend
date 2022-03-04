@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class FloorService implements EntityService<Floor, FloorDto, Integer> {
     private final FloorRepository floorRepository;
-    private final DetectorUnitRepository detectorUnitRepository;
+    private final DetectorUnitService detectorUnitService;
     @Override
     public Floor findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException{
         Optional<Floor> wrapper = floorRepository.findById(primaryKey);
@@ -53,6 +53,7 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
 
     @Override
     public void deleteOne(Integer primaryKey) {
+        detectorUnitService.disassociateCompartment(detectorUnitService.getAllDetectorUnitsByFloorId(primaryKey));
         floorRepository.deleteById(primaryKey);
     }
 
@@ -75,9 +76,5 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "order"));
         FloorMapper mapper = new FloorMapper();
         return floorRepository.findAll(page).map(mapper::mapToDto);
-    }
-
-    public List<DetectorUnit> getAllDetectorUnitsByFloor(int floorId) {
-        return detectorUnitRepository.getAllDetectorUnitsByFloorId(floorId);
     }
 }

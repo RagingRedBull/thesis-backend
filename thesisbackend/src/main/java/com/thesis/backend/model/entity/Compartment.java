@@ -38,6 +38,6 @@ public class Compartment implements Serializable {
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "compartment", cascade =CascadeType.ALL)
+    @OneToMany(mappedBy = "compartment", cascade =CascadeType.PERSIST)
     private Set<DetectorUnit> detectorUnits;
 }

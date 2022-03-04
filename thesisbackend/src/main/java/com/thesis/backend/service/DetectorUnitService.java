@@ -71,12 +71,21 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return null;
     }
 
+    public List<DetectorUnit> disassociateCompartment(List<DetectorUnit> detectorUnits) {
+        for (DetectorUnit detectorUnit : detectorUnits) {
+            detectorUnit.setCompartment(null);
+        }
+        return detectorUnitRepository.saveAllAndFlush(detectorUnits);
+    }
     public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
 
     public List<DetectorUnit> getAllDetectorUnitByCompartmentId(Integer compartmentId) {
         return null;
+    }
+    public List<DetectorUnit> getAllDetectorUnitsByFloorId(Integer floorId) {
+        return detectorUnitRepository.getAllDetectorUnitsByFloorId(floorId);
     }
     public void updateSensorList(DetectorUnitSensorUpdateWrapper detectorUnitSensorUpdateWrapper) throws JsonProcessingException,
             EntityNotFoundException {
