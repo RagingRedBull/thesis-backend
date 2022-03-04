@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public class FloorController {
     }
 
     @DeleteMapping(path = "/{floorId}/delete")
-    public ResponseEntity<Object> deleteFloor(@PathVariable int floorId) {
+    public ResponseEntity<Object> deleteFloor(@PathVariable int floorId, Authentication authentication) {
         floorService.deleteOne(floorId);
         return ResponseEntity.ok("Success");
     }
