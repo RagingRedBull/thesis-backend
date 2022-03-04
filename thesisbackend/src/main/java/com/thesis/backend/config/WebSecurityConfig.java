@@ -41,6 +41,7 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        super.configure(http);
         http.csrf().disable()
                 .cors()
                 .and()
@@ -49,5 +50,11 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .and()
                 .contentSecurityPolicy("script-src 'self'");
         http.authorizeRequests().antMatchers("/test/**").authenticated();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.GET,"/detector/**", "/floor/**", "/images/**",
+                        "/log*").permitAll();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.POST).authenticated()
+                .antMatchers("/test/**").authenticated();
     }
 }
