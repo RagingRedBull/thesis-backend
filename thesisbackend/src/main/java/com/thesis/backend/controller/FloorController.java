@@ -66,7 +66,6 @@ public class FloorController {
 
     @DeleteMapping(path = "/{floorId}/delete")
     public ResponseEntity<Object> deleteFloor(@PathVariable int floorId) {
-
         floorService.deleteOne(floorId);
         return ResponseEntity.ok("Success");
     }
