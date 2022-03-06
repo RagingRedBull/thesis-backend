@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FireSensorLogDto extends SensorLogDto{
-    private boolean hasFlame;
+    private int sensorValue;
 
     public FireSensorLogDto(long id, SensorType type, SensorName name) {
         super(id,type, name);

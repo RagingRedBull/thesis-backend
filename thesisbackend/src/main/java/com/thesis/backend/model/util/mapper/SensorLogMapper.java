@@ -18,7 +18,7 @@ public class SensorLogMapper implements EntityMapper<SensorLog, SensorLogDto> {
             dto = mqSensorLogDto;
         } else if (entity instanceof FireSensorLog) {
             FireSensorLogDto fireSensorLogDto = new FireSensorLogDto(entity.getId(),entity.getType(),entity.getName());
-            fireSensorLogDto.setHasFlame((((FireSensorLog) entity).isHasFire()));
+            fireSensorLogDto.setSensorValue((((FireSensorLog) entity).getSensorValue()));
             dto = fireSensorLogDto;
         } else if (entity instanceof SoundSensorLog) {
             SoundSensorLogDto soundSensorLogDto = new SoundSensorLogDto(entity.getId(),entity.getType(),entity.getName());
@@ -42,7 +42,7 @@ public class SensorLogMapper implements EntityMapper<SensorLog, SensorLogDto> {
             entity = mqSensorLog;
         } else if (dto instanceof FireSensorLogDto) {
             FireSensorLog fireSensorLog = new FireSensorLog(dto.getId(), dto.getType(), dto.getName());
-            fireSensorLog.setHasFire(((FireSensorLogDto) dto).isHasFlame());
+            fireSensorLog.setSensorValue(((FireSensorLogDto) dto).getSensorValue());
             entity = fireSensorLog;
         } else if (dto instanceof SoundSensorLogDto) {
             SoundSensorLog soundSensorLog = new SoundSensorLog(dto.getId(), dto.getType(), dto.getName());

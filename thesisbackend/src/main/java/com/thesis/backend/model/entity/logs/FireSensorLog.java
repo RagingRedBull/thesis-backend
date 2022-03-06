@@ -17,7 +17,7 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value = "FLAME")
 public class FireSensorLog extends SensorLog{
-    private boolean hasFire;
+    private int sensorValue;
 
     @PersistenceConstructor
     public FireSensorLog(long id, SensorType type, SensorName name) {
