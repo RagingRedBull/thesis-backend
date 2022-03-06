@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -18,6 +19,7 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value = "SOUND")
 public class SoundSensorLog extends SensorLog{
+    @Column(name = "sound_value")
     private float sound;
     @PersistenceConstructor
     public SoundSensorLog(long id, SensorType type, SensorName name) {

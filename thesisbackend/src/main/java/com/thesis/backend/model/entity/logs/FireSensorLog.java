@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -17,6 +18,7 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value = "FLAME")
 public class FireSensorLog extends SensorLog{
+    @Column(name = "flame_value")
     private int sensorValue;
 
     @PersistenceConstructor
