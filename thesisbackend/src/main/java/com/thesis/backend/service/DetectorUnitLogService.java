@@ -58,6 +58,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         log.info("INSERTING NEW LOG");
         log.info("Mac Address: " + detectorUnitLog.getMacAddress());
         log.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
+        log.info("SENSOR LOG SET: " + detectorUnitLog.getSensorLogSet());
         detectorUnitLog = detectorUnitLogRepository.save(detectorUnitLog);
         log.info("ROW ID: " + detectorUnitLog.getId());
         return detectorUnitLog;

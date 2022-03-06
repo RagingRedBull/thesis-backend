@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class SensorLogService implements EntityService<SensorLog, SensorLogDto, Long> {
-    private final Logger log = LoggerFactory.getLogger(SensorLogService.class);
     private final SensorLogRepository sensorLogRepository;
 
 
