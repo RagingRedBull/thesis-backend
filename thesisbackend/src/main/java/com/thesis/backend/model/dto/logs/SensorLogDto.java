@@ -22,8 +22,8 @@ import lombok.Setter;
         {
                 @JsonSubTypes.Type(value = DhtSensorLogDto.class, name = "DHT"),
                 @JsonSubTypes.Type(value = MqSensorLogDto.class, name = "MQ"),
-                @JsonSubTypes.Type(value = FireSensorLog.class, name = "FIRE"),
-                @JsonSubTypes.Type(value = SoundSensorLog.class, name = "SOUND")
+                @JsonSubTypes.Type(value = FireSensorLogDto.class, name = "FIRE"),
+                @JsonSubTypes.Type(value = SoundSensorLogDto.class, name = "SOUND")
         }
 )
 @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
