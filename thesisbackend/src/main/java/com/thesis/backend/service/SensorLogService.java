@@ -2,8 +2,8 @@ package com.thesis.backend.service;
 
 import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
-import com.thesis.backend.model.entity.logs.DetectorUnitLog;
-import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.entity.logs.*;
+import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.SensorLogRepository;
@@ -68,10 +68,50 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    public boolean checkAbnormalSensorValue(Set<SensorLog> sensorLogSet) {
+        boolean isAbnormal = false;
+        for (SensorLog log : sensorLogSet) {
+            if(log instanceof DhtSensorLog) {
+                if (((DhtSensorLog) log).getTemperature() >= 50) {
+                    isAbnormal = true;
+                    break;
+                }
+            } else if (log instanceof MqSensorLog) {
+                if(log.getName() == SensorName.MQ2) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ5) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ7) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ135) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                }
+            } else if (log instanceof FireSensorLog) {
+                if(((FireSensorLog)log).getSensorValue() >= 170) {
+                    isAbnormal = true;
+                    break;
+                }
+            }
+        }
+        return isAbnormal;
+    }
     public Set<SensorLogDto> mapSensorLogEntityToDto(List<SensorLog> sensorLogSet) {
         SensorLogMapper mapper = new SensorLogMapper();
         return sensorLogSet.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
 }

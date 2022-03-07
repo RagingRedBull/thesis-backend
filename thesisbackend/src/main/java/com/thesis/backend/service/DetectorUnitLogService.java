@@ -1,5 +1,6 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.config.AppConfig;
 import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
-
+    private final AppConfig appConfig;
     @Override
     public DetectorUnitLog findOneByPrimaryKey(Long primaryKey) {
         Optional<DetectorUnitLog> wrapper = detectorUnitLogRepository.findById(primaryKey);
@@ -54,11 +55,13 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
 
         //Debug purporse
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
         log.info("INSERTING NEW LOG");
         log.info("Mac Address: " + detectorUnitLog.getMacAddress());
         log.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
         log.info("SENSOR LOG SET: " + detectorUnitLog.getSensorLogSet());
+        if(sensorLogService.checkAbnormalSensorValue(detectorUnitLog.getSensorLogSet())) {
+            appConfig.setEnabledAlarmingMode(true);
+        }
         detectorUnitLog = detectorUnitLogRepository.save(detectorUnitLog);
         log.info("ROW ID: " + detectorUnitLog.getId());
         return detectorUnitLog;
