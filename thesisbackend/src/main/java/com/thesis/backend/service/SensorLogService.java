@@ -10,8 +10,6 @@ import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
@@ -68,7 +66,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    public boolean checkAbnormalSensorValue(Set<SensorLog> sensorLogSet) {
+    public boolean hasAbnormalSensorValue(Set<SensorLog> sensorLogSet) {
         boolean isAbnormal = false;
         for (SensorLog log : sensorLogSet) {
             if(log instanceof DhtSensorLog) {

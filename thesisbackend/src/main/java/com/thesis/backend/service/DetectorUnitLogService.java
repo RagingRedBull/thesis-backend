@@ -5,17 +5,17 @@ import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.DetectorUnit;
+import com.thesis.backend.model.entity.MachineLearningInput;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
+import com.thesis.backend.repository.MachineLearningInputRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,9 +31,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
+    private final DetectorUnitService detectorUnitService;
+    private final MachineLearningInputRepository machineLearningInputRepository;
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
     private final AppConfig appConfig;
+
     @Override
     public DetectorUnitLog findOneByPrimaryKey(Long primaryKey) {
         Optional<DetectorUnitLog> wrapper = detectorUnitLogRepository.findById(primaryKey);
@@ -59,11 +62,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         log.info("Mac Address: " + detectorUnitLog.getMacAddress());
         log.info("Date Recorded: " + detectorUnitLog.getTimeRecorded().format(formatter));
         log.info("SENSOR LOG SET: " + detectorUnitLog.getSensorLogSet());
-        if(sensorLogService.checkAbnormalSensorValue(detectorUnitLog.getSensorLogSet())) {
-            appConfig.setEnabledAlarmingMode(true);
-        }
         detectorUnitLog = detectorUnitLogRepository.save(detectorUnitLog);
-        log.info("ROW ID: " + detectorUnitLog.getId());
         return detectorUnitLog;
     }
 
@@ -77,6 +76,21 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         return null;
     }
 
+    public void checkReadings(DetectorUnitLog detectorUnitLog) {
+        if (sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
+                && !appConfig.isEnabledAlarmingMode()) {
+            log.info("Found abnormal readings with log id: " + detectorUnitLog.getId());
+            appConfig.setEnabledAlarmingMode(true);
+            DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
+            MachineLearningInput machineLearningInput = new MachineLearningInput();
+            machineLearningInput.setXOrigin(detectorUnit.getCompartment().getXDimension());
+            machineLearningInput.setYOrigin(detectorUnit.getCompartment().getYDimension());
+            machineLearningInput.setFloorOrigin(detectorUnit.getCompartment().getFloor().getOrder());
+            machineLearningInput.setTimeRecorded(LocalDateTime.now());
+            machineLearningInputRepository.saveAndFlush(machineLearningInput);
+        }
+    }
+
     public DetectorUnitLog findLatestLog(String macAddress) {
         return detectorUnitLogRepository.findLatestLog(macAddress);
     }
@@ -84,6 +98,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     public Set<DetectorUnitLog> findDetectorLogsByDetectorUnitId(Set<String> detectorUnits, Sort sort) {
         return detectorUnitLogRepository.findFirstByMacAddressIn(detectorUnits, sort);
     }
+
     public Page<DetectorUnitLogDto> findDetectorLogsByPage(Pageable page) {
         DetectorUnitLogMapper mapper = new DetectorUnitLogMapper();
         return detectorUnitLogRepository.findAll(page).map(mapper::mapToDto);

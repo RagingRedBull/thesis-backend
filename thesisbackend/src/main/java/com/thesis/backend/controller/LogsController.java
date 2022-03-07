@@ -88,7 +88,8 @@ public class LogsController {
     @PostMapping(path = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
         log.debug(detectorUnitLogDto.toString());
-        DetectorUnitLog log = detectorUnitLogService.saveOne(detectorUnitLogDto);
+        DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
+        detectorUnitLogService.checkReadings(detectorUnitLog);
         return ResponseEntity.ok(null);
     }
 
