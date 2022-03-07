@@ -62,7 +62,7 @@ public class CompartmentController {
     }
     @GetMapping(path = "/{id}/logs")
     public ResponseEntity<CompartmentLogResponse> getCompartmentLogs(@PathVariable int compartmentId) {
-
+        
         return null;
     }
 }

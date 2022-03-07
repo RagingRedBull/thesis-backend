@@ -13,8 +13,4 @@ public class FixedTasksService {
     private final AppConfig appConfig;
     private final DetectorUnitLogService detectorUnitLogService;
 
-    @Scheduled(fixedRate = 3000)
-    public void checkAbnormalLogs() {
-        log.info("Fixed Interval of 3s");
-    }
 }

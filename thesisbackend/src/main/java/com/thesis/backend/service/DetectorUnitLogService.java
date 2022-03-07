@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class DetectorUnitLogService implements EntityService<DetectorUnitLog, DetectorUnitLogDto, Long> {
     private final DetectorUnitService detectorUnitService;
-    private final MachineLearningInputRepository machineLearningInputRepository;
+    private final MachineLearningInputService machineLearningInputService;
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
     private final AppConfig appConfig;
@@ -87,7 +87,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
             machineLearningInput.setYOrigin(detectorUnit.getCompartment().getYDimension());
             machineLearningInput.setFloorOrigin(detectorUnit.getCompartment().getFloor().getOrder());
             machineLearningInput.setTimeRecorded(LocalDateTime.now());
-            machineLearningInputRepository.saveAndFlush(machineLearningInput);
+            machineLearningInputService.saveOne(machineLearningInput);
         }
     }
 
