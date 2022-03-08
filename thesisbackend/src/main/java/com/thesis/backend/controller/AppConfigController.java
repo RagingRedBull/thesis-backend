@@ -16,8 +16,8 @@ public class AppConfigController {
     public ResponseEntity<Object> getAlarmingMode() {
         return ResponseEntity.ok(appConfig.isEnabledAlarmingMode());
     }
-    @PostMapping("/alaraming/update")
-    public ResponseEntity<Object> setAlarmingMode(@RequestBody boolean enableAlarming) {
+    @GetMapping("/alarming/update")
+    public ResponseEntity<Object> setAlarmingMode(@RequestParam boolean enableAlarming) {
         appConfig.setEnabledAlarmingMode(enableAlarming);
         return ResponseEntity.ok(appConfig.isEnabledAlarmingMode());
     }
