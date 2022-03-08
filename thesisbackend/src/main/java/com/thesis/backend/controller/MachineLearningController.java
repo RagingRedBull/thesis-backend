@@ -6,6 +6,7 @@ import com.thesis.backend.model.entity.MachineLearningInput;
 import com.thesis.backend.model.entity.MachineLearningOutput;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.MachineLearningInputMapper;
+import com.thesis.backend.model.util.mapper.MachineLearningOutputMapper;
 import com.thesis.backend.service.MachineLearningInputService;
 import com.thesis.backend.service.MachineLearningOutputService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class MachineLearningController {
     @PostMapping(path = "/output/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> insertNewOutput(@RequestBody MachineLearningOutputDto dto) {
         return ResponseEntity.ok(machineLearningOutputService.saveOne(dto));
+    }
+    @GetMapping(path = "/output")
+    public ResponseEntity<Object> getLatestOutput() {
+        EntityMapper<MachineLearningOutput, MachineLearningOutputDto> mapper = new MachineLearningOutputMapper();
+        MachineLearningOutput entity = machineLearningOutputService.getLatestRow();
+        return ResponseEntity.ok(mapper.mapToDto(entity));
     }
     @GetMapping(path = "/input", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getLatestInput() {

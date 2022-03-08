@@ -39,4 +39,8 @@ public class MachineLearningOutputService implements EntityService<MachineLearni
     public MachineLearningOutput updateOne(MachineLearningOutputDto machineLearningOutputDto) {
         return null;
     }
+
+    public MachineLearningOutput getLatestRow() {
+        return machineLearningOutputRepository.getLatestOutput();
+    }
 }

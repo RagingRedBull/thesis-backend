@@ -27,6 +27,4 @@ public class MachineLearningOutput {
     private int yEnd;
     @Column(name = "floor_end")
     private int floorEnd;
-    @Column(name = "time_recorded")
-    private LocalDateTime timeRecorded;
 }

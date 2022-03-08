@@ -8,8 +8,8 @@ import lombok.Setter;
 public class MachineLearningOutputDto {
     private int xStart;
     private int yStart;
-    private int floorStart;
     private int xEnd;
     private int yEnd;
+    private int floorStart;
     private int floorEnd;
 }
