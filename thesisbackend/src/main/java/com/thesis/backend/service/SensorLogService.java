@@ -68,29 +68,29 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
 
     public boolean hasAbnormalSensorValue(Set<SensorLog> sensorLogSet) {
         boolean isAbnormal = false;
-        for (SensorLog log : sensorLogSet) {
-            if(log instanceof DhtSensorLog) {
-                if (((DhtSensorLog) log).getTemperature() >= 50) {
-                    isAbnormal = true;
-                    break;
-                }
-            } else if (log instanceof MqSensorLog) {
-                if(log.getName() == SensorName.MQ2) {
-                    if (((MqSensorLog)log).getMqValue() >= 400) {
-                        isAbnormal = true;
-                        break;
-                    }
-                } else if (log.getName() == SensorName.MQ5) {
-                    if (((MqSensorLog)log).getMqValue() >= 400) {
-                        isAbnormal = true;
-                        break;
-                    }
-                } else if (log.getName() == SensorName.MQ7) {
-                    if (((MqSensorLog)log).getMqValue() >= 400) {
-                        isAbnormal = true;
-                        break;
-                    }
-                } else if (log.getName() == SensorName.MQ135) {
+                for (SensorLog log : sensorLogSet) {
+                    if(log instanceof DhtSensorLog) {
+                        if (((DhtSensorLog) log).getTemperature() >= 50) {
+                            isAbnormal = true;
+                            break;
+                        }
+                    } else if (log instanceof MqSensorLog) {
+                        if(log.getName() == SensorName.MQ2) {
+                            if (((MqSensorLog)log).getMqValue() >= 400) {
+                                isAbnormal = true;
+                                break;
+                            }
+                        } else if (log.getName() == SensorName.MQ5) {
+                            if (((MqSensorLog)log).getMqValue() >= 400) {
+                                isAbnormal = true;
+                                break;
+                            }
+                        } else if (log.getName() == SensorName.MQ7) {
+                            if (((MqSensorLog)log).getMqValue() >= 700) {
+                                isAbnormal = true;
+                                break;
+                            }
+                        } else if (log.getName() == SensorName.MQ135) {
                     if (((MqSensorLog)log).getMqValue() >= 400) {
                         isAbnormal = true;
                         break;
