@@ -3,7 +3,7 @@ package com.thesis.backend.model.util.mapper;
 import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.model.entity.Floor;
 
-public class FloorEntityMapper implements EntityMapper<Floor, FloorDto> {
+public class FloorMapper implements EntityMapper<Floor, FloorDto> {
 
     @Override
     public FloorDto mapToDto(Floor entity) {
@@ -12,6 +12,7 @@ public class FloorEntityMapper implements EntityMapper<Floor, FloorDto> {
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
         dto.setImageUrl(entity.getImageName());
+        dto.setOrder(entity.getOrder());
         return dto;
     }
 
@@ -22,6 +23,7 @@ public class FloorEntityMapper implements EntityMapper<Floor, FloorDto> {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setImageName(dto.getImageUrl());
+        entity.setOrder(dto.getOrder());
         return entity;
     }
 }

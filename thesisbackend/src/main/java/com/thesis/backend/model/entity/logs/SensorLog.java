@@ -4,10 +4,13 @@ import com.thesis.backend.model.converter.SensorNameConverter;
 import com.thesis.backend.model.converter.SensorTypeConverter;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type",
@@ -24,13 +27,11 @@ public abstract class SensorLog implements Serializable {
     @Column(name = "type", insertable = false, updatable = false)
     @Convert(converter = SensorTypeConverter.class)
     protected SensorType type;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "detector_unit_log_id")
     private DetectorUnitLog detectorUnitLog;
-
-    protected SensorLog() {
-        // Default Empty
-    }
 
     public SensorLog(long id, SensorName name, SensorType type) {
         this.id = id;
@@ -38,41 +39,4 @@ public abstract class SensorLog implements Serializable {
         this.type = type;
     }
 
-    public SensorLog(SensorName name, SensorType type, DetectorUnitLog detectorUnitLog) {
-        this.name = name;
-        this.type = type;
-        this.detectorUnitLog = detectorUnitLog;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public SensorName getName() {
-        return name;
-    }
-
-    public void setName(SensorName name) {
-        this.name = name;
-    }
-
-    public SensorType getType() {
-        return type;
-    }
-
-    public void setType(SensorType type) {
-        this.type = type;
-    }
-
-    public DetectorUnitLog getDetectorUnitLog() {
-        return detectorUnitLog;
-    }
-
-    public void setDetectorUnitLog(DetectorUnitLog detectorUnitLog) {
-        this.detectorUnitLog = detectorUnitLog;
-    }
 }

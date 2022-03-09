@@ -1,54 +1,43 @@
 package com.thesis.backend.model.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "compartment")
 public class Compartment implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "x_pos")
-    private float x;
-    @Column(name = "y_pos")
-    private float y;
-    @ManyToOne
+    @Column(name = "name")
+    private String name;
+    @Column(name = "x_dimension")
+    private int xDimension;
+    @Column(name = "y_dimension")
+    private int yDimension;
+    @Column(name = "width")
+    private int width;
+    @Column(name = "depth")
+    private int depth;
+    @Column(name = "x_konva")
+    private int xKonva;
+    @Column(name = "y_konva")
+    private int yKonva;
+    @Column(name = "width_konva")
+    private int widthKonva;
+    @Column(name = "height_konva")
+    private int heightKonva;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
-    @OneToMany(mappedBy = "compartment")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "compartment", cascade =CascadeType.PERSIST)
     private Set<DetectorUnit> detectorUnits;
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public Floor getFloor() {
-        return floor;
-    }
-
-    public void setFloor(Floor floor) {
-        this.floor = floor;
-    }
 }

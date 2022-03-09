@@ -1,38 +1,36 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
-import com.thesis.backend.model.entity.logs.DetectorUnitLog;
-import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.entity.logs.*;
+import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.util.mapper.EntityMapper;
-import com.thesis.backend.model.util.mapper.SensorLogEntityMapper;
+import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
+@Slf4j
 @Service
 public class SensorLogService implements EntityService<SensorLog, SensorLogDto, Long> {
-    private final Logger logger = LoggerFactory.getLogger(SensorLogService.class);
     private final SensorLogRepository sensorLogRepository;
 
-    public SensorLogService(SensorLogRepository sensorLogRepository) {
-        this.sensorLogRepository = sensorLogRepository;
-    }
 
     @Override
     public SensorLog findOneByPrimaryKey(Long primaryKey) {
         Optional<SensorLog> wrapper = sensorLogRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            logger.error("No Sensor Log with ID: " + primaryKey);
-            throw new EntityNotFoundException("No Sensor Log with ID: " + primaryKey);
+            log.error("No Sensor Log with ID: " + primaryKey);
+            throw new PrmtsEntityNotFoundException(SensorLog.class, primaryKey);
         } else {
             return wrapper.get();
         }
@@ -40,15 +38,25 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
 
     @Override
     public SensorLog saveOne(SensorLogDto sensorLogDto) {
-        EntityMapper<SensorLog, SensorLogDto> mapper = new SensorLogEntityMapper();
+        EntityMapper<SensorLog, SensorLogDto> mapper = new SensorLogMapper();
         return sensorLogRepository.save(mapper.mapToEntity(sensorLogDto));
+    }
+
+    @Override
+    public void deleteOne(Long primaryKey) {
+        sensorLogRepository.deleteById(primaryKey);
+    }
+
+    @Override
+    public SensorLog updateOne(SensorLogDto sensorLogDto) {
+        return null;
     }
 
     public List<SensorLog> findLogsByDetectorLogId(long id) {
         return sensorLogRepository.findByDetectorUnitLog(id);
     }
     public Set<SensorLog> mapSensorLogDtoEntitySet(Set<SensorLogDto> sensorLogDtoSet, DetectorUnitLog detectorUnitLog){
-        SensorLogEntityMapper mapper = new SensorLogEntityMapper();
+        SensorLogMapper mapper = new SensorLogMapper();
         return sensorLogDtoSet.stream()
                 .map(sensorLogDto -> {
                     SensorLog log = mapper.mapToEntity(sensorLogDto);
@@ -58,10 +66,50 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    public boolean hasAbnormalSensorValue(Set<SensorLog> sensorLogSet) {
+        boolean isAbnormal = false;
+        for (SensorLog log : sensorLogSet) {
+            if(log instanceof DhtSensorLog) {
+                if (((DhtSensorLog) log).getTemperature() >= 50) {
+                    isAbnormal = true;
+                    break;
+                }
+            } else if (log instanceof MqSensorLog) {
+                if(log.getName() == SensorName.MQ2) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ5) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ7) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ135) {
+                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                        isAbnormal = true;
+                        break;
+                    }
+                }
+            } else if (log instanceof FireSensorLog) {
+                if(((FireSensorLog)log).getSensorValue() >= 170) {
+                    isAbnormal = true;
+                    break;
+                }
+            }
+        }
+        return isAbnormal;
+    }
     public Set<SensorLogDto> mapSensorLogEntityToDto(List<SensorLog> sensorLogSet) {
-        SensorLogEntityMapper mapper = new SensorLogEntityMapper();
+        SensorLogMapper mapper = new SensorLogMapper();
         return sensorLogSet.stream()
                 .map(mapper::mapToDto)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
 }

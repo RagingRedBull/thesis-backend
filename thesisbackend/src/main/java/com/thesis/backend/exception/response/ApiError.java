@@ -1,5 +1,10 @@
 package com.thesis.backend.exception.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ApiError {
     private String object;
     private String field;
@@ -11,35 +16,4 @@ public class ApiError {
         this.message = message;
     }
 
-    public String getObject() {
-        return object;
-    }
-
-    public void setObject(String object) {
-        this.object = object;
-    }
-
-    public String getField() {
-        return field;
-    }
-
-    public void setField(String field) {
-        this.field = field;
-    }
-
-    public Object getRejectedValue() {
-        return rejectedValue;
-    }
-
-    public void setRejectedValue(Object rejectedValue) {
-        this.rejectedValue = rejectedValue;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

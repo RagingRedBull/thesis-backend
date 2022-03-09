@@ -3,9 +3,9 @@ package com.thesis.backend.model.util.mapper;
 import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 
-public class DetectorUnitEntityMapper implements EntityMapper<DetectorUnit, DetectorUnitDto> {
+public class DetectorUnitMapper implements EntityMapper<DetectorUnit, DetectorUnitDto> {
 
-    public DetectorUnitEntityMapper() {
+    public DetectorUnitMapper() {
 
     }
 
@@ -17,6 +17,11 @@ public class DetectorUnitEntityMapper implements EntityMapper<DetectorUnit, Dete
         dto.setName(entity.getName());
         dto.setXpos(entity.getXpos());
         dto.setYpos(entity.getYpos());
+        if(entity.getCompartment() == null) {
+            dto.setCompartmentId(null);
+        } else {
+            dto.setCompartmentId(entity.getCompartment().getId());
+        }
         return dto;
     }
 

@@ -22,7 +22,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         KeycloakAuthenticationProvider keycloakAuthProvider = keycloakAuthenticationProvider();
@@ -50,11 +49,12 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .xssProtection()
                 .and()
                 .contentSecurityPolicy("script-src 'self'");
+        http.authorizeRequests().antMatchers("/test/**").authenticated();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/detector/**", "/floor/**", "/images/**",
                         "/log*").permitAll();
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST).authenticated()
+                .antMatchers(HttpMethod.DELETE).authenticated()
                 .antMatchers("/test/**").authenticated();
     }
 }

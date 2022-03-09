@@ -3,17 +3,21 @@ package com.thesis.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.DetectorUnitDto;
-import com.thesis.backend.model.dto.update.DetectorUnitUpdateDto;
+import com.thesis.backend.model.dto.update.DetectorUnitCompartmentUpdateDto;
+import com.thesis.backend.model.dto.update.DetectorUnitSensorUpdateWrapper;
 import com.thesis.backend.model.dto.update.SensorUpdateDto;
+import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Sensor;
-import com.thesis.backend.model.util.mapper.DetectorUnitEntityMapper;
+import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
+import com.thesis.backend.repository.CompartmentRepository;
 import com.thesis.backend.repository.DetectorUnitRepository;
 import com.thesis.backend.service.interfaces.EntityService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -31,24 +35,22 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
+@Slf4j
 @Service
 public class DetectorUnitService implements EntityService<DetectorUnit, DetectorUnitDto, String> {
-    private final Logger logger = LoggerFactory.getLogger(DetectorUnitService.class);
-    private final EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitEntityMapper();
+    private final EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitMapper();
     private final DetectorUnitRepository detectorUnitRepository;
+    private final CompartmentRepository compartmentRepository;
     private final SensorService sensorService;
 
-    public DetectorUnitService(DetectorUnitRepository detectorUnitRepository, SensorService sensorService) {
-        this.detectorUnitRepository = detectorUnitRepository;
-        this.sensorService = sensorService;
-    }
 
     @Override
     public DetectorUnit findOneByPrimaryKey(String primaryKey) throws EntityNotFoundException{
         Optional<DetectorUnit> wrapper = detectorUnitRepository.findById(primaryKey);
         if (wrapper.isEmpty()) {
-            logger.error("No Detector Unit with Mac Address: " + primaryKey);
-            throw new EntityNotFoundException("No Detector Unit with Mac Address: " + primaryKey);
+            log.error("No Detector Unit with Mac Address: " + primaryKey);
+            throw new PrmtsEntityNotFoundException(DetectorUnit.class, primaryKey);
         } else {
             return wrapper.get();
         }
@@ -59,38 +61,71 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return detectorUnitRepository.saveAndFlush(mapper.mapToEntity(detectorUnitDto));
     }
 
+    @Override
+    public void deleteOne(String primaryKey) {
+        detectorUnitRepository.deleteById(primaryKey);
+    }
+
+    @Override
+    public DetectorUnit updateOne(DetectorUnitDto detectorUnitDto) {
+        return null;
+    }
+
+    public List<DetectorUnit> disassociateCompartment(List<DetectorUnit> detectorUnits) {
+        for (DetectorUnit detectorUnit : detectorUnits) {
+            detectorUnit.setCompartment(null);
+        }
+        return detectorUnitRepository.saveAllAndFlush(detectorUnits);
+    }
     public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
 
-    public void updateSensorList(DetectorUnitUpdateDto detectorUnitUpdateDto) throws JsonProcessingException,
+    public List<DetectorUnit> getAllDetectorUnitByCompartmentId(Integer compartmentId) {
+        return null;
+    }
+    public List<DetectorUnit> getAllDetectorUnitsByFloorId(Integer floorId) {
+        return detectorUnitRepository.getAllDetectorUnitsByFloorId(floorId);
+    }
+    public void updateSensorList(DetectorUnitSensorUpdateWrapper detectorUnitSensorUpdateWrapper) throws JsonProcessingException,
             EntityNotFoundException {
-        DetectorUnit unitToUpdate = findOneByPrimaryKey(detectorUnitUpdateDto.getDetectorUnitDto().getMacAddress());
+        DetectorUnit unitToUpdate = findOneByPrimaryKey(detectorUnitSensorUpdateWrapper.getDetectorUnitDto().getMacAddress());
         boolean isSuccessful = false;
-        logger.info("PERFORMING UPDATE!");
-        logger.info("Unit Mac Address: " + detectorUnitUpdateDto.getDetectorUnitDto().getMacAddress());
-        logger.info("Sensor Update Set: " + detectorUnitUpdateDto.getSensorUpdateDtoSet().toString());
+        log.info("PERFORMING UPDATE!");
+        log.info("Unit Mac Address: " + detectorUnitSensorUpdateWrapper.getDetectorUnitDto().getMacAddress());
+        log.info("Sensor Update Set: " + detectorUnitSensorUpdateWrapper.getSensorUpdateDtoSet().toString());
         Set<Sensor> targetSensorSet =
                 sensorService.getAllSensorsInList(getSensorIdFromSensorUpdateDtoAsList(
-                        detectorUnitUpdateDto.getSensorUpdateDtoSet()));
+                        detectorUnitSensorUpdateWrapper.getSensorUpdateDtoSet()));
         unitToUpdate.getAssociatedSensorSet().removeAll(getSensorsToRemove(
-                targetSensorSet, detectorUnitUpdateDto.getSensorUpdateDtoSet()));
+                targetSensorSet, detectorUnitSensorUpdateWrapper.getSensorUpdateDtoSet()));
         unitToUpdate.getAssociatedSensorSet().addAll(getSensorToAdd(
-                targetSensorSet, detectorUnitUpdateDto.getSensorUpdateDtoSet()));
-        if (contactDetectorUnitToUpdate(unitToUpdate, detectorUnitUpdateDto.getSensorUpdateDtoSet())) {
+                targetSensorSet, detectorUnitSensorUpdateWrapper.getSensorUpdateDtoSet()));
+        if (contactDetectorUnitToUpdate(unitToUpdate, detectorUnitSensorUpdateWrapper.getSensorUpdateDtoSet())) {
             detectorUnitRepository.saveAndFlush(unitToUpdate);
-            logger.info("Unit Mac Address: " + unitToUpdate.getMacAddress());
-            logger.info("Updated Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
+            log.info("Unit Mac Address: " + unitToUpdate.getMacAddress());
+            log.info("Updated Sensor Set: " + unitToUpdate.getAssociatedSensorSet().toString());
         } else {
 
         }
     }
 
+    public DetectorUnitDto updateAssociatedCompartment(DetectorUnitCompartmentUpdateDto dto) {
+        EntityMapper<DetectorUnit,DetectorUnitDto> mapper = new DetectorUnitMapper();
+        DetectorUnit detectorUnit = detectorUnitRepository.getById(dto.getDetectorUnitId());
+        if(dto.getCompartmentId() != null) {
+            Compartment compartment = compartmentRepository.getById(dto.getCompartmentId());
+            detectorUnit.setCompartment(compartment);
+        } else {
+            detectorUnit.setCompartment(null);
+        }
+        return mapper.mapToDto(detectorUnitRepository.saveAndFlush(detectorUnit));
+    }
     public String buildSensorSetJSON(DetectorUnit detectorUnit) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer().withRootName("sensorSet");
-        logger.info("SENDING SENSOR OF " + detectorUnit.getMacAddress());
-        logger.info("Sensor Set: " + detectorUnit.getAssociatedSensorSet().toString());
+        log.info("SENDING SENSOR OF " + detectorUnit.getMacAddress());
+        log.info("Sensor Set: " + detectorUnit.getAssociatedSensorSet().toString());
         return
                 writer.writeValueAsString(sensorService.buildSensorSetUpdateDto(
                         detectorUnit.getAssociatedSensorSet(), true));
@@ -116,8 +151,8 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         Mono<String> response = headersSpec.retrieve()
                 .bodyToMono(String.class);
         response.subscribe(
-                logger::info,
-                error -> logger.info(error.getMessage())
+                log::info,
+                error -> log.info(error.getMessage())
         );
         return true;
     }
