@@ -90,9 +90,8 @@ public class DetectorUnitController {
         EntityMapper<DetectorUnitLog, DetectorUnitLogDto> mapper = new DetectorUnitLogMapper();
         EntityMapper<SensorLog, SensorLogDto> sensorLogMapper = new SensorLogMapper();
         DetectorUnitLog detectorUnitLog = detectorUnitLogService.findLatestLog(macAddress);
-        List<SensorLog> sensorLogs = sensorLogService.findLogsByDetectorLogId(detectorUnitLog.getId());
         DetectorUnitLogDto dto = mapper.mapToDto(detectorUnitLog);
-        dto.setSensorLogSet(sensorLogs.stream()
+        dto.setSensorLogSet(detectorUnitLog.getSensorLogSet().stream()
                 .map(sensorLogMapper::mapToDto)
                 .collect(Collectors.toSet()));
         return ResponseEntity.ok(dto);
