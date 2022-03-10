@@ -1,4 +1,4 @@
-package com.thesis.backend.model.entity;
+package com.thesis.backend.model.entity.ml;
 
 import lombok.Getter;
 import lombok.Setter;

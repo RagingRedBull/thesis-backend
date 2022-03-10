@@ -1,6 +1,6 @@
 package com.thesis.backend.repository;
 
-import com.thesis.backend.model.entity.MachineLearningInput;
+import com.thesis.backend.model.entity.ml.MachineLearningInput;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

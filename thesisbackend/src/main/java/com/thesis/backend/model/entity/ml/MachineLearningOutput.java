@@ -1,10 +1,10 @@
-package com.thesis.backend.model.entity;
+package com.thesis.backend.model.entity.ml;
 
+import com.thesis.backend.model.converter.MachineLearningOutputLogTypeConverter;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -27,4 +27,7 @@ public class MachineLearningOutput {
     private int yEnd;
     @Column(name = "floor_end")
     private int floorEnd;
+    @Column(name = "type")
+    @Convert(converter = MachineLearningOutputLogTypeConverter.class)
+    private LogType logType;
 }

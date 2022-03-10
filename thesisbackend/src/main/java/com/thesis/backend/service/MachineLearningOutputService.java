@@ -2,7 +2,7 @@ package com.thesis.backend.service;
 
 
 import com.thesis.backend.model.dto.MachineLearningOutputDto;
-import com.thesis.backend.model.entity.MachineLearningOutput;
+import com.thesis.backend.model.entity.ml.MachineLearningOutput;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.MachineLearningOutputMapper;
 import com.thesis.backend.repository.MachineLearningOutputRepository;
@@ -40,7 +40,7 @@ public class MachineLearningOutputService implements EntityService<MachineLearni
         return null;
     }
 
-    public MachineLearningOutput getLatestRow() {
-        return machineLearningOutputRepository.getLatestOutput();
+    public MachineLearningOutput getLatestOutput(String type) {
+        return machineLearningOutputRepository.getLatestOutput(type);
     }
 }
