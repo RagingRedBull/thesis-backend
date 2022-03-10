@@ -1,7 +1,6 @@
 package com.thesis.backend.model.converter;
 
 import com.thesis.backend.model.entity.ml.LogType;
-import com.thesis.backend.model.enums.SensorType;
 
 import javax.persistence.AttributeConverter;
 import java.util.stream.Stream;

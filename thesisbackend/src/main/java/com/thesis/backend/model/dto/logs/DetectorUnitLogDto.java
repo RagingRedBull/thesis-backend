@@ -3,7 +3,6 @@ package com.thesis.backend.model.dto.logs;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.thesis.backend.model.dto.logs.SensorLogDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -5,8 +5,6 @@ import com.thesis.backend.model.dto.FloorDto;
 import com.thesis.backend.service.interfaces.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

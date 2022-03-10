@@ -1,7 +1,6 @@
 package com.thesis.backend.model.entity.logs;
 
 
-import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

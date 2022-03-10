@@ -13,4 +13,9 @@ public class FixedTasksService {
     private final AppConfig appConfig;
     private final DetectorUnitLogService detectorUnitLogService;
 
+
+    @Scheduled(fixedRate = 1000)
+    public void testLog() {
+        log.info("test");
+    }
 }

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.thesis.backend.model.entity.logs.FireSensorLog;
-import com.thesis.backend.model.entity.logs.SoundSensorLog;
 import com.thesis.backend.model.enums.SensorName;
 import com.thesis.backend.model.enums.SensorType;
 import lombok.Getter;

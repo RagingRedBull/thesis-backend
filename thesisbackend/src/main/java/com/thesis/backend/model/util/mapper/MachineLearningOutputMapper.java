@@ -1,7 +1,6 @@
 package com.thesis.backend.model.util.mapper;
 
 import com.thesis.backend.model.dto.MachineLearningOutputDto;
-import com.thesis.backend.model.entity.ml.LogType;
 import com.thesis.backend.model.entity.ml.MachineLearningOutput;
 
 public class MachineLearningOutputMapper implements EntityMapper<MachineLearningOutput, MachineLearningOutputDto> {
