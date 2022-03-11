@@ -44,12 +44,12 @@ public class TestController {
 
     @GetMapping(path = "/alarming")
     public ResponseEntity<Object> checkAlarmingMode() {
-        return ResponseEntity.ok(appConfig.isEnabledAlarmingMode());
+        return ResponseEntity.ok(appConfig.isAlarmingMode());
     }
 
     @GetMapping(path = "/alarming/update")
     public ResponseEntity<Object> updateAlarmingMode(@RequestParam boolean update) {
-        appConfig.setEnabledAlarmingMode(update);
+        appConfig.setAlarmingMode(update);
         return ResponseEntity.ok(null);
     }
 
