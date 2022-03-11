@@ -56,7 +56,7 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
                 .antMatchers(HttpMethod.PATCH).authenticated()
-                .antMatchers(HttpMethod.POST, "/detector/**", "/floor/**", "/images/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/compartment/**", "/floor/**", "/images/**").authenticated()
                 .antMatchers("/test/**").authenticated();
     }
 }
