@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -111,5 +112,9 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
                 .map(sensorMapper::mapToDto)
                 .collect(Collectors.toSet()));
         return dto;
+    }
+
+    public List<DetectorUnitLog> findAllByDateRange() {
+        return detectorUnitLogRepository.findAll();
     }
 }
