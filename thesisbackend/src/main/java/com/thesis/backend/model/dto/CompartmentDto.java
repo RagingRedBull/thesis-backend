@@ -16,5 +16,5 @@ public class CompartmentDto {
     private float yKonva;
     private float widthKonva;
     private float heightKonva;
-    private float floorId;
+    private int floorId;
 }

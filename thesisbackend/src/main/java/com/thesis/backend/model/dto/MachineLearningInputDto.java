@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class MachineLearningInputDto {
-    private int xOrigin;
-    private int yOrigin;
+    private float xOrigin;
+    private float yOrigin;
     private int floorOrigin;
     private LocalDateTime timeRecorded;
 }

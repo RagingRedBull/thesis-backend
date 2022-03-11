@@ -16,9 +16,9 @@ public class MachineLearningInput {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
     @Column(name = "x_origin")
-    private int xOrigin;
+    private float xOrigin;
     @Column(name = "y_origin")
-    private int yOrigin;
+    private float yOrigin;
     @Column(name = "floor_origin")
     private int floorOrigin;
     @Column(name = "time_recorded")
