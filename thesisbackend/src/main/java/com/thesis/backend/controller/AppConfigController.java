@@ -16,11 +16,20 @@ public class AppConfigController {
 
     @GetMapping("/alarming")
     public ResponseEntity<Object> getAlarmingMode() {
-        return ResponseEntity.ok(appConfig.isEnabledAlarmingMode());
+        return ResponseEntity.ok(appConfig.isAlarmingMode());
+    }
+    @GetMapping("/fire-drill")
+    public ResponseEntity<Object> getFireDrillMode() {
+        return ResponseEntity.ok(appConfig.isFireDrillMode());
     }
     @GetMapping("/alarming/update")
     public ResponseEntity<Object> setAlarmingMode(@RequestParam boolean enableAlarming) {
-        appConfig.setEnabledAlarmingMode(enableAlarming);
-        return ResponseEntity.ok(appConfig.isEnabledAlarmingMode());
+        appConfig.setAlarmingMode(enableAlarming);
+        return ResponseEntity.ok(appConfig.isAlarmingMode());
+    }
+    @GetMapping("/alarming/update")
+    public ResponseEntity<Object> setFireDrillMode(@RequestParam boolean enableFireDrillMode) {
+        appConfig.setFireDrillMode(enableFireDrillMode);
+        return ResponseEntity.ok(appConfig.isFireDrillMode());
     }
 }

@@ -12,5 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 @Setter
 public class AppConfig {
     @Value("${prmts.alarming}")
-    private boolean isEnabledAlarmingMode;
+    private boolean alarmingMode;
+    @Value("${prmts.fire-drill-mode}")
+    private boolean fireDrillMode;
 }
