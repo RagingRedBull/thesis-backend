@@ -6,10 +6,10 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "status_report_logs")
+@Table(name = "post_fire_reports")
 @Getter
 @Setter
-public class StatusReportLog {
+public class PostFireReportLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
