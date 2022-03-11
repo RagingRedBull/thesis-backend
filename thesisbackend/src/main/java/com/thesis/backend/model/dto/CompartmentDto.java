@@ -8,13 +8,13 @@ import lombok.Setter;
 public class CompartmentDto {
     private int id;
     private String name;
-    private int xDimension;
-    private int yDimension;
-    private int width;
-    private int depth;
-    private int xKonva;
-    private int yKonva;
-    private int widthKonva;
-    private int heightKonva;
-    private int floorId;
+    private float xDimension;
+    private float yDimension;
+    private float width;
+    private float depth;
+    private float xKonva;
+    private float yKonva;
+    private float widthKonva;
+    private float heightKonva;
+    private float floorId;
 }

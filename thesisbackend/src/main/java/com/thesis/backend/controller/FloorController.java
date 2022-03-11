@@ -7,6 +7,7 @@ import com.thesis.backend.model.entity.Floor;
 import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
+import com.thesis.backend.service.AuthenticationService;
 import com.thesis.backend.service.CompartmentService;
 import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.FloorService;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/floor")
 public class FloorController {
     private final FloorService floorService;
-    private final CompartmentService compartmentService;
+    private final AuthenticationService authenticationService;
     private final DetectorUnitService detectorUnitService;
 
     @GetMapping(path = "/all")
@@ -61,7 +62,9 @@ public class FloorController {
 
     @DeleteMapping(path = "/{floorId}/delete")
     public ResponseEntity<Object> deleteFloor(@PathVariable int floorId, Authentication authentication) {
+        String username = authenticationService.getKeycloakPrincipal(authentication).getEmail();
         floorService.deleteOne(floorId);
+        log.info(username + " DELETED FLOOR " + floorId);
         return ResponseEntity.ok("Success");
     }
 

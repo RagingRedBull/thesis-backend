@@ -19,27 +19,27 @@ public class Compartment implements Serializable {
     @Column(name = "name")
     private String name;
     @Column(name = "x_dimension")
-    private int xDimension;
+    private float xDimension;
     @Column(name = "y_dimension")
-    private int yDimension;
+    private float yDimension;
     @Column(name = "width")
-    private int width;
+    private float width;
     @Column(name = "depth")
-    private int depth;
+    private float depth;
     @Column(name = "x_konva")
-    private int xKonva;
+    private float xKonva;
     @Column(name = "y_konva")
-    private int yKonva;
+    private float yKonva;
     @Column(name = "width_konva")
-    private int widthKonva;
+    private float widthKonva;
     @Column(name = "height_konva")
-    private int heightKonva;
+    private float heightKonva;
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "compartment", cascade =CascadeType.PERSIST)
+    @OneToMany(mappedBy = "compartment", cascade = CascadeType.PERSIST)
     private Set<DetectorUnit> detectorUnits;
 }
