@@ -24,6 +24,8 @@ public class DetectorUnitLog implements Serializable {
     private String macAddress;
     @Column(name = "time_recorded", nullable = false)
     private LocalDateTime timeRecorded;
+    @Column(name = "is_abnormal")
+    private boolean abnormalState;
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "detectorUnitLog", cascade = CascadeType.ALL, orphanRemoval = true)

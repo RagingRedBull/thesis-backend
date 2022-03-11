@@ -54,7 +54,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         detectorUnitLog.setTimeRecorded(LocalDateTime.now());
         detectorUnitLog.setSensorLogSet(sensorLogService.mapSensorLogDtoEntitySet(detectorUnitLogDto.getSensorLogSet(),
                 detectorUnitLog));
-
+        detectorUnitLog.setAbnormalState(sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet()));
         //Debug purporse
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         log.info("INSERTING NEW LOG");
