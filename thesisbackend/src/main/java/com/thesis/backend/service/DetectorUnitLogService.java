@@ -77,9 +77,9 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
 
     public void checkReadings(DetectorUnitLog detectorUnitLog) {
         if (sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
-                && !appConfig.isEnabledAlarmingMode()) {
+                && !appConfig.isAlarmingMode()) {
             log.info("Found abnormal readings with log id: " + detectorUnitLog.getId());
-            appConfig.setEnabledAlarmingMode(true);
+            appConfig.setAlarmingMode(true);
             DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
             MachineLearningInput machineLearningInput = new MachineLearningInput();
             machineLearningInput.setXOrigin(detectorUnit.getCompartment().getXDimension());
