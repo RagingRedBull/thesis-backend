@@ -70,38 +70,43 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
         boolean isAbnormal = false;
                 for (SensorLog log : sensorLogSet) {
                     if(log instanceof DhtSensorLog) {
-                        if (((DhtSensorLog) log).getTemperature() >= 50) {
+                        if (((DhtSensorLog) log).getTemperature() >= 35) {
                             isAbnormal = true;
                             break;
                         }
                     } else if (log instanceof MqSensorLog) {
                         if(log.getName() == SensorName.MQ2) {
-                            if (((MqSensorLog)log).getMqValue() >= 400) {
+                            if (((MqSensorLog)log).getMqValue() >= 300) {
                                 isAbnormal = true;
                                 break;
                             }
                         } else if (log.getName() == SensorName.MQ5) {
-                            if (((MqSensorLog)log).getMqValue() >= 400) {
+                            if (((MqSensorLog)log).getMqValue() >= 500) {
                                 isAbnormal = true;
                                 break;
                             }
                         } else if (log.getName() == SensorName.MQ7) {
-                            if (((MqSensorLog)log).getMqValue() >= 700) {
+                            if (((MqSensorLog)log).getMqValue() >= 300) {
                                 isAbnormal = true;
                                 break;
                             }
                         } else if (log.getName() == SensorName.MQ135) {
-                    if (((MqSensorLog)log).getMqValue() >= 400) {
+                    if (((MqSensorLog)log).getMqValue() >= 300) {
                         isAbnormal = true;
                         break;
                     }
                 }
             } else if (log instanceof FireSensorLog) {
-                if(((FireSensorLog)log).getSensorValue() >= 170) {
+                if(((FireSensorLog)log).getSensorValue() >= 85) {
                     isAbnormal = true;
                     break;
                 }
-            }
+            } else if (log instanceof SoundSensorLog) {
+                        if (((SoundSensorLog) log).getSound() < 80 && ((SoundSensorLog) log).getSound() > 99) {
+                            isAbnormal = true;
+                            break;
+                        }
+                    }
         }
         return isAbnormal;
     }

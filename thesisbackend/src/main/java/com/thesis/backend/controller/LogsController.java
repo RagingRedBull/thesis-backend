@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -95,5 +96,10 @@ public class LogsController {
     @GetMapping(path = "/date")
     public ResponseEntity<List<DetectorUnitLog>> getAllDetectorLogsByDateRange() {
         return ResponseEntity.ok(detectorUnitLogService.findAllByDateRange());
+    }
+
+    @GetMapping(path = "/status-report")
+    public ResponseEntity<List<Object>> getStatusReportLogs(LocalDate day) {
+        return null;
     }
 }
