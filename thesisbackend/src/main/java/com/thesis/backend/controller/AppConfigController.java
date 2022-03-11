@@ -27,7 +27,7 @@ public class AppConfigController {
         appConfig.setAlarmingMode(enableAlarming);
         return ResponseEntity.ok(appConfig.isAlarmingMode());
     }
-    @GetMapping("/alarming/update")
+    @GetMapping("/fire-drill/update")
     public ResponseEntity<Object> setFireDrillMode(@RequestParam boolean enableFireDrillMode) {
         appConfig.setFireDrillMode(enableFireDrillMode);
         return ResponseEntity.ok(appConfig.isFireDrillMode());
