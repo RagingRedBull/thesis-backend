@@ -1,29 +1,34 @@
 package com.thesis.backend.controller;
 
+import com.thesis.backend.model.dto.SensorStatusDto;
+import com.thesis.backend.model.dto.StatusReportLogDto;
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.enums.SensorType;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
-import com.thesis.backend.service.CompartmentService;
-import com.thesis.backend.service.DetectorUnitLogService;
-import com.thesis.backend.service.SensorLogService;
+import com.thesis.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,9 +39,10 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/log")
 public class LogsController {
     private final DetectorUnitLogService detectorUnitLogService;
+    private final DetectorUnitService detectorUnitService;
     private final SensorLogService sensorLogService;
     private final CompartmentService compartmentService;
-
+    private final ReportService reportService;
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber,
                                                                     @RequestParam int pageSize) {
@@ -99,7 +105,7 @@ public class LogsController {
     }
 
     @GetMapping(path = "/status-report")
-    public ResponseEntity<List<Object>> getStatusReportLogs(LocalDate day) {
-        return null;
+    public ResponseEntity<List<StatusReportLogDto>> getStatusReportLogs(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
+        return ResponseEntity.ok(reportService.getSensorStatus(day));
     }
 }

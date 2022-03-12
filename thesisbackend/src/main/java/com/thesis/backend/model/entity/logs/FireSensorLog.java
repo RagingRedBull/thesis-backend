@@ -19,7 +19,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "FIRE")
 public class FireSensorLog extends SensorLog{
     @Column(name = "flame_value")
-    private int sensorValue;
+    private float sensorValue;
 
     @PersistenceConstructor
     public FireSensorLog(long id, SensorType type, SensorName name) {

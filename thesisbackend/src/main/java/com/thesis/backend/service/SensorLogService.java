@@ -1,9 +1,11 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.exception.PrmtsEntityNotFoundException;
+import com.thesis.backend.model.dto.SensorStatusDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.*;
 import com.thesis.backend.model.enums.SensorName;
+import com.thesis.backend.model.enums.SensorType;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.SensorLogRepository;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -117,4 +120,14 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+
+    public SensorStatusDto getSensorStatus(String macAddress, LocalDateTime start, LocalDateTime end, SensorName sensorName, SensorType sensorType) {
+        SensorStatusDto sensorStatusDto = null;
+        if (sensorType == SensorType.DHT) {
+            sensorStatusDto = sensorLogRepository.getTemperatureStatusByDayByMacAddressBySensorName(macAddress,start,end,sensorName);
+        } else if (sensorType == SensorType.MQ) {
+            sensorStatusDto = sensorLogRepository.getMqValueStatusByDayByMacAddressBySensorNameSensorStatusDto(macAddress,start,end,sensorName);
+        }
+        return sensorStatusDto;
+    }
 }

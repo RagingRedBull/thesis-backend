@@ -19,7 +19,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "MQ")
 public class MqSensorLog extends SensorLog{
     @Column(name = "mq_value")
-    private int mqValue;
+    private float mqValue;
 
     @PersistenceConstructor
     public MqSensorLog(long id, SensorType type, SensorName name) {

@@ -16,13 +16,13 @@
         </JDBC>
     </Appenders>
     <Loggers>
-        <Logger name="com.thesis.backend" level="info"
+        <Logger name="com.thesis.backend" level="INFO"
                 additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="DB" />
         </Logger>
 
-        <Root level="info">
+        <Root level="DEBUG">
             <AppenderRef ref="Console" />
             <AppenderRef ref="DB" />
         </Root>

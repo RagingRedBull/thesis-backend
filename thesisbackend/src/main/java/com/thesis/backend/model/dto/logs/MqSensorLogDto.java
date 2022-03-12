@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MqSensorLogDto extends SensorLogDto{
-    private int mqValue;
+    private float mqValue;
 
     public MqSensorLogDto(long id, SensorType type, SensorName name) {
         super(id,type, name);

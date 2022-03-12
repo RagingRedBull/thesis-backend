@@ -22,7 +22,7 @@ public class DetectorUnitLog implements Serializable {
     private long id;
     @Column(name = "mac_address", length = 17, nullable = false)
     private String macAddress;
-    @Column(name = "time_recorded", nullable = false)
+    @Column(name = "time_recorded", nullable = false, columnDefinition = "date")
     private LocalDateTime timeRecorded;
     @Column(name = "is_abnormal")
     private boolean abnormalState;

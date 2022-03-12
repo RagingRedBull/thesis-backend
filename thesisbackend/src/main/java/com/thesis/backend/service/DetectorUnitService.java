@@ -11,6 +11,7 @@ import com.thesis.backend.model.dto.update.SensorUpdateDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Sensor;
+import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.CompartmentRepository;
@@ -80,7 +81,13 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
+    public List<String> getAllMacAddress() {
+        return detectorUnitRepository.getAllDetectorUnitMacAddress();
+    }
 
+    public List<DetectorUnit> getAll() {
+        return detectorUnitRepository.findAll();
+    }
     public List<DetectorUnit> getAllDetectorUnitByCompartmentId(Integer compartmentId) {
         return null;
     }
