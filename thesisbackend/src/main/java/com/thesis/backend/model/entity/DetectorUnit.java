@@ -22,7 +22,7 @@ public class DetectorUnit {
     private int xpos;
     @Column(name = "y_loc")
     private int ypos;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "sensors_join_detector_unit",
             joinColumns = @JoinColumn(name = "detector_unit_id"),
