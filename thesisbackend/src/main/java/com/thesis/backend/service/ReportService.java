@@ -7,10 +7,14 @@ import com.thesis.backend.model.entity.logs.SensorStatusReportLog;
 import com.thesis.backend.model.entity.logs.StatusReportLog;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorStatusReportMapper;
+import com.thesis.backend.model.util.mapper.StatusReportLogMapper;
 import com.thesis.backend.repository.SensorStatusReportLogRepository;
 import com.thesis.backend.repository.StatusReportLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -71,58 +75,81 @@ public class ReportService {
             e.printStackTrace();
         }
     }
-
-
+    @Scheduled(cron = "* 59 * * * *")
     public void generateHourlyLogs() {
         EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
         List<DetectorUnit> detectorUnitList = detectorUnitService.getAll();
         List<StatusReportLog> statusReportLogList = new ArrayList<>();
         LocalDateTime dateTimeStart = LocalDateTime.of(LocalDate.now(),
-                LocalTime.of(LocalTime.now().getHour(), 0));
-        LocalDateTime dateTimeEnd = LocalDateTime.of(LocalDate.now(),
-                LocalTime.of(LocalTime.now().getHour(), 59));
+                LocalTime.MIDNIGHT);
+        LocalDateTime dateTimeEnd = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
         for (DetectorUnit unit : detectorUnitList) {
             StatusReportLog statusReportLog = new StatusReportLog();
             statusReportLog.setMacAddress(unit.getMacAddress());
-            statusReportLog.setSensorStatusReportLogs(unit.getAssociatedSensorSet().stream().map(
+            List<SensorStatusReportLog> sensorStatusReportLogList = unit.getAssociatedSensorSet().stream().map(
                             sensor -> sensorLogService.getSensorStatusByMacAddressBetweenStartEndDate(
                                     unit.getMacAddress(),
                                     dateTimeStart,
                                     dateTimeEnd,
                                     sensor.getName(),
-                                    sensor.getType())
-                    ).map(sensorStatusMapper::mapToEntity)
-                    .collect(Collectors.toList()));
+                                    sensor.getType()))
+                    .map(sensorStatusMapper::mapToEntity)
+                    .collect(Collectors.toList());
+            sensorStatusReportLogList.forEach(sensorStatusReportLog ->
+                    sensorStatusReportLog.setStatusReportLog(statusReportLog));
+            statusReportLog.setSensorStatusReportLogs(sensorStatusReportLogList);
             statusReportLog.setDateStart(dateTimeStart);
             statusReportLog.setDateEnd(dateTimeEnd);
             statusReportLogList.add(statusReportLog);
-            statusReportLogRepository.saveAll(statusReportLogList);
         }
+        statusReportLogRepository.saveAll(statusReportLogList);
     }
-
-    public List<StatusReportLogDto> generateStatusReportLog(LocalDate date) {
+    public void generateStatusReportLog(LocalDate date) {
+        EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
         List<DetectorUnit> detectorUnitList = detectorUnitService.getAll();
-        List<StatusReportLogDto> statusReportLogDtoList = new ArrayList<>();
+        List<StatusReportLog> statusReportLogList = new ArrayList<>();
         for (DetectorUnit unit : detectorUnitList) {
             for (int i = 0; i < 24; i++) {
-                StatusReportLogDto statusReportLogDto = new StatusReportLogDto();
-                statusReportLogDto.setMacAddress(unit.getMacAddress());
-                LocalDateTime dateTimeStart = LocalDateTime.of(date, LocalTime.of(i, 0));
-                LocalDateTime dateTimeEnd = LocalDateTime.of(date, LocalTime.of(i, 59));
-                statusReportLogDto.setSensorStatusReportLogDtoList(unit.getAssociatedSensorSet().stream().map(
-                        sensor -> sensorLogService.getSensorStatusByMacAddressBetweenStartEndDate(
-                                unit.getMacAddress(),
-                                dateTimeStart,
-                                dateTimeEnd,
-                                sensor.getName(),
-                                sensor.getType())
-                ).collect(Collectors.toList()));
-                statusReportLogDto.setStart(dateTimeStart.toLocalTime());
-                statusReportLogDto.setEnd(dateTimeEnd.toLocalTime());
-                statusReportLogDtoList.add(statusReportLogDto);
+                LocalDateTime dateTimeStart = LocalDateTime.of(date,
+                        LocalTime.of(i,0,0,0));
+                LocalDateTime dateTimeEnd = LocalDateTime.of(date,
+                        LocalTime.of(i,59,59,999999999));
+                StatusReportLog statusReportLog = new StatusReportLog();
+                statusReportLog.setMacAddress(unit.getMacAddress());
+                List<SensorStatusReportLog> sensorStatusReportLogList = unit.getAssociatedSensorSet().stream().map(
+                                sensor -> sensorLogService.getSensorStatusByMacAddressBetweenStartEndDate(
+                                        unit.getMacAddress(),
+                                        dateTimeStart,
+                                        dateTimeEnd,
+                                        sensor.getName(),
+                                        sensor.getType()))
+                        .map(sensorStatusMapper::mapToEntity)
+                        .collect(Collectors.toList());
+                sensorStatusReportLogList.forEach(sensorStatusReportLog ->
+                        sensorStatusReportLog.setStatusReportLog(statusReportLog));
+                statusReportLog.setSensorStatusReportLogs(sensorStatusReportLogList);
+                statusReportLog.setDateStart(dateTimeStart);
+                statusReportLog.setDateEnd(dateTimeEnd);
+                statusReportLogList.add(statusReportLog);
             }
-
         }
-        return statusReportLogDtoList;
+        statusReportLogRepository.saveAll(statusReportLogList);
+    }
+    public Page<StatusReportLogDto> generateStatusReportLog(LocalDate date, Pageable page) {
+        LocalDateTime startDt = LocalDateTime.of(date, LocalTime.MIDNIGHT);
+        LocalDateTime endDt = LocalDateTime.of(date, LocalTime.MAX);
+        Page<StatusReportLog> statusReportLogs = statusReportLogRepository.getAllStatusReportLogsByDay(startDt,endDt,page);
+        return statusReportLogs.map(this::buildSensorStatusReportLogDto);
+    }
+
+    private StatusReportLogDto buildSensorStatusReportLogDto(StatusReportLog statusReportLog) {
+        StatusReportLogDto dto;
+        EntityMapper<StatusReportLog, StatusReportLogDto> statusReportLogMapper = new StatusReportLogMapper();
+        EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
+        dto = statusReportLogMapper.mapToDto(statusReportLog);
+        dto.setSensorStatusReportLogDtoList(statusReportLog.getSensorStatusReportLogs().stream()
+                .map(sensorStatusMapper::mapToDto)
+                .collect(Collectors.toList()));
+        return dto;
     }
 }

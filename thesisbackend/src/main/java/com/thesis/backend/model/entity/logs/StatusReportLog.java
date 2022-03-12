@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 public class StatusReportLog {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "mac_address")
@@ -23,6 +23,6 @@ public class StatusReportLog {
     private LocalDateTime dateStart;
     @Column(name = "date_end")
     private LocalDateTime dateEnd;
-    @OneToMany(mappedBy = "statusReportLog")
+    @OneToMany(mappedBy = "statusReportLog", cascade = {CascadeType.ALL})
     private List<SensorStatusReportLog> sensorStatusReportLogs;
 }

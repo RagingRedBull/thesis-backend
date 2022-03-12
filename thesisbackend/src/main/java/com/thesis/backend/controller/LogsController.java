@@ -99,7 +99,17 @@ public class LogsController {
     }
 
     @GetMapping(path = "/status-report")
-    public ResponseEntity<Object> getStatusReportLogs(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
-        return ResponseEntity.ok(reportService.generateStatusReportLog(day));
+    public ResponseEntity<Object> getStatusReportLogs(@RequestParam
+                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
+                                                      @RequestParam int pageSize,
+                                                      @RequestParam int pageNumber) {
+        Pageable page = PageRequest.of(pageNumber,pageSize);
+        return ResponseEntity.ok(reportService.generateStatusReportLog(day, page));
+    }
+    @GetMapping(path = "/status-force")
+    public ResponseEntity<Object> forceGenStatusLogs(@RequestParam
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
+        reportService.generateStatusReportLog(day);
+        return ResponseEntity.ok("yeetus");
     }
 }
