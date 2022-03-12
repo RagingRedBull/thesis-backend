@@ -1,7 +1,7 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.exception.PrmtsEntityNotFoundException;
-import com.thesis.backend.model.dto.SensorStatusDto;
+import com.thesis.backend.model.dto.SensorStatusReportLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.logs.*;
 import com.thesis.backend.model.enums.SensorName;
@@ -15,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -58,7 +55,8 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
     public List<SensorLog> findLogsByDetectorLogId(long id) {
         return sensorLogRepository.findByDetectorUnitLog(id);
     }
-    public Set<SensorLog> mapSensorLogDtoEntitySet(Set<SensorLogDto> sensorLogDtoSet, DetectorUnitLog detectorUnitLog){
+
+    public Set<SensorLog> mapSensorLogDtoEntitySet(Set<SensorLogDto> sensorLogDtoSet, DetectorUnitLog detectorUnitLog) {
         SensorLogMapper mapper = new SensorLogMapper();
         return sensorLogDtoSet.stream()
                 .map(sensorLogDto -> {
@@ -71,48 +69,49 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
 
     public boolean hasAbnormalSensorValue(Set<SensorLog> sensorLogSet) {
         boolean isAbnormal = false;
-                for (SensorLog log : sensorLogSet) {
-                    if(log instanceof DhtSensorLog) {
-                        if (((DhtSensorLog) log).getTemperature() >= 35) {
-                            isAbnormal = true;
-                            break;
-                        }
-                    } else if (log instanceof MqSensorLog) {
-                        if(log.getName() == SensorName.MQ2) {
-                            if (((MqSensorLog)log).getMqValue() >= 300) {
-                                isAbnormal = true;
-                                break;
-                            }
-                        } else if (log.getName() == SensorName.MQ5) {
-                            if (((MqSensorLog)log).getMqValue() >= 500) {
-                                isAbnormal = true;
-                                break;
-                            }
-                        } else if (log.getName() == SensorName.MQ7) {
-                            if (((MqSensorLog)log).getMqValue() >= 300) {
-                                isAbnormal = true;
-                                break;
-                            }
-                        } else if (log.getName() == SensorName.MQ135) {
-                    if (((MqSensorLog)log).getMqValue() >= 300) {
+        for (SensorLog log : sensorLogSet) {
+            if (log instanceof DhtSensorLog) {
+                if (((DhtSensorLog) log).getTemperature() >= 35) {
+                    isAbnormal = true;
+                    break;
+                }
+            } else if (log instanceof MqSensorLog) {
+                if (log.getName() == SensorName.MQ2) {
+                    if (((MqSensorLog) log).getMqValue() >= 300) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ5) {
+                    if (((MqSensorLog) log).getMqValue() >= 500) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ7) {
+                    if (((MqSensorLog) log).getMqValue() >= 300) {
+                        isAbnormal = true;
+                        break;
+                    }
+                } else if (log.getName() == SensorName.MQ135) {
+                    if (((MqSensorLog) log).getMqValue() >= 300) {
                         isAbnormal = true;
                         break;
                     }
                 }
             } else if (log instanceof FireSensorLog) {
-                if(((FireSensorLog)log).getSensorValue() >= 85) {
+                if (((FireSensorLog) log).getSensorValue() >= 85) {
                     isAbnormal = true;
                     break;
                 }
             } else if (log instanceof SoundSensorLog) {
-                        if (((SoundSensorLog) log).getSound() < 80 && ((SoundSensorLog) log).getSound() > 99) {
-                            isAbnormal = true;
-                            break;
-                        }
-                    }
+                if (((SoundSensorLog) log).getSound() < 80 && ((SoundSensorLog) log).getSound() > 99) {
+                    isAbnormal = true;
+                    break;
+                }
+            }
         }
         return isAbnormal;
     }
+
     public Set<SensorLogDto> mapSensorLogEntityToDto(List<SensorLog> sensorLogSet) {
         SensorLogMapper mapper = new SensorLogMapper();
         return sensorLogSet.stream()
@@ -121,13 +120,21 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
     }
 
 
-    public SensorStatusDto getSensorStatus(String macAddress, LocalDateTime start, LocalDateTime end, SensorName sensorName, SensorType sensorType) {
-        SensorStatusDto sensorStatusDto = null;
+    public SensorStatusReportLogDto getSensorStatusByMacAddressBetweenStartEndDate(String macAddress, LocalDateTime start,
+                                                                                   LocalDateTime end, SensorName sensorName,
+                                                                                   SensorType sensorType) {
+        SensorStatusReportLogDto dto = null;
         if (sensorType == SensorType.DHT) {
-            sensorStatusDto = sensorLogRepository.getTemperatureStatusByDayByMacAddressBySensorName(macAddress,start,end,sensorName);
+            dto = sensorLogRepository.getDhtStatusReportBetweenDate(macAddress, start, end, sensorName);
         } else if (sensorType == SensorType.MQ) {
-            sensorStatusDto = sensorLogRepository.getMqValueStatusByDayByMacAddressBySensorNameSensorStatusDto(macAddress,start,end,sensorName);
+            dto = sensorLogRepository.getMqStatusReportBetweenDate(macAddress,start,end,sensorName);
+        } else if (sensorType == SensorType.FIRE) {
+            dto = sensorLogRepository.getFireStatusReportBetweenDate(macAddress,start,end,sensorName);
+        } else if (sensorType == SensorType.SOUND) {
+            dto = sensorLogRepository.getSoundStatusReportBetweenDate(macAddress,start,end,sensorName);
         }
-        return sensorStatusDto;
+        dto.setSensorName(sensorName);
+        dto.setSensorType(sensorType);
+        return dto;
     }
 }

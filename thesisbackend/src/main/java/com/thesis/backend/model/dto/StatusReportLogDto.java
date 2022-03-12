@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -13,5 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StatusReportLogDto {
     private String macAddress;
-    private List<SensorStatusDto> sensorStatusDtoList;
+    private LocalTime start;
+    private LocalTime end;
+    private List<SensorStatusReportLogDto> sensorStatusReportLogDtoList;
 }
