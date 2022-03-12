@@ -103,7 +103,7 @@ public class LogsController {
                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                                       @RequestParam int pageSize,
                                                       @RequestParam int pageNumber) {
-        Pageable page = PageRequest.of(pageNumber,pageSize);
+        Pageable page = PageRequest.of(pageNumber,pageSize, Sort.by("dateStart").ascending());
         return ResponseEntity.ok(reportService.generateStatusReportLog(day, page));
     }
     @GetMapping(path = "/status-force")
