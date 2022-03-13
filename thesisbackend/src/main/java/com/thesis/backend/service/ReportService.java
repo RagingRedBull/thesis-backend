@@ -46,7 +46,7 @@ public class ReportService {
     private final SensorLogService sensorLogService;
     private final DetectorUnitService detectorUnitService;
 
-    public void playFireWarning(String compartmentName) {
+    public void playFireWarning(String compartmentName, String floorDesc) {
         try {
             // Set property as Kevin Dictionary
             System.setProperty(
@@ -74,7 +74,7 @@ public class ReportService {
             // until the queue is empty.
             for (int i = 0; i < 5; i++) {
                 synthesizer.speakPlainText(
-                        "WARNING! FIRE DETECTED AT " + compartmentName, null);
+                        "WARNING! FIRE DETECTED AT " + compartmentName + ". By " + floorDesc, null);
                 Thread.sleep(1000);
             }
             synthesizer.waitEngineState(

@@ -24,7 +24,7 @@ public class PostFireReportService implements EntityService<PostFireReportLog, P
     private final SensorLogService sensorLogService;
     @Override
     public PostFireReportLog findOneByPrimaryKey(Long primaryKey) throws EntityNotFoundException {
-        return null;
+        return postFireReportLogRepository.findById(primaryKey).orElseThrow();
     }
 
     @Override
@@ -50,12 +50,16 @@ public class PostFireReportService implements EntityService<PostFireReportLog, P
     public List<PostFireReportLogDto> getIdsAndDates() {
         return postFireReportLogRepository.getIdAndDates();
     }
-    private PostFireReportLogDto buildPostFireReportLogDto(PostFireReportLog log) {
+    public PostFireReportLogDto buildPostFireReportLogDto(PostFireReportLog log) {
         Compartment affectedCompartment = compartmentService.findOneByPrimaryKey(log.getCompartmentId());
         PostFireReportLogDto dto = new PostFireReportLogMapper().mapToDto(log);
         dto.setSensorLogSet(sensorLogService.mapSensorLogEntityToDto(log.getLogsDetected()));
         dto.setCompartmentName(affectedCompartment.getName());
         dto.setFloorDesc(affectedCompartment.getFloor().getDescription());
         return dto;
+    }
+
+    public Long getIdOfActivePFR() {
+        return postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut();
     }
 }

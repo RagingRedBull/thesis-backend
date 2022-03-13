@@ -19,9 +19,9 @@ public class DetectorUnit {
     @Column(name = "name")
     private String name;
     @Column(name = "x_loc")
-    private int xpos;
+    private Integer xpos;
     @Column(name = "y_loc")
-    private int ypos;
+    private Integer ypos;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "sensors_join_detector_unit",

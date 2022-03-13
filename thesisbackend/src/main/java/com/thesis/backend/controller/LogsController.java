@@ -114,11 +114,10 @@ public class LogsController {
         return ResponseEntity.ok("yeetus");
     }
     @GetMapping(path = "/post-fire-report")
-    public ResponseEntity<Object> getPostFireReports(@RequestParam(required = false) Integer pageSize,
-                                                     @RequestParam(required = false) Integer pageNumber) {
-        if(pageSize != null && pageNumber != null) {
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
-            return ResponseEntity.ok(postFireReportService.findAllByPage(pageable));
+    public ResponseEntity<Object> getPostFireReports(@RequestParam(required = false) Long pfrId) {
+        if(pfrId != null) {
+            return ResponseEntity.ok(postFireReportService.buildPostFireReportLogDto(
+                    postFireReportService.findOneByPrimaryKey(pfrId)));
         } else {
             return ResponseEntity.ok(postFireReportService.getIdsAndDates());
         }

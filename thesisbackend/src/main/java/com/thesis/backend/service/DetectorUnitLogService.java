@@ -4,6 +4,7 @@ import com.thesis.backend.config.AppConfig;
 import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
+import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.PostFireReportLog;
@@ -87,8 +88,9 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
                 && !appConfig.isAlarmingMode()) {
             log.info("Found abnormal readings with log id: " + detectorUnitLog.getId());
             PostFireReportLog postFireReportLog = new PostFireReportLog();
+            Compartment compartment = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress()).getCompartment();
             appConfig.setAlarmingMode(true);
-            reportService.playFireWarning(detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress()).getCompartment().getName());
+            reportService.playFireWarning(compartment.getName(), compartment.getFloor().getDescription());
             DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
             MachineLearningInput machineLearningInput = new MachineLearningInput();
             machineLearningInput.setXOrigin(detectorUnit.getCompartment().getXDimension());
@@ -107,6 +109,15 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
             }
             sensorLogService.saveAll(logsDetected);
             reportService.sendSmsToUsers();
+        } else if(sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
+                && appConfig.isAlarmingMode()) {
+            long latestPfrId = postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut();
+            PostFireReportLog pfrLog = postFireReportLogRepository.getById(latestPfrId);
+            List<SensorLog> abnormalLogs = sensorLogService.getAbnormalReading(detectorUnitLog.getSensorLogSet());
+            for (SensorLog sensorLog : abnormalLogs ) {
+                sensorLog.setPostFireReportLog(pfrLog);
+            }
+            sensorLogService.saveAll(abnormalLogs);
         }
     }
 
