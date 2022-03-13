@@ -86,23 +86,27 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     public void checkReadings(DetectorUnitLog detectorUnitLog) {
         if (sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
                 && !appConfig.isAlarmingMode()) {
-            log.info("Found abnormal readings with log id: " + detectorUnitLog.getId());
+            log.info("Found abnormal readings with detecor unit log id: " + detectorUnitLog.getId());
+            log.info("Enabling alarming mode!");
+            appConfig.setAlarmingMode(true);
             PostFireReportLog postFireReportLog = new PostFireReportLog();
             Compartment compartment = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress()).getCompartment();
-            appConfig.setAlarmingMode(true);
+            log.info("First affected compartment: " + compartment.getName() + " with id: " + compartment.getId());
+            log.info("Playing TTS!");
             reportService.playFireWarning(compartment.getName(), compartment.getFloor().getDescription());
             DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
+            log.info("Building Machine Learning Input");
             MachineLearningInput machineLearningInput = new MachineLearningInput();
             machineLearningInput.setXOrigin(detectorUnit.getCompartment().getXDimension());
             machineLearningInput.setYOrigin(detectorUnit.getCompartment().getYDimension());
             machineLearningInput.setFloorOrigin(detectorUnit.getCompartment().getFloor().getOrder());
             machineLearningInput.setTimeRecorded(LocalDateTime.now());
             machineLearningInputService.saveOne(machineLearningInput);
-            log.info("Sensor Log Set Size: " + detectorUnitLog.getSensorLogSet().size());
             postFireReportLog.setTimeOccurred(LocalDateTime.now());
             postFireReportLog.setCompartmentId(detectorUnit.getCompartment().getId());
             postFireReportLog.setLogsDetected(sensorLogService.getAbnormalReading(detectorUnitLog.getSensorLogSet()));
             postFireReportLog = postFireReportLogRepository.saveAndFlush(postFireReportLog);
+            log.info("Generated PFR with ID " + postFireReportLog.getId() + " AT TIME: " + postFireReportLog.getTimeOccurred());
             List<SensorLog> logsDetected = postFireReportLog.getLogsDetected();
             for(SensorLog sensorLog : logsDetected) {
                 sensorLog.setPostFireReportLog(postFireReportLog);

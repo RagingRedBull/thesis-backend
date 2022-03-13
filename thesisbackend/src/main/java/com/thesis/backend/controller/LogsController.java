@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/log")
 public class LogsController {
     private final DetectorUnitLogService detectorUnitLogService;
-    private final DetectorUnitService detectorUnitService;
     private final SensorLogService sensorLogService;
     private final CompartmentService compartmentService;
     private final ReportService reportService;
