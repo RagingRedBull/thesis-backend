@@ -107,11 +107,6 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                     isAbnormal = true;
                     break;
                 }
-            } else if (log instanceof SoundSensorLog) {
-                if (((SoundSensorLog) log).getSound() >= 180) {
-                    isAbnormal = true;
-                    break;
-                }
             }
         }
         return isAbnormal;
