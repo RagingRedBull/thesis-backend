@@ -103,7 +103,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                     }
                 }
             } else if (log instanceof FireSensorLog) {
-                if (((FireSensorLog) log).getSensorValue() >= 120) {
+                if (((FireSensorLog) log).getSensorValue() > 120) {
                     isAbnormal = true;
                     break;
                 }
