@@ -6,12 +6,14 @@ import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
+import com.thesis.backend.model.entity.logs.PostFireReportLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.entity.ml.MachineLearningInput;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.repository.DetectorUnitLogRepository;
+import com.thesis.backend.repository.PostFireReportLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,6 +39,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     private final DetectorUnitLogRepository detectorUnitLogRepository;
     private final SensorLogService sensorLogService;
     private final ReportService reportService;
+    private final PostFireReportLogRepository postFireReportLogRepository;
     private final AppConfig appConfig;
 
     @Override
@@ -77,10 +81,12 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         return null;
     }
 
+    @Transactional
     public void checkReadings(DetectorUnitLog detectorUnitLog) {
         if (sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
                 && !appConfig.isAlarmingMode()) {
             log.info("Found abnormal readings with log id: " + detectorUnitLog.getId());
+            PostFireReportLog postFireReportLog = new PostFireReportLog();
             appConfig.setAlarmingMode(true);
             reportService.playFireWarning(detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress()).getCompartment().getName());
             DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
@@ -90,6 +96,17 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
             machineLearningInput.setFloorOrigin(detectorUnit.getCompartment().getFloor().getOrder());
             machineLearningInput.setTimeRecorded(LocalDateTime.now());
             machineLearningInputService.saveOne(machineLearningInput);
+            log.info("Sensor Log Set Size: " + detectorUnitLog.getSensorLogSet().size());
+            postFireReportLog.setTimeOccurred(LocalDateTime.now());
+            postFireReportLog.setCompartmentId(detectorUnit.getCompartment().getId());
+            postFireReportLog.setLogsDetected(sensorLogService.getAbnormalReading(detectorUnitLog.getSensorLogSet()));
+            postFireReportLog = postFireReportLogRepository.saveAndFlush(postFireReportLog);
+            List<SensorLog> logsDetected = postFireReportLog.getLogsDetected();
+            for(SensorLog sensorLog : logsDetected) {
+                sensorLog.setPostFireReportLog(postFireReportLog);
+            }
+            sensorLogService.saveAll(logsDetected);
+            reportService.sendSmsToUsers();
         }
     }
 

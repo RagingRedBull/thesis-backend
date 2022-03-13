@@ -1,2 +1,15 @@
-package com.thesis.backend.repository;public interface PostFireReportLogRepository {
+package com.thesis.backend.repository;
+
+import com.thesis.backend.model.dto.PostFireReportLogDto;
+import com.thesis.backend.model.entity.logs.PostFireReportLog;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface PostFireReportLogRepository extends JpaRepository<PostFireReportLog, Long> {
+    @Query(value = "SELECT new com.thesis.backend.model.dto.PostFireReportLogDto(pfr.id,DATE(pfr.timeOccurred)) FROM PostFireReportLog pfr")
+    List<PostFireReportLogDto> getIdAndDates();
 }

@@ -1,9 +1,12 @@
 package com.thesis.backend.model.entity.logs;
 
+import com.thesis.backend.model.entity.Compartment;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "post_fire_report")
@@ -13,6 +16,13 @@ public class PostFireReportLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
-
+    private long id;
+    @Column(name = "time_occurred", unique = true)
+    private LocalDateTime timeOccurred;
+    @Column(name = "fire_out")
+    private LocalDateTime fireOut;
+    @Column(name = "compartment_id")
+    private int compartmentId;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFireReportLog", cascade = CascadeType.ALL)
+    private List<SensorLog> logsDetected;
 }
