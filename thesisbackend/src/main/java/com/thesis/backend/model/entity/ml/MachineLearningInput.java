@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class MachineLearningInput {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "x_origin")
     private float xOrigin;
