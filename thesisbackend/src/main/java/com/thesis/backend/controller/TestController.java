@@ -1,11 +1,14 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.config.AppConfig;
+import com.thesis.backend.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.AccessToken;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,8 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class TestController {
     private final Environment environment;
+    private final ReportService reportService;
     private final AppConfig appConfig;
-
+    private final Keycloak keycloak;
     @GetMapping(path = "/user")
     public ResponseEntity<String> currentUserInformation(Authentication authentication) {
         log.info("Getting User");
@@ -53,5 +59,17 @@ public class TestController {
         return ResponseEntity.ok(null);
     }
 
-    ;
+    @GetMapping(path = "/all-users")
+    public ResponseEntity<Object> getUsers() {
+        List<UserRepresentation> users = keycloak.realm("prmts").users().list();
+        List<String> attributes = new ArrayList<>();
+        for (UserRepresentation user : users) {
+            if (user.getAttributes() != null) {
+                log.info("Email: " + user.getEmail());
+                log.info("Cellphone: " + user.getAttributes().get("cellphone").get(0));
+            }
+        }
+        reportService.sendSmsToUsers();
+        return ResponseEntity.ok("geh");
+    }
 }

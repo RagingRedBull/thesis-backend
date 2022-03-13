@@ -119,6 +119,17 @@
             <artifactId>keycloak-spring-boot-starter</artifactId>
             <version>16.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-core</artifactId>
+            <version>16.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>16.1.1</version>
+        </dependency>
+
         <!-- TESTING MODULES -->
         <dependency>
             <groupId>org.springframework.security</groupId>

@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "post_fire_reports")
+@Table(name = "post_fire_report")
 @Getter
 @Setter
 public class PostFireReportLog {
@@ -14,4 +14,5 @@ public class PostFireReportLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
 }

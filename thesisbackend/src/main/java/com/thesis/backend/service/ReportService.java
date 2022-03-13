@@ -1,5 +1,6 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.config.AppConfig;
 import com.thesis.backend.model.dto.SensorStatusReportLogDto;
 import com.thesis.backend.model.dto.StatusReportLogDto;
 import com.thesis.backend.model.entity.DetectorUnit;
@@ -10,9 +11,13 @@ import com.thesis.backend.model.util.mapper.SensorStatusReportMapper;
 import com.thesis.backend.model.util.mapper.StatusReportLogMapper;
 import com.thesis.backend.repository.SensorStatusReportLogRepository;
 import com.thesis.backend.repository.StatusReportLogRepository;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,6 +39,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class ReportService {
+    private final Keycloak keycloak;
+    private final AppConfig appConfig;
     private final SensorStatusReportLogRepository sensorStatusReportLogRepository;
     private final StatusReportLogRepository statusReportLogRepository;
     private final SensorLogService sensorLogService;
@@ -82,9 +89,10 @@ public class ReportService {
         EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
         List<DetectorUnit> detectorUnitList = detectorUnitService.getAll();
         List<StatusReportLog> statusReportLogList = new ArrayList<>();
-        LocalDateTime dateTimeStart = LocalDateTime.of(LocalDate.now(),
-                LocalTime.MIDNIGHT);
-        LocalDateTime dateTimeEnd = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+        LocalDateTime dateTimeStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(LocalTime.now().getHour(),
+                0,0, 0));
+        LocalDateTime dateTimeEnd = LocalDateTime.of(LocalDate.now(),LocalTime.of(LocalTime.now().getHour(),
+                59,59,999999));
         for (DetectorUnit unit : detectorUnitList) {
             StatusReportLog statusReportLog = new StatusReportLog();
             statusReportLog.setMacAddress(unit.getMacAddress());
@@ -106,6 +114,7 @@ public class ReportService {
         }
         statusReportLogRepository.saveAll(statusReportLogList);
     }
+    @Transactional
     public void generateStatusReportLog(LocalDate date) {
         EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
         List<DetectorUnit> detectorUnitList = detectorUnitService.getAll();
@@ -144,6 +153,22 @@ public class ReportService {
         return statusReportLogs.map(this::buildSensorStatusReportLogDto);
     }
 
+    public void sendSmsToUsers() {
+        Twilio.init(appConfig.getTwilioSid(), appConfig.getTwilioAuthToken());
+        List<UserRepresentation> users = keycloak.realm("prmts").users().list();
+        for (UserRepresentation user : users) {
+            if (user.getAttributes() != null) {
+                log.info("Email: " + user.getEmail());
+                log.info("Cellphone: " + user.getAttributes().get("cellphone").get(0));
+                Message message = Message.creator(
+                        new PhoneNumber(user.getAttributes().get("cellphone").get(0)),
+                        new PhoneNumber(appConfig.getTwilioNumber()),
+                        "FIRE AT UR MOM!!!!"
+                ).create();
+                log.info("Sending SMS to " + message.getTo());
+            }
+        }
+    }
     private StatusReportLogDto buildSensorStatusReportLogDto(StatusReportLog statusReportLog) {
         StatusReportLogDto dto;
         EntityMapper<StatusReportLog, StatusReportLogDto> statusReportLogMapper = new StatusReportLogMapper();
