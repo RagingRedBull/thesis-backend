@@ -20,6 +20,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,7 @@ public class ReportService {
     private final SensorLogService sensorLogService;
     private final DetectorUnitService detectorUnitService;
 
+    @Async
     public void playFireWarning(String compartmentName) {
         try {
             // Set property as Kevin Dictionary
@@ -83,7 +85,7 @@ public class ReportService {
             e.printStackTrace();
         }
     }
-    @Scheduled(cron = "* 59 * * * *")
+//    @Scheduled(cron = "* 59 * * * *")
     @Transactional
     public void generateHourlyLogs() {
         EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
