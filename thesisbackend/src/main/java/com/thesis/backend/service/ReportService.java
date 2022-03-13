@@ -163,7 +163,7 @@ public class ReportService {
                 Message message = Message.creator(
                         new PhoneNumber(user.getAttributes().get("cellphone").get(0)),
                         new PhoneNumber(appConfig.getTwilioNumber()),
-                        "FIRE AT UR MOM!!!!"
+                        "Sapnu Puas"
                 ).create();
                 log.info("Sending SMS to " + message.getTo());
             }
