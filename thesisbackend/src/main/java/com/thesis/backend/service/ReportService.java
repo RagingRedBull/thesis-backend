@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.speech.Central;
 import javax.speech.synthesis.Synthesizer;
 import javax.speech.synthesis.SynthesizerModeDesc;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -76,6 +77,7 @@ public class ReportService {
         }
     }
     @Scheduled(cron = "* 59 * * * *")
+    @Transactional
     public void generateHourlyLogs() {
         EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
         List<DetectorUnit> detectorUnitList = detectorUnitService.getAll();
