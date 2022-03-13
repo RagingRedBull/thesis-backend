@@ -90,11 +90,11 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
             log.info("Enabling alarming mode!");
             appConfig.setAlarmingMode(true);
             PostFireReportLog postFireReportLog = new PostFireReportLog();
-            Compartment compartment = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress()).getCompartment();
+            DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
+            Compartment compartment = detectorUnit.getCompartment();
             log.info("First affected compartment: " + compartment.getName() + " with id: " + compartment.getId());
             log.info("Playing TTS!");
             reportService.playFireWarning(compartment.getName(), compartment.getFloor().getDescription());
-            DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
             log.info("Building Machine Learning Input");
             MachineLearningInput machineLearningInput = new MachineLearningInput();
             machineLearningInput.setXOrigin(detectorUnit.getCompartment().getXDimension());
