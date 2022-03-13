@@ -1,6 +1,7 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.config.AppConfig;
+import com.thesis.backend.service.PostFireReportService;
 import com.thesis.backend.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class TestController {
     private final ReportService reportService;
     private final AppConfig appConfig;
     private final Keycloak keycloak;
+    private final PostFireReportService postFireReportService;
     @GetMapping(path = "/user")
     public ResponseEntity<String> currentUserInformation(Authentication authentication) {
         log.info("Getting User");
@@ -71,5 +73,10 @@ public class TestController {
         }
         reportService.sendSmsToUsers();
         return ResponseEntity.ok("geh");
+    }
+
+    @GetMapping("/latest-pfr")
+    public ResponseEntity<Object> getLatestPFR() {
+        return ResponseEntity.ok(postFireReportService.getIdOfActivePFR());
     }
 }

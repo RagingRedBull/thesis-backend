@@ -37,6 +37,7 @@ public class LogsController {
     private final SensorLogService sensorLogService;
     private final CompartmentService compartmentService;
     private final ReportService reportService;
+    private final PostFireReportService postFireReportService;
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber,
                                                                     @RequestParam int pageSize) {
@@ -112,4 +113,14 @@ public class LogsController {
         reportService.generateStatusReportLog(day);
         return ResponseEntity.ok("yeetus");
     }
+    @GetMapping(path = "/post-fire-report")
+    public ResponseEntity<Object> getPostFireReports(@RequestParam(required = false) Long pfrId) {
+        if(pfrId != null) {
+            return ResponseEntity.ok(postFireReportService.buildPostFireReportLogDto(
+                    postFireReportService.findOneByPrimaryKey(pfrId)));
+        } else {
+            return ResponseEntity.ok(postFireReportService.getIdsAndDates());
+        }
+    }
+
 }

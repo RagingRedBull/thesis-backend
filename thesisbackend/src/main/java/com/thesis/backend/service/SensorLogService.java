@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +53,10 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
         return null;
     }
 
+    @Transactional
+    public List<SensorLog> saveAll(Iterable<SensorLog> sensorLogCollection) {
+        return sensorLogRepository.saveAllAndFlush(sensorLogCollection);
+    }
     public List<SensorLog> findLogsByDetectorLogId(long id) {
         return sensorLogRepository.findByDetectorUnitLog(id);
     }
@@ -136,5 +141,31 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
         dto.setSensorName(sensorName);
         dto.setSensorType(sensorType);
         return dto;
+    }
+
+    public List<SensorLog> getAbnormalReading(Set<SensorLog> sensorLogSet) {
+        List<SensorLog> abnormalSensorLogs = new ArrayList<>();
+        for (SensorLog sensorLog : sensorLogSet) {
+            if(sensorLog.getType() == SensorType.DHT) {
+                if(((DhtSensorLog) sensorLog).getTemperature() > 35) {
+                    abnormalSensorLogs.add(sensorLog);
+                }
+            } else if (sensorLog.getType() == SensorType.MQ) {
+                if (sensorLog.getName() == SensorName.MQ2 && ((MqSensorLog)sensorLog).getMqValue() > 300) {
+                    abnormalSensorLogs.add(sensorLog);
+                } else if (sensorLog.getName() == SensorName.MQ5 && ((MqSensorLog)sensorLog).getMqValue() > 500) {
+                    abnormalSensorLogs.add(sensorLog);
+                } else if (sensorLog.getName() == SensorName.MQ7 && ((MqSensorLog)sensorLog).getMqValue() > 300) {
+                    abnormalSensorLogs.add(sensorLog);
+                } else if (sensorLog.getName() == SensorName.MQ135 && ((MqSensorLog) sensorLog).getMqValue() > 300) {
+                    abnormalSensorLogs.add(sensorLog);
+                }
+            } else if (sensorLog.getType() == SensorType.FIRE) {
+                if (((FireSensorLog)sensorLog).getSensorValue() > 85){
+                    abnormalSensorLogs.add(sensorLog);
+                }
+            }
+        }
+        return abnormalSensorLogs;
     }
 }
