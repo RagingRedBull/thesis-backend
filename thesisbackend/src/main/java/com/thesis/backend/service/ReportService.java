@@ -87,7 +87,7 @@ public class ReportService {
             e.printStackTrace();
         }
     }
-//    @Scheduled(cron = "* 59 * * * *")
+    @Scheduled(cron = "* 59 * * * *")
     @Transactional
     public void generateHourlyLogs() {
         EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
