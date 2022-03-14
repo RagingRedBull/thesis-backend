@@ -1,6 +1,8 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.config.AppConfig;
+import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
+import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.PostFireReportService;
 import com.thesis.backend.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,9 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,6 +35,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestController {
     private final Environment environment;
+    private final SensorLogRepository sensorLogRepository;
     private final ReportService reportService;
     private final AppConfig appConfig;
     private final Keycloak keycloak;
@@ -77,6 +83,11 @@ public class TestController {
 
     @GetMapping("/latest-pfr")
     public ResponseEntity<Object> getLatestPFR() {
-        return ResponseEntity.ok(postFireReportService.getIdOfActivePFR());
+        log.info("yeet");
+        Pageable page = PageRequest.of(0,10);
+        Page<PostFireReportCompartmentDto> logs = sensorLogRepository.getAffectedCompartmentsByPfrId(5L, page);
+        log.info(logs.toString());
+        System.out.println(logs);
+        return ResponseEntity.ok(logs);
     }
 }

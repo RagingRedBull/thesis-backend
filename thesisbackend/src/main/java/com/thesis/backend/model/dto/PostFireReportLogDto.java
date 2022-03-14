@@ -1,14 +1,13 @@
 package com.thesis.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.thesis.backend.model.dto.logs.SensorLogDto;
+import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -19,10 +18,7 @@ public class PostFireReportLogDto {
     private LocalDateTime timeOccurred;
     private LocalDateTime fireOut;
     private Date dateOccurred;
-    private String compartmentName;
-    private String floorDesc;
-    private Set<SensorLogDto> sensorLogSet;
-
+    private List<PostFireReportCompartmentDto> affectedCompartments;
     public PostFireReportLogDto() {
 
     }

@@ -103,7 +103,6 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
             machineLearningInput.setTimeRecorded(LocalDateTime.now());
             machineLearningInputService.saveOne(machineLearningInput);
             postFireReportLog.setTimeOccurred(LocalDateTime.now());
-            postFireReportLog.setCompartmentId(detectorUnit.getCompartment().getId());
             postFireReportLog.setLogsDetected(sensorLogService.getAbnormalReading(detectorUnitLog.getSensorLogSet()));
             postFireReportLog = postFireReportLogRepository.saveAndFlush(postFireReportLog);
             log.info("Generated PFR with ID " + postFireReportLog.getId() + " AT TIME: " + postFireReportLog.getTimeOccurred());

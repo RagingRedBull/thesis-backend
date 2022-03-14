@@ -1,10 +1,12 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.PostFireReportLogDto;
-import com.thesis.backend.model.entity.Compartment;
+import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
 import com.thesis.backend.model.entity.logs.PostFireReportLog;
 import com.thesis.backend.model.util.mapper.PostFireReportLogMapper;
+import com.thesis.backend.repository.DetectorUnitRepository;
 import com.thesis.backend.repository.PostFireReportLogRepository;
+import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,8 @@ import java.util.List;
 public class PostFireReportService implements EntityService<PostFireReportLog, PostFireReportLogDto, Long> {
     private final PostFireReportLogRepository postFireReportLogRepository;
     private final CompartmentService compartmentService;
-    private final SensorLogService sensorLogService;
+    private final SensorLogRepository sensorLogRepository;
+    private final DetectorUnitRepository detectorUnitRepository;
 
     @Override
     public PostFireReportLog findOneByPrimaryKey(Long primaryKey) throws EntityNotFoundException {
@@ -48,27 +51,23 @@ public class PostFireReportService implements EntityService<PostFireReportLog, P
     }
 
     public PostFireReportLog getReferenceOfActivePfr() {
-        return postFireReportLogRepository.getById(postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut());
-    }
-
-    public Page<PostFireReportLogDto> findAllByPage(Pageable page) {
-        Page<PostFireReportLog> postFireReportLogs = postFireReportLogRepository.findAll(page);
-        return postFireReportLogs.map(this::buildPostFireReportLogDto);
+        Long id = postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut();
+        PostFireReportLog log;
+        if (id == null || id == 0) {
+            log = null;
+        } else {
+            log = postFireReportLogRepository.getById(id);
+        }
+        return log;
     }
 
     public List<PostFireReportLogDto> getIdsAndDates() {
         return postFireReportLogRepository.getIdAndDates();
     }
 
-    public PostFireReportLogDto buildPostFireReportLogDto(PostFireReportLog log) {
-        Compartment affectedCompartment = compartmentService.findOneByPrimaryKey(log.getCompartmentId());
-        PostFireReportLogDto dto = new PostFireReportLogMapper().mapToDto(log);
-        dto.setSensorLogSet(sensorLogService.mapSensorLogEntityToDto(log.getLogsDetected()));
-        dto.setCompartmentName(affectedCompartment.getName());
-        dto.setFloorDesc(affectedCompartment.getFloor().getDescription());
-        return dto;
+    public Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(long pfrId, Pageable page) {
+        return sensorLogRepository.getAffectedCompartmentsByPfrId(pfrId, page);
     }
-
     public Long getIdOfActivePFR() {
         return postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut();
     }
