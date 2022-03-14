@@ -17,7 +17,7 @@ public interface ContactPersonRepository extends JpaRepository<ContactPerson, In
     List<ContactPerson> getAllEnabled();
     @Query("SELECT cp FROM ContactPerson cp WHERE cp.delete=false")
     Page<ContactPerson> getAllEnabled(Pageable pageable);
-    @Query("UPDATE ContactPerson cp SET cp.delete=true WHERE cp.id=:id")
+    @Query("UPDATE ContactPerson cp SET cp.delete=true WHERE cp.id=:id AND cp.delete=false")
     @Modifying
-    void softDelete(@Param("id") int id);
+    int softDelete(@Param("id") int id);
 }

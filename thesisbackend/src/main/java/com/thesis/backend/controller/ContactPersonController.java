@@ -49,7 +49,7 @@ public class ContactPersonController {
 
     @DeleteMapping(path = "/delete/{cpId}")
     public ResponseEntity<Object> deleteContact(@PathVariable int cpId) {
-        contactPersonService.deleteOne(cpId);
-        return ResponseEntity.ok("Deleted");
+        int update = contactPersonService.softDelete(cpId);
+        return ResponseEntity.ok(update);
     }
 }

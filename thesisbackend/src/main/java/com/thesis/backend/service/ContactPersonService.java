@@ -23,10 +23,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ContactPersonService implements EntityService<ContactPerson, ContactPersonDto, Integer> {
     private final ContactPersonRepository contactPersonRepository;
+
     @Override
     public ContactPerson findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException {
         Optional<ContactPerson> entity = contactPersonRepository.findById(primaryKey);
-        if (entity.isEmpty()){
+        if (entity.isEmpty()) {
             throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
         } else {
             return entity.get();
@@ -36,7 +37,7 @@ public class ContactPersonService implements EntityService<ContactPerson, Contac
     @Transactional
     @Override
     public ContactPerson saveOne(ContactPersonDto contactPersonDto) {
-        EntityMapper<ContactPerson,ContactPersonDto> mapper = new ContactPersonMapper();
+        EntityMapper<ContactPerson, ContactPersonDto> mapper = new ContactPersonMapper();
         return contactPersonRepository.saveAndFlush(mapper.mapToEntity(contactPersonDto));
     }
 
@@ -45,10 +46,17 @@ public class ContactPersonService implements EntityService<ContactPerson, Contac
     public void deleteOne(Integer primaryKey) {
         contactPersonRepository.softDelete(primaryKey);
     }
+
+    @Transactional
+    public int softDelete(int primaryKey) {
+        return contactPersonRepository.softDelete(primaryKey);
+
+    }
+
     @Transactional
     @Override
     public ContactPerson updateOne(ContactPersonDto contactPersonDto) {
-        EntityMapper<ContactPerson,ContactPersonDto> mapper = new ContactPersonMapper();
+        EntityMapper<ContactPerson, ContactPersonDto> mapper = new ContactPersonMapper();
         return contactPersonRepository.saveAndFlush(mapper.mapToEntity(contactPersonDto));
     }
 
