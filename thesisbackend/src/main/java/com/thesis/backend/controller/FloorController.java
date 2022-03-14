@@ -8,7 +8,6 @@ import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
 import com.thesis.backend.service.AuthenticationService;
-import com.thesis.backend.service.CompartmentService;
 import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.FloorService;
 import lombok.RequiredArgsConstructor;

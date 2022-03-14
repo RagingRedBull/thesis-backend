@@ -1,7 +1,6 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
-import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;

@@ -47,9 +47,9 @@ public class ContactPersonController {
         return ResponseEntity.ok(contactPersonDto);
     }
 
-    @DeleteMapping(path = "/delete")
-    public ResponseEntity<Object> deleteContact(@RequestBody ContactPersonDto contactPersonDto) {
-        contactPersonService.deleteOne(contactPersonDto.getId());
+    @DeleteMapping(path = "/delete/{cpId}")
+    public ResponseEntity<Object> deleteContact(@PathVariable int cpId) {
+        contactPersonService.deleteOne(cpId);
         return ResponseEntity.ok("Deleted");
     }
 }

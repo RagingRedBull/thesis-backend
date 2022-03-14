@@ -11,7 +11,6 @@ import com.thesis.backend.model.dto.update.SensorUpdateDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Sensor;
-import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.repository.CompartmentRepository;
@@ -62,6 +61,13 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return detectorUnitRepository.saveAndFlush(mapper.mapToEntity(detectorUnitDto));
     }
 
+    public List<DetectorUnit> getAllUnitsByCompId(int id) {
+        return detectorUnitRepository.getAllDetectorUnitsByCompartment(id);
+    }
+
+    public List<DetectorUnit> getAllUnitsWithNoCompartment() {
+        return detectorUnitRepository.getAllUnassociatedUnits();
+    }
     @Override
     public void deleteOne(String primaryKey) {
         detectorUnitRepository.deleteById(primaryKey);
@@ -89,7 +95,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         return detectorUnitRepository.findAll();
     }
     public List<DetectorUnit> getAllDetectorUnitByCompartmentId(Integer compartmentId) {
-        return null;
+        return detectorUnitRepository.getAllDetectorUnitsByCompartment(compartmentId);
     }
     public List<DetectorUnit> getAllDetectorUnitsByFloorId(Integer floorId) {
         return detectorUnitRepository.getAllDetectorUnitsByFloorId(floorId);

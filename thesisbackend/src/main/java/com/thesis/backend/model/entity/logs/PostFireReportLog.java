@@ -1,6 +1,5 @@
 package com.thesis.backend.model.entity.logs;
 
-import com.thesis.backend.model.entity.Compartment;
 import lombok.Getter;
 import lombok.Setter;
 

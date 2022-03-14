@@ -2,7 +2,6 @@ package com.thesis.backend.model.util.mapper;
 
 import com.thesis.backend.model.dto.SensorStatusReportLogDto;
 import com.thesis.backend.model.entity.logs.SensorStatusReportLog;
-import com.thesis.backend.service.interfaces.EntityService;
 
 public class SensorStatusReportMapper implements EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> {
     @Override

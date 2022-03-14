@@ -1,6 +1,5 @@
 package com.thesis.backend.service;
 
-import com.itextpdf.text.Document;
 import com.thesis.backend.config.AppConfig;
 import com.thesis.backend.model.dto.SensorStatusReportLogDto;
 import com.thesis.backend.model.dto.StatusReportLogDto;
@@ -12,7 +11,6 @@ import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorStatusReportMapper;
 import com.thesis.backend.model.util.mapper.StatusReportLogMapper;
 import com.thesis.backend.repository.ContactPersonRepository;
-import com.thesis.backend.repository.SensorStatusReportLogRepository;
 import com.thesis.backend.repository.StatusReportLogRepository;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
@@ -20,7 +18,6 @@ import com.twilio.type.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;

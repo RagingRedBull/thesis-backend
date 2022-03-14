@@ -3,7 +3,6 @@ package com.thesis.backend.service;
 import com.thesis.backend.model.dto.PostFireReportLogDto;
 import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
 import com.thesis.backend.model.entity.logs.PostFireReportLog;
-import com.thesis.backend.model.util.mapper.PostFireReportLogMapper;
 import com.thesis.backend.repository.DetectorUnitRepository;
 import com.thesis.backend.repository.PostFireReportLogRepository;
 import com.thesis.backend.repository.SensorLogRepository;

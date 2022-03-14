@@ -74,10 +74,10 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
             "MAX(CASE WHEN slog.name='MQ-7' then slog.mqValue ELSE NULL END), " +
             "MAX(CASE WHEN slog.name='MQ-135' then slog.mqValue ELSE NULL END), " +
             "MAX(CASE WHEN slog.name='FIRE' then slog.sensorValue ELSE NULL END)) " +
-            "FROM SensorLog slog, DetectorUnitLog dlog " +
-            "LEFT JOIN DetectorUnit du ON du.macAddress=dlog.macAddress " +
-            "LEFT JOIN Compartment comp ON du.compartment.id=comp.id " +
-            "LEFT JOIN Floor floor ON comp.floor.id=floor.id " +
+            "FROM SensorLog slog, DetectorUnit du " +
+            "INNER JOIN DetectorUnitLog dlog ON dlog.id=slog.detectorUnitLog.id " +
+            "INNER JOIN Compartment comp ON du.compartment.id=comp.id " +
+            "INNER JOIN Floor floor ON comp.floor.id=floor.id " +
             "WHERE slog.postFireReportLog.id=:pfrId " +
             "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
             "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
