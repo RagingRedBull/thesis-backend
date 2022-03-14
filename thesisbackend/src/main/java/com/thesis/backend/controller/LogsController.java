@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/log")
 public class LogsController {
+    private final DetectorUnitService detectorUnitService;
     private final DetectorUnitLogService detectorUnitLogService;
     private final SensorLogService sensorLogService;
     private final CompartmentService compartmentService;
@@ -89,9 +90,11 @@ public class LogsController {
     @PostMapping(path = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
         log.debug(detectorUnitLogDto.toString());
-
-        DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
-        detectorUnitLogService.checkReadings(detectorUnitLog);
+        DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLogDto.getMacAddress());
+        if(detectorUnit.getCompartment() != null) {
+            DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
+            detectorUnitLogService.checkReadings(detectorUnitLog, detectorUnit);
+        }
         return ResponseEntity.ok(null);
     }
 

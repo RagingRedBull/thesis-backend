@@ -83,8 +83,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
     }
 
     @Transactional
-    public void checkReadings(DetectorUnitLog detectorUnitLog) {
-        DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
+    public void checkReadings(DetectorUnitLog detectorUnitLog, DetectorUnit detectorUnit) {
         if (sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
                 && !appConfig.isAlarmingMode() && detectorUnit.getCompartment() != null) {
             log.info("Found abnormal readings with detecor unit log id: " + detectorUnitLog.getId());
