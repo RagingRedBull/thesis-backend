@@ -30,7 +30,7 @@ public class AppConfigController {
     @GetMapping("/alarming/update")
     public ResponseEntity<Object> setAlarmingMode(@RequestParam boolean enableAlarming) {
         PostFireReportLog currentPFR = postFireReportService.getReferenceOfActivePfr();
-        if(appConfig.isAlarmingMode() && currentPFR != null){
+        if(currentPFR != null){
             currentPFR.setFireOut(LocalDateTime.now());
             postFireReportService.saveOne(currentPFR);
         }

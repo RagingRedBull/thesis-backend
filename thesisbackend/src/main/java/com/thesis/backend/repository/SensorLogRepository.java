@@ -79,6 +79,7 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
             "LEFT JOIN Compartment comp ON du.compartment.id=comp.id " +
             "LEFT JOIN Floor floor ON comp.floor.id=floor.id " +
             "WHERE slog.postFireReportLog.id=:pfrId " +
-            "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300)")
+            "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
+            "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
     Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(@Param("pfrId")Long pfrId, Pageable pageable);
 }
