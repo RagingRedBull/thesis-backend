@@ -84,22 +84,22 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                 }
             } else if (log instanceof MqSensorLog) {
                 if (log.getName() == SensorName.MQ2) {
-                    if (((MqSensorLog) log).getMqValue() >= 300) {
+                    if (((MqSensorLog) log).getMqValue() >= 165) {
                         isAbnormal = true;
                         break;
                     }
                 } else if (log.getName() == SensorName.MQ5) {
-                    if (((MqSensorLog) log).getMqValue() >= 500) {
+                    if (((MqSensorLog) log).getMqValue() >= 455) {
                         isAbnormal = true;
                         break;
                     }
                 } else if (log.getName() == SensorName.MQ7) {
-                    if (((MqSensorLog) log).getMqValue() >= 300) {
+                    if (((MqSensorLog) log).getMqValue() >= 190) {
                         isAbnormal = true;
                         break;
                     }
                 } else if (log.getName() == SensorName.MQ135) {
-                    if (((MqSensorLog) log).getMqValue() >= 300) {
+                    if (((MqSensorLog) log).getMqValue() >= 210) {
                         isAbnormal = true;
                         break;
                     }
@@ -148,13 +148,13 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                     abnormalSensorLogs.add(sensorLog);
                 }
             } else if (sensorLog.getType() == SensorType.MQ) {
-                if (sensorLog.getName() == SensorName.MQ2 && ((MqSensorLog)sensorLog).getMqValue() > 300) {
+                if (sensorLog.getName() == SensorName.MQ2 && ((MqSensorLog)sensorLog).getMqValue() > 165) {
                     abnormalSensorLogs.add(sensorLog);
-                } else if (sensorLog.getName() == SensorName.MQ5 && ((MqSensorLog)sensorLog).getMqValue() > 500) {
+                } else if (sensorLog.getName() == SensorName.MQ5 && ((MqSensorLog)sensorLog).getMqValue() > 455) {
                     abnormalSensorLogs.add(sensorLog);
-                } else if (sensorLog.getName() == SensorName.MQ7 && ((MqSensorLog)sensorLog).getMqValue() > 300) {
+                } else if (sensorLog.getName() == SensorName.MQ7 && ((MqSensorLog)sensorLog).getMqValue() > 190) {
                     abnormalSensorLogs.add(sensorLog);
-                } else if (sensorLog.getName() == SensorName.MQ135 && ((MqSensorLog) sensorLog).getMqValue() > 300) {
+                } else if (sensorLog.getName() == SensorName.MQ135 && ((MqSensorLog) sensorLog).getMqValue() > 210) {
                     abnormalSensorLogs.add(sensorLog);
                 }
             } else if (sensorLog.getType() == SensorType.FIRE) {
