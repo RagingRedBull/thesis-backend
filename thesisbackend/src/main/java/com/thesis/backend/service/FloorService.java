@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
         }
     }
 
+    @Transactional
     @Override
     public Floor saveOne(FloorDto floorDto) {
         EntityMapper<Floor, FloorDto> mapper = new FloorMapper();
@@ -43,12 +45,14 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
         return entity;
     }
 
+    @Transactional
     @Override
     public void deleteOne(Integer primaryKey) {
         detectorUnitService.disassociateCompartment(detectorUnitService.getAllDetectorUnitsByFloorId(primaryKey));
         floorRepository.deleteById(primaryKey);
     }
 
+    @Transactional
     @Override
     public Floor updateOne(FloorDto dto) {
         Floor floor;

@@ -37,8 +37,8 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         }
     }
 
-    @Override
     @Transactional
+    @Override
     public Compartment saveOne(CompartmentDto compartmentDto) {
         EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
         Floor floor = floorRepository.getById(compartmentDto.getFloorId());
@@ -47,8 +47,8 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         return compartmentRepository.saveAndFlush(compartment);
     }
 
-    @Override
     @Transactional
+    @Override
     public void deleteOne(Integer primaryKey) {
         try {
             compartmentRepository.deleteById(primaryKey);
@@ -57,6 +57,7 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
         }
     }
 
+    @Transactional
     @Override
     public Compartment updateOne(CompartmentDto compartmentDto) {
         Compartment compartment;
@@ -79,12 +80,5 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
 
     public List<Compartment> findCompartmentsByFloorId(int floorId) {
         return compartmentRepository.findByFloorId(floorId, Sort.by(Sort.Direction.ASC, "id"));
-    }
-
-    public Set<CompartmentDto> convertEntitySetToDto (Set<Compartment> compartments) {
-        EntityMapper<Compartment, CompartmentDto> mapper = new CompartmentMapper();
-        return compartments.stream()
-                .map(mapper::mapToDto)
-                .collect(Collectors.toSet());
     }
 }

@@ -54,6 +54,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         }
     }
 
+    @Transactional
     @Override
     public DetectorUnitLog saveOne(DetectorUnitLogDto detectorUnitLogDto) {
         EntityMapper<DetectorUnitLog, DetectorUnitLogDto> mapper = new DetectorUnitLogMapper();
@@ -72,11 +73,13 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
         return detectorUnitLog;
     }
 
+    @Transactional
     @Override
     public void deleteOne(Long primaryKey) {
         detectorUnitLogRepository.deleteById(primaryKey);
     }
 
+    @Transactional
     @Override
     public DetectorUnitLog updateOne(DetectorUnitLogDto detectorUnitLogDto) {
         return null;

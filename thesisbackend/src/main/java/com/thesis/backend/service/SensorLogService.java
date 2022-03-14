@@ -37,12 +37,14 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
         }
     }
 
+    @Transactional
     @Override
     public SensorLog saveOne(SensorLogDto sensorLogDto) {
         EntityMapper<SensorLog, SensorLogDto> mapper = new SensorLogMapper();
         return sensorLogRepository.save(mapper.mapToEntity(sensorLogDto));
     }
 
+    @Transactional
     @Override
     public void deleteOne(Long primaryKey) {
         sensorLogRepository.deleteById(primaryKey);

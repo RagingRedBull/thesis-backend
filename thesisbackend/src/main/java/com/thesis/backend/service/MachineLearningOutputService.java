@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 @Service
 @Slf4j
@@ -24,6 +25,7 @@ public class MachineLearningOutputService implements EntityService<MachineLearni
         return null;
     }
 
+    @Transactional
     @Override
     public MachineLearningOutput saveOne(MachineLearningOutputDto machineLearningOutputDto) {
         EntityMapper<MachineLearningOutput, MachineLearningOutputDto> entityMapper = new MachineLearningOutputMapper();

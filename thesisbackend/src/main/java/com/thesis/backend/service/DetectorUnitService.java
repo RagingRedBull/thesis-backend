@@ -27,6 +27,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -56,6 +57,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         }
     }
 
+    @Transactional
     @Override
     public DetectorUnit saveOne(DetectorUnitDto detectorUnitDto) {
         return detectorUnitRepository.saveAndFlush(mapper.mapToEntity(detectorUnitDto));
@@ -68,11 +70,13 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public List<DetectorUnit> getAllUnitsWithNoCompartment() {
         return detectorUnitRepository.getAllUnassociatedUnits();
     }
+    @Transactional
     @Override
     public void deleteOne(String primaryKey) {
         detectorUnitRepository.deleteById(primaryKey);
     }
 
+    @Transactional
     @Override
     public DetectorUnit updateOne(DetectorUnitDto detectorUnitDto) {
         return null;
@@ -100,6 +104,8 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public List<DetectorUnit> getAllDetectorUnitsByFloorId(Integer floorId) {
         return detectorUnitRepository.getAllDetectorUnitsByFloorId(floorId);
     }
+
+    @Transactional
     public void updateSensorList(DetectorUnitSensorUpdateWrapper detectorUnitSensorUpdateWrapper) throws JsonProcessingException,
             EntityNotFoundException {
         DetectorUnit unitToUpdate = findOneByPrimaryKey(detectorUnitSensorUpdateWrapper.getDetectorUnitDto().getMacAddress());
@@ -123,6 +129,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         }
     }
 
+    @Transactional
     public DetectorUnitDto updateAssociatedCompartment(DetectorUnitCompartmentUpdateDto dto) {
         EntityMapper<DetectorUnit,DetectorUnitDto> mapper = new DetectorUnitMapper();
         DetectorUnit detectorUnit = detectorUnitRepository.getById(dto.getDetectorUnitId());

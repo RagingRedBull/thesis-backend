@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -32,17 +33,19 @@ public class ContactPersonService implements EntityService<ContactPerson, Contac
         }
     }
 
+    @Transactional
     @Override
     public ContactPerson saveOne(ContactPersonDto contactPersonDto) {
         EntityMapper<ContactPerson,ContactPersonDto> mapper = new ContactPersonMapper();
         return contactPersonRepository.saveAndFlush(mapper.mapToEntity(contactPersonDto));
     }
 
+    @Transactional
     @Override
     public void deleteOne(Integer primaryKey) {
         contactPersonRepository.softDelete(primaryKey);
     }
-
+    @Transactional
     @Override
     public ContactPerson updateOne(ContactPersonDto contactPersonDto) {
         EntityMapper<ContactPerson,ContactPersonDto> mapper = new ContactPersonMapper();
