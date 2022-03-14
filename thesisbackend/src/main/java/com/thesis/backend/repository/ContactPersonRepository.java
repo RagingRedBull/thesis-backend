@@ -9,8 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ContactPersonRepository extends JpaRepository<ContactPerson, Integer> {
+    @Query("SELECT cp FROM ContactPerson cp WHERE cp.delete=false")
+    List<ContactPerson> getAllEnabled();
     @Query("SELECT cp FROM ContactPerson cp WHERE cp.delete=false")
     Page<ContactPerson> getAllEnabled(Pageable pageable);
     @Query("UPDATE ContactPerson cp SET cp.delete=true WHERE cp.id=:id")

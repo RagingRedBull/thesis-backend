@@ -156,7 +156,7 @@ public class ReportService {
 
     public void sendSmsToUsers(String compartmentName, String floorDesc) {
         Twilio.init(appConfig.getTwilioSid(), appConfig.getTwilioAuthToken());
-        List<ContactPerson> contactPeople = contactPersonRepository.findAll();
+        List<ContactPerson> contactPeople = contactPersonRepository.getAllEnabled();
         for (ContactPerson person : contactPeople) {
             log.info("Email: " + person.getEmail());
                 log.info("Cellphone: " + person.getPhoneNumber());
