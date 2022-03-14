@@ -84,13 +84,13 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
 
     @Transactional
     public void checkReadings(DetectorUnitLog detectorUnitLog) {
+        DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
         if (sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
-                && !appConfig.isAlarmingMode()) {
+                && !appConfig.isAlarmingMode() && detectorUnit.getCompartment() != null) {
             log.info("Found abnormal readings with detecor unit log id: " + detectorUnitLog.getId());
             log.info("Enabling alarming mode!");
             appConfig.setAlarmingMode(true);
             PostFireReportLog postFireReportLog = new PostFireReportLog();
-            DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLog.getMacAddress());
             Compartment compartment = detectorUnit.getCompartment();
             log.info("First affected compartment: " + compartment.getName() + " with id: " + compartment.getId());
             log.info("Playing TTS!");
@@ -113,7 +113,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
             sensorLogService.saveAll(logsDetected);
             reportService.sendSmsToUsers(compartment.getName(), compartment.getFloor().getDescription());
         } else if(sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
-                && appConfig.isAlarmingMode()) {
+                && appConfig.isAlarmingMode() && detectorUnit.getCompartment() != null) {
             long latestPfrId = postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut();
             PostFireReportLog pfrLog = postFireReportLogRepository.getById(latestPfrId);
             List<SensorLog> abnormalLogs = sensorLogService.getAbnormalReading(detectorUnitLog.getSensorLogSet());
