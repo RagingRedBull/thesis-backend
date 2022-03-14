@@ -21,8 +21,6 @@ public class PostFireReportLog {
     private LocalDateTime timeOccurred;
     @Column(name = "fire_out")
     private LocalDateTime fireOut;
-    @Column(name = "compartment_id")
-    private int compartmentId;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFireReportLog", cascade = CascadeType.ALL)
     private List<SensorLog> logsDetected;
 }

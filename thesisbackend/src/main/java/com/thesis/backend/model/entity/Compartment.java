@@ -36,7 +36,7 @@ public class Compartment implements Serializable {
     private float heightKonva;
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
     @EqualsAndHashCode.Exclude

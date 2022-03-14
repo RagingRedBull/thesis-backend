@@ -1,6 +1,7 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.logs.DetectorUnitLogDto;
+import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
 import com.thesis.backend.model.dto.logs.SensorLogDto;
 import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
@@ -113,10 +114,12 @@ public class LogsController {
         return ResponseEntity.ok("yeetus");
     }
     @GetMapping(path = "/post-fire-report")
-    public ResponseEntity<Object> getPostFireReports(@RequestParam(required = false) Long pfrId) {
-        if(pfrId != null) {
-            return ResponseEntity.ok(postFireReportService.buildPostFireReportLogDto(
-                    postFireReportService.findOneByPrimaryKey(pfrId)));
+    public ResponseEntity<Object> getPostFireReports(@RequestParam(required = false) Long pfrId,
+                                                     @RequestParam(required = false) Integer pageNumber,
+                                                     @RequestParam(required = false) Integer pageSize) {
+        if(pfrId != null && pageNumber != null && pageSize != null) {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            return ResponseEntity.ok(postFireReportService.getAffectedCompartmentsByPfrId(pfrId,pageable));
         } else {
             return ResponseEntity.ok(postFireReportService.getIdsAndDates());
         }
