@@ -74,11 +74,12 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
             "MAX(CASE WHEN slog.name='MQ-7' then slog.mqValue ELSE NULL END), " +
             "MAX(CASE WHEN slog.name='MQ-135' then slog.mqValue ELSE NULL END), " +
             "MAX(CASE WHEN slog.name='FIRE' then slog.sensorValue ELSE NULL END)) " +
-            "FROM SensorLog slog, DetectorUnit du " +
-            "INNER JOIN DetectorUnitLog dlog ON dlog.id=slog.detectorUnitLog.id " +
-            "INNER JOIN Compartment comp ON du.compartment.id=comp.id " +
-            "INNER JOIN Floor floor ON comp.floor.id=floor.id " +
-            "WHERE slog.postFireReportLog.id=:pfrId " +
+            "FROM SensorLog slog, DetectorUnit du, DetectorUnitLog dlog, Compartment comp, Floor floor " +
+            "WHERE dlog.id=slog.detectorUnitLog.id " +
+            "AND du.macAddress=dlog.macAddress " +
+            "AND du.compartment.id=comp.id " +
+            "AND floor.id=comp.floor.id " +
+            "AND slog.postFireReportLog.id=:pfrId " +
             "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
             "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
     Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(@Param("pfrId")Long pfrId, Pageable pageable);
