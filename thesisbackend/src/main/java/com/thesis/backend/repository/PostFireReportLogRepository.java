@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface PostFireReportLogRepository extends JpaRepository<PostFireReportLog, Long> {
-    @Query(value = "SELECT new com.thesis.backend.model.dto.PostFireReportLogDto(pfr.id,DATE(pfr.timeOccurred)) FROM PostFireReportLog pfr")
+    @Query(value = "SELECT new com.thesis.backend.model.dto.PostFireReportLogDto(pfr.id,pfr.timeOccurred,pfr.fireOut) FROM PostFireReportLog pfr")
     List<PostFireReportLogDto> getIdAndDates();
     @Query(value = "SELECT pfr.id FROM post_fire_report pfr " +
             "WHERE pfr.fire_out IS NULL " +
