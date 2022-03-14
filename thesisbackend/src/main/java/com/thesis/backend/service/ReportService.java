@@ -1,14 +1,17 @@
 package com.thesis.backend.service;
 
+import com.itextpdf.text.Document;
 import com.thesis.backend.config.AppConfig;
 import com.thesis.backend.model.dto.SensorStatusReportLogDto;
 import com.thesis.backend.model.dto.StatusReportLogDto;
+import com.thesis.backend.model.entity.ContactPerson;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.SensorStatusReportLog;
 import com.thesis.backend.model.entity.logs.StatusReportLog;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorStatusReportMapper;
 import com.thesis.backend.model.util.mapper.StatusReportLogMapper;
+import com.thesis.backend.repository.ContactPersonRepository;
 import com.thesis.backend.repository.SensorStatusReportLogRepository;
 import com.thesis.backend.repository.StatusReportLogRepository;
 import com.twilio.Twilio;
@@ -42,11 +45,10 @@ import java.util.stream.Collectors;
 public class ReportService {
     private final Keycloak keycloak;
     private final AppConfig appConfig;
-    private final SensorStatusReportLogRepository sensorStatusReportLogRepository;
     private final StatusReportLogRepository statusReportLogRepository;
     private final SensorLogService sensorLogService;
     private final DetectorUnitService detectorUnitService;
-
+    private final ContactPersonRepository contactPersonRepository;
     @Async
     public void playFireWarning(String compartmentName, String floorDesc) {
         try {
@@ -155,20 +157,18 @@ public class ReportService {
         return statusReportLogs.map(this::buildSensorStatusReportLogDto);
     }
 
-    public void sendSmsToUsers() {
+    public void sendSmsToUsers(String compartmentName, String floorDesc) {
         Twilio.init(appConfig.getTwilioSid(), appConfig.getTwilioAuthToken());
-        List<UserRepresentation> users = keycloak.realm("prmts").users().list();
-        for (UserRepresentation user : users) {
-            if (user.getAttributes() != null) {
-                log.info("Email: " + user.getEmail());
-                log.info("Cellphone: " + user.getAttributes().get("cellphone").get(0));
+        List<ContactPerson> contactPeople = contactPersonRepository.findAll();
+        for (ContactPerson person : contactPeople) {
+            log.info("Email: " + person.getEmail());
+                log.info("Cellphone: " + person.getPhoneNumber());
                 Message message = Message.creator(
-                        new PhoneNumber(user.getAttributes().get("cellphone").get(0)),
+                        new PhoneNumber(person.getPhoneNumber()),
                         new PhoneNumber(appConfig.getTwilioNumber()),
-                        "Sapnu Puas"
+                        "Hi, found possible fire at " + compartmentName + " at " + floorDesc
                 ).create();
                 log.info("Sending SMS to " + message.getTo());
-            }
         }
     }
     private StatusReportLogDto buildSensorStatusReportLogDto(StatusReportLog statusReportLog) {
@@ -181,4 +181,5 @@ public class ReportService {
                 .collect(Collectors.toList()));
         return dto;
     }
+
 }
