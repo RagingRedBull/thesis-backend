@@ -77,7 +77,7 @@ public class TestController {
                 log.info("Cellphone: " + user.getAttributes().get("cellphone").get(0));
             }
         }
-        reportService.sendSmsToUsers();
+        reportService.sendSmsToUsers("Test Compartment", "Test Floor");
         return ResponseEntity.ok("geh");
     }
 

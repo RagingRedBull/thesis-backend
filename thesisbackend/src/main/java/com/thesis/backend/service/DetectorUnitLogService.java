@@ -111,7 +111,7 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
                 sensorLog.setPostFireReportLog(postFireReportLog);
             }
             sensorLogService.saveAll(logsDetected);
-            reportService.sendSmsToUsers();
+            reportService.sendSmsToUsers(compartment.getName(), compartment.getFloor().getDescription());
         } else if(sensorLogService.hasAbnormalSensorValue(detectorUnitLog.getSensorLogSet())
                 && appConfig.isAlarmingMode()) {
             long latestPfrId = postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut();
