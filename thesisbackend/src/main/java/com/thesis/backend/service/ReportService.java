@@ -2,19 +2,26 @@ package com.thesis.backend.service;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.WebColors;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import com.thesis.backend.config.AppConfig;
 import com.thesis.backend.exception.CannotBuildPdfException;
 import com.thesis.backend.model.dto.SensorStatusReportLogDto;
 import com.thesis.backend.model.dto.StatusReportLogDto;
+import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
 import com.thesis.backend.model.entity.ContactPerson;
 import com.thesis.backend.model.entity.DetectorUnit;
+import com.thesis.backend.model.entity.logs.PostFireReportLog;
 import com.thesis.backend.model.entity.logs.SensorStatusReportLog;
 import com.thesis.backend.model.entity.logs.StatusReportLog;
 import com.thesis.backend.model.enums.ReportType;
@@ -47,10 +54,7 @@ import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +67,7 @@ import java.util.stream.Collectors;
 public class ReportService {
     private final AppConfig appConfig;
     private final StatusReportLogRepository statusReportLogRepository;
+    private final PostFireReportService postFireReportService;
     private final SensorLogService sensorLogService;
     private final DetectorUnitService detectorUnitService;
     private final ContactPersonRepository contactPersonRepository;
@@ -205,21 +210,61 @@ public class ReportService {
         return dto;
     }
 
-    public Resource buildPdf(ReportType reportType, Authentication authentication) {
+    @Transactional
+    public Resource buildPdf(ReportType reportType, Authentication authentication, LocalDate day) {
         Resource resource = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         AccessToken accessToken = authenticationService.getKeycloakPrincipal(authentication);
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = LocalDateTime.now().plusDays(1);
+        LocalDateTime start = LocalDateTime.of(day, LocalTime.MIDNIGHT);
+        LocalDateTime end = LocalDateTime.of(day, LocalTime.MAX);
+        List<StatusReportLog> statusReportLogs = statusReportLogRepository.getAllStatusReportLogsByDay(start, end);
+        log.info("Status Report List Size: " + statusReportLogs.size());
         try {
             PdfWriter pdfWriter = new PdfWriter(baos);
             PdfDocument pdfDocument = new PdfDocument(pdfWriter);
             Document document = new Document(pdfDocument);
 
-            //Append Logo
+            // Append Logo
             buildLogoAndTitle(reportType, start, end, document);
+            // Build Requester Details
             String requester = accessToken.getFamilyName() + ", " + accessToken.getGivenName();
             documentDetails(requester, document);
+            // Build Table
+            buildSRTable();
+            document.close();
+
+            final byte[] bytes = baos.toByteArray();
+            resource = new ByteArrayResource(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (resource == null) {
+            throw new CannotBuildPdfException("Error generating pdf");
+        }
+        return resource;
+    }
+
+    @Transactional
+    public Resource buildPdf(ReportType reportType, Authentication authentication, long pfrId) {
+        Resource resource = null;
+        PostFireReportLog postFireReportLog = postFireReportService.findOneByPrimaryKey(pfrId);
+        List<PostFireReportCompartmentDto> affectedCompartments = postFireReportService.getAffectedCompartmentsByPfrId(pfrId);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        AccessToken accessToken = authenticationService.getKeycloakPrincipal(authentication);
+        LocalDateTime start = postFireReportLog.getTimeOccurred();
+        LocalDateTime end = postFireReportLog.getFireOut();
+        try {
+            PdfWriter pdfWriter = new PdfWriter(baos);
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+            Document document = new Document(pdfDocument, PageSize.A4);
+
+            // Append Logo
+            buildLogoAndTitle(reportType, start, end, document);
+            // Build Requester Details
+            String requester = accessToken.getFamilyName() + ", " + accessToken.getGivenName();
+            documentDetails(requester, document);
+            // Build Table
+            buildPFRTable(document, affectedCompartments);
             document.close();
 
             final byte[] bytes = baos.toByteArray();
@@ -256,9 +301,12 @@ public class ReportService {
         /*
             Date Range
          */
-        Paragraph dateRange = new Paragraph(start.format(DateTimeFormatter.ISO_DATE)
+        final ZoneId id = ZoneId.systemDefault();
+        ZonedDateTime zdtStart = ZonedDateTime.of(start,id);
+        ZonedDateTime zdtEnd = ZonedDateTime.of(end, id);
+        Paragraph dateRange = new Paragraph(DateTimeFormatter.RFC_1123_DATE_TIME.format(zdtStart)
                 + " - "
-                + end.format(DateTimeFormatter.ISO_DATE));
+                + DateTimeFormatter.RFC_1123_DATE_TIME.format(zdtEnd));
         dateRange.setHorizontalAlignment(HorizontalAlignment.CENTER);
         dateRange.setTextAlignment(TextAlignment.CENTER);
         dateRange.setUnderline(1f, -2f);
@@ -275,11 +323,70 @@ public class ReportService {
         document.add(reportRequestDate);
     }
 
-    private void buildPFRTable() {
-
+    private void buildPFRTable(Document document, List<PostFireReportCompartmentDto> affectedCompartments) {
+        Table pfrTable = new Table(9).useAllAvailableWidth();
+        // Set Headers
+        pfrTable.addHeaderCell("Date Time");
+        pfrTable.addHeaderCell("Compartment");
+        pfrTable.addHeaderCell("DHT-11");
+        pfrTable.addHeaderCell("DHT-22");
+        pfrTable.addHeaderCell("MQ-2");
+        pfrTable.addHeaderCell("MQ-5");
+        pfrTable.addHeaderCell("MQ-7");
+        pfrTable.addHeaderCell("MQ-135");
+        pfrTable.addHeaderCell("Fire");
+        for (PostFireReportCompartmentDto compartment : affectedCompartments) {
+            final ZoneId id = ZoneId.systemDefault();
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(compartment.getTimeDetected().toInstant(), id);
+            pfrTable.addCell(DateTimeFormatter.ISO_LOCAL_TIME.format(zdt));
+            pfrTable.addCell(compartment.getCompartmentName());
+            if(compartment.getDht11() != null) {
+                pfrTable.addCell(buildDetectedCell(compartment.getDht11().toString()));
+            } else {
+                pfrTable.addCell("X");
+            }
+            if(compartment.getDht22() != null) {
+                pfrTable.addCell(buildDetectedCell(compartment.getDht22().toString()));
+            } else {
+                pfrTable.addCell("X");
+            }
+            if(compartment.getMq2() != null) {
+                pfrTable.addCell(buildDetectedCell(compartment.getMq2().toString()));
+            } else {
+                pfrTable.addCell("X");
+            }
+            if(compartment.getMq5() != null) {
+                pfrTable.addCell(buildDetectedCell(compartment.getMq5().toString()));
+            } else {
+                pfrTable.addCell("X");
+            }
+            if(compartment.getMq7() != null) {
+                pfrTable.addCell(buildDetectedCell(compartment.getMq7().toString()));
+            } else {
+                pfrTable.addCell("X");
+            }
+            if(compartment.getMq135() != null) {
+                pfrTable.addCell(buildDetectedCell(compartment.getMq135().toString()));
+            } else {
+                pfrTable.addCell("X");
+            }
+            if(compartment.getFire() != null) {
+                pfrTable.addCell(buildDetectedCell(compartment.getFire().toString()));
+            } else {
+                pfrTable.addCell("X");
+            }
+        }
+        document.add(pfrTable);
     }
 
     private void buildSRTable() {
 
+    }
+
+    private Cell buildDetectedCell(String text) {
+        Cell cell = new Cell();
+        cell.add(new Paragraph(text));
+        cell.setBackgroundColor(WebColors.getRGBColor("#dc3545"), 0.4f);
+        return cell;
     }
 }

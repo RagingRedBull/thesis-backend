@@ -136,7 +136,7 @@ public class LogsController {
 
     @GetMapping(path = "/post-fire-report/pdf/{pfrId}")
     public ResponseEntity<Object> downloadPostFireReport(@PathVariable long pfrId, Authentication authentication) {
-        Resource pdf = reportService.buildPdf(ReportType.PFR, authentication);
+        Resource pdf = reportService.buildPdf(ReportType.PFR, authentication, pfrId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdf);
@@ -146,7 +146,7 @@ public class LogsController {
     public ResponseEntity<Object> downloadStatusReport(@RequestParam
                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                                        Authentication authentication) {
-        Resource pdf = reportService.buildPdf(ReportType.SR, authentication);
+        Resource pdf = reportService.buildPdf(ReportType.SR, authentication,day);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdf);
