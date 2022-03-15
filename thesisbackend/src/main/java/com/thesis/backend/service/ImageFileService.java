@@ -46,7 +46,7 @@ public class ImageFileService implements FileService {
             throw new InvalidFileException("Invalid File Type! File must be an image.");
         }
         if(!isValidResolution(file.getInputStream())){
-            throw new InvalidFileException("Image resolution must be atleast 1280x720! pixels");
+            throw new InvalidFileException("Image resolution must be atleast 1280x720 pixels!");
         }
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + file.getOriginalFilename();
