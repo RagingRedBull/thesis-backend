@@ -82,5 +82,25 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
             "AND slog.postFireReportLog.id=:pfrId " +
             "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
             "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
-    Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(@Param("pfrId")Long pfrId, Pageable pageable);
+    Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrIdPaged(@Param("pfrId")Long pfrId, Pageable pageable);
+    @Query(value = "SELECT new com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto(" +
+            "FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300)," +
+            "comp.name," +
+            "floor.description," +
+            "MAX(CASE WHEN slog.name='DHT-11' then slog.temperature ELSE NULL END), " +
+            "MAX(CASE WHEN slog.name='DHT-22' then slog.temperature ELSE NULL END), " +
+            "MAX(CASE WHEN slog.name='MQ-2' then slog.mqValue ELSE NULL END), " +
+            "MAX(CASE WHEN slog.name='MQ-5' then slog.mqValue ELSE NULL END), " +
+            "MAX(CASE WHEN slog.name='MQ-7' then slog.mqValue ELSE NULL END), " +
+            "MAX(CASE WHEN slog.name='MQ-135' then slog.mqValue ELSE NULL END), " +
+            "MAX(CASE WHEN slog.name='FIRE' then slog.sensorValue ELSE NULL END)) " +
+            "FROM SensorLog slog, DetectorUnit du, DetectorUnitLog dlog, Compartment comp, Floor floor " +
+            "WHERE dlog.id=slog.detectorUnitLog.id " +
+            "AND du.macAddress=dlog.macAddress " +
+            "AND du.compartment.id=comp.id " +
+            "AND floor.id=comp.floor.id " +
+            "AND slog.postFireReportLog.id=:pfrId " +
+            "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
+            "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
+    List<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(@Param("pfrId")Long pfrId);
 }

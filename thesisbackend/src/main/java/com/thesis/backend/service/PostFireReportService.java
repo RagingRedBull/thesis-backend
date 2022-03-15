@@ -1,7 +1,9 @@
 package com.thesis.backend.service;
 
+import com.thesis.backend.exception.PrmtsEntityNotFoundException;
 import com.thesis.backend.model.dto.PostFireReportLogDto;
 import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
+import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.logs.PostFireReportLog;
 import com.thesis.backend.repository.DetectorUnitRepository;
 import com.thesis.backend.repository.PostFireReportLogRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,7 +31,12 @@ public class PostFireReportService implements EntityService<PostFireReportLog, P
 
     @Override
     public PostFireReportLog findOneByPrimaryKey(Long primaryKey) throws EntityNotFoundException {
-        return postFireReportLogRepository.findById(primaryKey).orElseThrow();
+        Optional<PostFireReportLog> entity = postFireReportLogRepository.findById(primaryKey);
+        if (entity.isEmpty()){
+            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
+        } else {
+            return entity.get();
+        }
     }
 
     @Override
@@ -67,7 +75,10 @@ public class PostFireReportService implements EntityService<PostFireReportLog, P
     }
 
     public Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(long pfrId, Pageable page) {
-        return sensorLogRepository.getAffectedCompartmentsByPfrId(pfrId, page);
+        return sensorLogRepository.getAffectedCompartmentsByPfrIdPaged(pfrId, page);
+    }
+    public List<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(long pfrId) {
+        return sensorLogRepository.getAffectedCompartmentsByPfrId(pfrId);
     }
     public Long getIdOfActivePFR() {
         return postFireReportLogRepository.getIdOfLatestPfrWithNoFireOut();

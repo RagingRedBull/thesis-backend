@@ -85,7 +85,7 @@ public class TestController {
     public ResponseEntity<Object> getLatestPFR() {
         log.info("yeet");
         Pageable page = PageRequest.of(0,10);
-        Page<PostFireReportCompartmentDto> logs = sensorLogRepository.getAffectedCompartmentsByPfrId(5L, page);
+        Page<PostFireReportCompartmentDto> logs = sensorLogRepository.getAffectedCompartmentsByPfrIdPaged(5L, page);
         log.info(logs.toString());
         System.out.println(logs);
         return ResponseEntity.ok(logs);

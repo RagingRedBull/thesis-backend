@@ -22,6 +22,6 @@ public class StatusReportLog {
     private LocalDateTime dateStart;
     @Column(name = "date_end")
     private LocalDateTime dateEnd;
-    @OneToMany(mappedBy = "statusReportLog", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "statusReportLog", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<SensorStatusReportLog> sensorStatusReportLogs;
 }
