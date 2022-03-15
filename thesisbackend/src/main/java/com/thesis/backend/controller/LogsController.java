@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -139,16 +140,18 @@ public class LogsController {
         Resource pdf = reportService.buildPdf(ReportType.PFR, authentication, pfrId);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Post-Fire-Report\"")
                 .body(pdf);
     }
 
-    @GetMapping(path = "/status-report/pdf/")
+    @GetMapping(path = "/status-report/pdf")
     public ResponseEntity<Object> downloadStatusReport(@RequestParam
                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                                        Authentication authentication) {
         Resource pdf = reportService.buildPdf(ReportType.SR, authentication,day);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Status-Report-"+ day + "\"")
                 .body(pdf);
     }
 }
