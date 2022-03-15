@@ -6,12 +6,14 @@ import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.enums.ReportType;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -38,6 +41,7 @@ public class LogsController {
     private final CompartmentService compartmentService;
     private final ReportService reportService;
     private final PostFireReportService postFireReportService;
+
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber,
                                                                     @RequestParam int pageSize) {
@@ -90,7 +94,7 @@ public class LogsController {
     public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
         log.debug(detectorUnitLogDto.toString());
         DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLogDto.getMacAddress());
-        if(detectorUnit.getCompartment() != null) {
+        if (detectorUnit.getCompartment() != null) {
             DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
             detectorUnitLogService.checkReadings(detectorUnitLog, detectorUnit);
         }
@@ -104,28 +108,47 @@ public class LogsController {
 
     @GetMapping(path = "/status-report")
     public ResponseEntity<Object> getStatusReportLogs(@RequestParam
-                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
+                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                                       @RequestParam int pageSize,
                                                       @RequestParam int pageNumber) {
-        Pageable page = PageRequest.of(pageNumber,pageSize, Sort.by("dateStart").ascending());
+        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by("dateStart").ascending());
         return ResponseEntity.ok(reportService.generateStatusReportLog(day, page));
     }
+
     @GetMapping(path = "/status-force")
     public ResponseEntity<Object> forceGenStatusLogs(@RequestParam
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
         reportService.generateStatusReportLog(day);
         return ResponseEntity.ok("yeetus");
     }
+
     @GetMapping(path = "/post-fire-report")
     public ResponseEntity<Object> getPostFireReports(@RequestParam(required = false) Long pfrId,
                                                      @RequestParam(required = false) Integer pageNumber,
                                                      @RequestParam(required = false) Integer pageSize) {
-        if(pfrId != null && pageNumber != null && pageSize != null) {
+        if (pfrId != null && pageNumber != null && pageSize != null) {
             Pageable pageable = PageRequest.of(pageNumber, pageSize);
-            return ResponseEntity.ok(postFireReportService.getAffectedCompartmentsByPfrId(pfrId,pageable));
+            return ResponseEntity.ok(postFireReportService.getAffectedCompartmentsByPfrId(pfrId, pageable));
         } else {
             return ResponseEntity.ok(postFireReportService.getIdsAndDates());
         }
     }
 
+    @GetMapping(path = "/post-fire-report/pdf/{pfrId}")
+    public ResponseEntity<Object> downloadPostFireReport(@PathVariable long pfrId, Authentication authentication) {
+        Resource pdf = reportService.buildPdf(ReportType.PFR, authentication);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+    @GetMapping(path = "/status-report/pdf/")
+    public ResponseEntity<Object> downloadStatusReport(@RequestParam
+                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
+                                                       Authentication authentication) {
+        Resource pdf = reportService.buildPdf(ReportType.SR, authentication);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
 }

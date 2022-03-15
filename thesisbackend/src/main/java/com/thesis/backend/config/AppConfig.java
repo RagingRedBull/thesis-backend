@@ -37,6 +37,8 @@ public class AppConfig {
     private String twilioAuthToken;
     @Value("${prmts.twilio.number}")
     private String twilioNumber;
+    @Value("${prmts.logo}")
+    private String logoPath;
 
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
