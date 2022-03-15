@@ -136,21 +136,21 @@ public class LogsController {
     }
 
     @GetMapping(path = "/post-fire-report/pdf/{pfrId}")
-    public ResponseEntity<Object> downloadPostFireReport(@PathVariable long pfrId, Authentication authentication) {
+    public ResponseEntity<Resource> downloadPostFireReport(@PathVariable long pfrId, Authentication authentication) {
         Resource pdf = reportService.buildPdf(ReportType.PFR, authentication, pfrId);
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Post-Fire-Report\"")
                 .body(pdf);
     }
 
     @GetMapping(path = "/status-report/pdf")
-    public ResponseEntity<Object> downloadStatusReport(@RequestParam
+    public ResponseEntity<Resource> downloadStatusReport(@RequestParam
                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                                        Authentication authentication) {
         Resource pdf = reportService.buildPdf(ReportType.SR, authentication,day);
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Status-Report-"+ day + "\"")
                 .body(pdf);
     }

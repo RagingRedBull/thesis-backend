@@ -52,6 +52,7 @@ import javax.speech.Central;
 import javax.speech.synthesis.Synthesizer;
 import javax.speech.synthesis.SynthesizerModeDesc;
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -249,7 +250,7 @@ public class ReportService {
 
     @Transactional
     public Resource buildPdf(ReportType reportType, Authentication authentication, long pfrId) {
-        Resource resource = null;
+        InputStreamResource resource = null;
         PostFireReportLog postFireReportLog = postFireReportService.findOneByPrimaryKey(pfrId);
         List<PostFireReportCompartmentDto> affectedCompartments = postFireReportService.getAffectedCompartmentsByPfrId(pfrId);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -271,7 +272,7 @@ public class ReportService {
             document.close();
 
             final byte[] bytes = baos.toByteArray();
-            resource = new ByteArrayResource(bytes);
+            resource = new InputStreamResource(new ByteArrayInputStream(bytes));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -407,7 +408,7 @@ public class ReportService {
             ZonedDateTime zdtEnd = ZonedDateTime.of(srl.getDateEnd(), id);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             String timeRange = zdtStart.format(formatter)
-                    + " - " + zdtEnd.format(formatter);
+                    + "  " + zdtEnd.format(formatter);
             srlTable.addCell(timeRange);
             srlTable.addCell(srl.getMacAddress());
             srlTable.addCell(buildSensorCell(findLogBySensorName(sensorReportList, SensorName.DHT11)));
