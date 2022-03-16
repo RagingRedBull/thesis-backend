@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MachineLearningOutputDto {
-    private int xStart;
-    private int yStart;
-    private int xEnd;
-    private int yEnd;
+    private float xStart;
+    private float yStart;
+    private float xEnd;
+    private float yEnd;
     private int floorStart;
     private int floorEnd;
     private LogType type;
