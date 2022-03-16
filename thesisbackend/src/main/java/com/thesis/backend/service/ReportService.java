@@ -115,7 +115,44 @@ public class ReportService {
             e.printStackTrace();
         }
     }
+    @Async
+    public void playFireDrillMode() {
+        try {
+            // Set property as Kevin Dictionary
+            System.setProperty(
+                    "freetts.voices",
+                    "com.sun.speech.freetts.en.us"
+                            + ".cmu_us_kal.KevinVoiceDirectory");
 
+            // Register Engine
+            Central.registerEngineCentral(
+                    "com.sun.speech.freetts"
+                            + ".jsapi.FreeTTSEngineCentral");
+
+            // Create a Synthesizer
+            Synthesizer synthesizer
+                    = Central.createSynthesizer(
+                    new SynthesizerModeDesc(Locale.US));
+
+            // Allocate synthesizer
+            synthesizer.allocate();
+
+            // Resume Synthesizer
+            synthesizer.resume();
+
+            // Speaks the given text
+            // until the queue is empty.
+            for (int i = 0; i < 5; i++) {
+                synthesizer.speakPlainText(
+                        "FIRE DRILL INITIATED! PLEASE EVACUATE THE BUILDING!", null);
+                Thread.sleep(1000);
+            }
+            synthesizer.waitEngineState(
+                    Synthesizer.QUEUE_EMPTY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Scheduled(cron = "* 59 * * * *")
     @Transactional
     public void generateHourlyLogs() {
@@ -198,6 +235,21 @@ public class ReportService {
                     new PhoneNumber(person.getPhoneNumber()),
                     new PhoneNumber(appConfig.getTwilioNumber()),
                     "Hi, found possible fire at " + compartmentName + " at " + floorDesc
+            ).create();
+            log.info("Sending SMS to " + message.getTo());
+        }
+    }
+
+    public void sendSmsToUsers() {
+        Twilio.init(appConfig.getTwilioSid(), appConfig.getTwilioAuthToken());
+        List<ContactPerson> contactPeople = contactPersonRepository.getAllEnabled();
+        for (ContactPerson person : contactPeople) {
+            log.info("Email: " + person.getEmail());
+            log.info("Cellphone: " + person.getPhoneNumber());
+            Message message = Message.creator(
+                    new PhoneNumber(person.getPhoneNumber()),
+                    new PhoneNumber(appConfig.getTwilioNumber()),
+                    "Fire Drill initiated on " + LocalDate.now() + ". Please evacuate the building!"
             ).create();
             log.info("Sending SMS to " + message.getTo());
         }
