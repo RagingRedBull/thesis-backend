@@ -105,7 +105,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                     }
                 }
             } else if (log instanceof FireSensorLog) {
-                if (((FireSensorLog) log).getSensorValue() > 120) {
+                if (((FireSensorLog) log).getSensorValue() > 180) {
                     isAbnormal = true;
                     break;
                 }
@@ -158,7 +158,7 @@ public class SensorLogService implements EntityService<SensorLog, SensorLogDto, 
                     abnormalSensorLogs.add(sensorLog);
                 }
             } else if (sensorLog.getType() == SensorType.FIRE) {
-                if (((FireSensorLog)sensorLog).getSensorValue() > 120){
+                if (((FireSensorLog)sensorLog).getSensorValue() > 180){
                     abnormalSensorLogs.add(sensorLog);
                 }
             }
