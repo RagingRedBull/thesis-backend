@@ -15,8 +15,6 @@ public class DetectorUnitMapper implements EntityMapper<DetectorUnit, DetectorUn
         dto.setMacAddress(entity.getMacAddress());
         dto.setIpV4(entity.getIpV4());
         dto.setName(entity.getName());
-        dto.setXpos(entity.getXpos());
-        dto.setYpos(entity.getYpos());
         if(entity.getCompartment() == null) {
             dto.setCompartmentId(null);
         } else {
@@ -31,8 +29,6 @@ public class DetectorUnitMapper implements EntityMapper<DetectorUnit, DetectorUn
         entity.setMacAddress(dto.getMacAddress());
         entity.setIpV4(dto.getIpV4());
         entity.setName(dto.getName());
-        entity.setXpos(dto.getXpos());
-        entity.setYpos(dto.getYpos());
         return entity;
     }
 }

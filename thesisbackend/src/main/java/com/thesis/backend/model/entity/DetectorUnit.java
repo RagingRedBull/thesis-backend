@@ -18,10 +18,6 @@ public class DetectorUnit {
     private String ipV4;
     @Column(name = "name")
     private String name;
-    @Column(name = "x_loc")
-    private int xpos;
-    @Column(name = "y_loc")
-    private int ypos;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "sensors_join_detector_unit",

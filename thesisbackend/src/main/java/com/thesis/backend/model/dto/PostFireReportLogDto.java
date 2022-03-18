@@ -1,7 +1,6 @@
 package com.thesis.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
 import lombok.Getter;
 import lombok.Setter;
 

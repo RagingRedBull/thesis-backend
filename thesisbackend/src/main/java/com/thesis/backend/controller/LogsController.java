@@ -93,18 +93,14 @@ public class LogsController {
 
     @PostMapping(path = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
-        log.debug(detectorUnitLogDto.toString());
         DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLogDto.getMacAddress());
-        if (detectorUnit.getCompartment() != null) {
-            DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
-            detectorUnitLogService.checkReadings(detectorUnitLog, detectorUnit);
+        if (detectorUnit.getCompartment() != null && detectorUnitLogDto.getSensorLogSet() != null) {
+            if (detectorUnitLogDto.getSensorLogSet().size() > 0) {
+                DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
+                detectorUnitLogService.checkReadings(detectorUnitLog, detectorUnit);
+            }
         }
         return ResponseEntity.ok(null);
-    }
-
-    @GetMapping(path = "/date")
-    public ResponseEntity<List<DetectorUnitLog>> getAllDetectorLogsByDateRange() {
-        return ResponseEntity.ok(detectorUnitLogService.findAllByDateRange());
     }
 
     @GetMapping(path = "/status-report")
@@ -120,7 +116,7 @@ public class LogsController {
     public ResponseEntity<Object> forceGenStatusLogs(@RequestParam
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
         reportService.generateStatusReportLog(day);
-        return ResponseEntity.ok("yeetus");
+        return ResponseEntity.ok("force gen by day");
     }
 
     @GetMapping(path = "/post-fire-report")

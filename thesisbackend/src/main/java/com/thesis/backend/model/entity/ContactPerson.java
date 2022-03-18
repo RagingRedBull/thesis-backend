@@ -14,6 +14,7 @@ public class ContactPerson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+    @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "first_name")
     private String firstName;

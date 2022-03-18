@@ -41,6 +41,7 @@ public class AppConfigController {
     }
     @GetMapping("/fire-drill/update")
     public ResponseEntity<Object> setFireDrillMode(@RequestParam boolean enableFireDrillMode) {
+        log.info("Enable Fire Drill: " + enableFireDrillMode);
         if(enableFireDrillMode) {
             reportService.playFireDrillMode();
             reportService.sendSmsToUsers();

@@ -32,8 +32,6 @@ public class FloorController {
 
     @GetMapping(path = "/all")
     public ResponseEntity<Page<FloorDto>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        log.debug("Page Size: " + pageSize);
-        log.debug("Page: " + (pageNumber - 1));
         return ResponseEntity.ok(floorService.getAllFloorByPage(pageNumber, pageSize));
     }
 

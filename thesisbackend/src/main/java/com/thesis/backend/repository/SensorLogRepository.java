@@ -1,7 +1,7 @@
 package com.thesis.backend.repository;
 
 import com.thesis.backend.model.dto.SensorStatusReportLogDto;
-import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
+import com.thesis.backend.model.dto.PostFireReportCompartmentDto;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.enums.SensorName;
 import org.springframework.data.domain.Page;
@@ -63,7 +63,7 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
                                                              @Param("start") LocalDateTime start,
                                                              @Param("end") LocalDateTime end,
                                                              @Param("sensorName")SensorName sensorName);
-    @Query(value = "SELECT new com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto(" +
+    @Query(value = "SELECT new com.thesis.backend.model.dto.PostFireReportCompartmentDto(" +
             "FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300)," +
             "comp.name," +
             "floor.description," +
@@ -83,7 +83,7 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
             "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
             "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
     Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrIdPaged(@Param("pfrId")Long pfrId, Pageable pageable);
-    @Query(value = "SELECT new com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto(" +
+    @Query(value = "SELECT new com.thesis.backend.model.dto.PostFireReportCompartmentDto(" +
             "FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300)," +
             "comp.name," +
             "floor.description," +

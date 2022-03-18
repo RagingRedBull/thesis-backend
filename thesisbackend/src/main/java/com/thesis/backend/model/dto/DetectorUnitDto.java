@@ -16,8 +16,6 @@ public class DetectorUnitDto {
     @JsonProperty(required = true)
     private String ipV4;
     private String name;
-    private int xpos;
-    private int ypos;
     private Integer compartmentId;
 
     public DetectorUnitDto(String macAddress, String ipV4) {

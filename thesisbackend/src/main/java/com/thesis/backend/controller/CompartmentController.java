@@ -62,9 +62,4 @@ public class CompartmentController {
         compartmentService.deleteOne(compartmentId);
         return ResponseEntity.ok("Deleted");
     }
-    @GetMapping(path = "/{id}/logs")
-    public ResponseEntity<CompartmentLogResponse> getCompartmentLogs(@PathVariable int compartmentId) {
-        
-        return null;
-    }
 }

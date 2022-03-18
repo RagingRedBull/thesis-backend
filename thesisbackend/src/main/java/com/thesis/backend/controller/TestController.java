@@ -1,7 +1,7 @@
 package com.thesis.backend.controller;
 
 import com.thesis.backend.config.AppConfig;
-import com.thesis.backend.model.dto.logs.PostFireReportCompartmentDto;
+import com.thesis.backend.model.dto.PostFireReportCompartmentDto;
 import com.thesis.backend.repository.SensorLogRepository;
 import com.thesis.backend.service.PostFireReportService;
 import com.thesis.backend.service.ReportService;

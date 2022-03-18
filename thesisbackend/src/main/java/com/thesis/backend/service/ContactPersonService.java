@@ -28,7 +28,7 @@ public class ContactPersonService implements EntityService<ContactPerson, Contac
     public ContactPerson findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException {
         Optional<ContactPerson> entity = contactPersonRepository.findById(primaryKey);
         if (entity.isEmpty()) {
-            throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);
+            throw new PrmtsEntityNotFoundException(ContactPerson.class, primaryKey);
         } else {
             return entity.get();
         }

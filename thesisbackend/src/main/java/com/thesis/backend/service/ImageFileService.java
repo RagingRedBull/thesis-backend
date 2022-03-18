@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -29,6 +30,9 @@ import java.util.UUID;
 public class ImageFileService implements FileService {
     @Override
     public Resource load(String fileName) throws FileNotFoundException {
+        if (Objects.equals(fileName, "undefined")) {
+            return null;
+        }
         String path = "/var/lib/prmts/images/" + fileName;
         Resource resource = new FileSystemResource(path);
         if (resource.exists() && resource.isFile()) {

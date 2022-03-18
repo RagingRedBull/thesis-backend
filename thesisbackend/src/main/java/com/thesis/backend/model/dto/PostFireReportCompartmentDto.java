@@ -1,4 +1,4 @@
-package com.thesis.backend.model.dto.logs;
+package com.thesis.backend.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

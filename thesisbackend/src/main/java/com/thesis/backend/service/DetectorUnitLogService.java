@@ -148,8 +148,4 @@ public class DetectorUnitLogService implements EntityService<DetectorUnitLog, De
                 .collect(Collectors.toSet()));
         return dto;
     }
-
-    public List<DetectorUnitLog> findAllByDateRange() {
-        return detectorUnitLogRepository.findAll();
-    }
 }

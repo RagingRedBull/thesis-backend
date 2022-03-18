@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.FileNotFoundException;
+
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class PrmtsExceptionHandler extends ResponseEntityExceptionHandler {
@@ -54,7 +56,12 @@ public class PrmtsExceptionHandler extends ResponseEntityExceptionHandler {
         apiErrorResponse.setMessage(nullPointerException.getLocalizedMessage());
         return buildResponseEntity(apiErrorResponse);
     }
-
+    @ExceptionHandler(FileNotFoundException.class)
+    protected ResponseEntity<Object> handleFileNotFoundException(FileNotFoundException fileNotFoundException) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR);
+        apiErrorResponse.setMessage(fileNotFoundException.getLocalizedMessage());
+        return buildResponseEntity(apiErrorResponse);
+    }
     private ResponseEntity<Object> buildResponseEntity(ApiErrorResponse errorResponse) {
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
