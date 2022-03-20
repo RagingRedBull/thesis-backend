@@ -36,10 +36,10 @@ public class Compartment implements Serializable {
     private float heightKonva;
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id", nullable = false)
     private Floor floor;
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "compartment", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "compartment", cascade = CascadeType.ALL)
     private Set<DetectorUnit> detectorUnits;
 }

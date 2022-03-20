@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class CompartmentService implements EntityService<Compartment, CompartmentDto,Integer> {
     private final CompartmentRepository compartmentRepository;
     private final FloorRepository floorRepository;
+    private final DetectorUnitService detectorUnitService;
 
     @Override
     public Compartment findOneByPrimaryKey(Integer primaryKey) throws EntityNotFoundException {
@@ -51,6 +52,9 @@ public class CompartmentService implements EntityService<Compartment, Compartmen
     @Override
     public void deleteOne(Integer primaryKey) {
         try {
+            Compartment compartment = compartmentRepository.getById(primaryKey);
+            detectorUnitService.disassociateCompartment(
+                    detectorUnitService.getAllDetectorUnitsByFloorId(compartment.getFloor().getId()));
             compartmentRepository.deleteById(primaryKey);
         } catch (EmptyResultDataAccessException exception) {
             throw new PrmtsEntityNotFoundException(Compartment.class, primaryKey);

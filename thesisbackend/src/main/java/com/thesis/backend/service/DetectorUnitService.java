@@ -133,7 +133,7 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public DetectorUnitDto updateAssociatedCompartment(DetectorUnitCompartmentUpdateDto dto) {
         EntityMapper<DetectorUnit,DetectorUnitDto> mapper = new DetectorUnitMapper();
         DetectorUnit detectorUnit = detectorUnitRepository.getById(dto.getDetectorUnitId());
-        if(dto.getCompartmentId() != null) {
+        if(dto.getCompartmentId() != null && detectorUnit != null) {
             Compartment compartment = compartmentRepository.getById(dto.getCompartmentId());
             detectorUnit.setCompartment(compartment);
         } else {
