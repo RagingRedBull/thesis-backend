@@ -2,7 +2,7 @@ package com.thesis.backend.service;
 
 
 import com.thesis.backend.model.dto.MachineLearningOutputDto;
-import com.thesis.backend.model.entity.MachineLearningOutput;
+import com.thesis.backend.model.entity.ml.MachineLearningOutput;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.MachineLearningOutputMapper;
 import com.thesis.backend.repository.MachineLearningOutputRepository;
@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 @Service
 @Slf4j
@@ -24,6 +25,7 @@ public class MachineLearningOutputService implements EntityService<MachineLearni
         return null;
     }
 
+    @Transactional
     @Override
     public MachineLearningOutput saveOne(MachineLearningOutputDto machineLearningOutputDto) {
         EntityMapper<MachineLearningOutput, MachineLearningOutputDto> entityMapper = new MachineLearningOutputMapper();
@@ -40,7 +42,7 @@ public class MachineLearningOutputService implements EntityService<MachineLearni
         return null;
     }
 
-    public MachineLearningOutput getLatestRow() {
-        return machineLearningOutputRepository.getLatestOutput();
+    public MachineLearningOutput getLatestOutput(String type) {
+        return machineLearningOutputRepository.getLatestOutput(type);
     }
 }

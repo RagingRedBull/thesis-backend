@@ -1,22 +1,17 @@
 package com.thesis.backend.controller;
 
-import com.thesis.backend.model.dto.CompartmentDto;
 import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.FloorDto;
-import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Floor;
-import com.thesis.backend.model.util.mapper.CompartmentMapper;
 import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
-import com.thesis.backend.service.CompartmentService;
+import com.thesis.backend.service.AuthenticationService;
 import com.thesis.backend.service.DetectorUnitService;
 import com.thesis.backend.service.FloorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -33,13 +27,11 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/floor")
 public class FloorController {
     private final FloorService floorService;
-    private final CompartmentService compartmentService;
+    private final AuthenticationService authenticationService;
     private final DetectorUnitService detectorUnitService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<Page<FloorDto>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        log.debug("Page Size: " + pageSize);
-        log.debug("Page: " + (pageNumber - 1));
         return ResponseEntity.ok(floorService.getAllFloorByPage(pageNumber, pageSize));
     }
 
@@ -67,7 +59,9 @@ public class FloorController {
 
     @DeleteMapping(path = "/{floorId}/delete")
     public ResponseEntity<Object> deleteFloor(@PathVariable int floorId, Authentication authentication) {
+        String username = authenticationService.getKeycloakPrincipal(authentication).getEmail();
         floorService.deleteOne(floorId);
+        log.info(username + " DELETED FLOOR " + floorId);
         return ResponseEntity.ok("Success");
     }
 

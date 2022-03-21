@@ -1,7 +1,7 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.model.dto.MachineLearningInputDto;
-import com.thesis.backend.model.entity.MachineLearningInput;
+import com.thesis.backend.model.entity.ml.MachineLearningInput;
 import com.thesis.backend.repository.MachineLearningInputRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class MachineLearningInputService implements EntityService<MachineLearnin
         return null;
     }
 
+    @Transactional
     public MachineLearningInput saveOne(MachineLearningInput machineLearningInput) {
         return machineLearningInputRepository.saveAndFlush(machineLearningInput);
     }

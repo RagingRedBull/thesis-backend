@@ -27,6 +27,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -56,16 +57,26 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         }
     }
 
+    @Transactional
     @Override
     public DetectorUnit saveOne(DetectorUnitDto detectorUnitDto) {
         return detectorUnitRepository.saveAndFlush(mapper.mapToEntity(detectorUnitDto));
     }
 
+    public List<DetectorUnit> getAllUnitsByCompId(int id) {
+        return detectorUnitRepository.getAllDetectorUnitsByCompartment(id);
+    }
+
+    public List<DetectorUnit> getAllUnitsWithNoCompartment() {
+        return detectorUnitRepository.getAllUnassociatedUnits();
+    }
+    @Transactional
     @Override
     public void deleteOne(String primaryKey) {
         detectorUnitRepository.deleteById(primaryKey);
     }
 
+    @Transactional
     @Override
     public DetectorUnit updateOne(DetectorUnitDto detectorUnitDto) {
         return null;
@@ -80,13 +91,21 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
     public Page<DetectorUnitDto> findDetectorUnitsByPage(Pageable page) {
         return detectorUnitRepository.findAll(page).map(mapper::mapToDto);
     }
+    public List<String> getAllMacAddress() {
+        return detectorUnitRepository.getAllDetectorUnitMacAddress();
+    }
 
+    public List<DetectorUnit> getAll() {
+        return detectorUnitRepository.findAll();
+    }
     public List<DetectorUnit> getAllDetectorUnitByCompartmentId(Integer compartmentId) {
-        return null;
+        return detectorUnitRepository.getAllDetectorUnitsByCompartment(compartmentId);
     }
     public List<DetectorUnit> getAllDetectorUnitsByFloorId(Integer floorId) {
         return detectorUnitRepository.getAllDetectorUnitsByFloorId(floorId);
     }
+
+    @Transactional
     public void updateSensorList(DetectorUnitSensorUpdateWrapper detectorUnitSensorUpdateWrapper) throws JsonProcessingException,
             EntityNotFoundException {
         DetectorUnit unitToUpdate = findOneByPrimaryKey(detectorUnitSensorUpdateWrapper.getDetectorUnitDto().getMacAddress());
@@ -110,10 +129,11 @@ public class DetectorUnitService implements EntityService<DetectorUnit, Detector
         }
     }
 
+    @Transactional
     public DetectorUnitDto updateAssociatedCompartment(DetectorUnitCompartmentUpdateDto dto) {
         EntityMapper<DetectorUnit,DetectorUnitDto> mapper = new DetectorUnitMapper();
         DetectorUnit detectorUnit = detectorUnitRepository.getById(dto.getDetectorUnitId());
-        if(dto.getCompartmentId() != null) {
+        if(dto.getCompartmentId() != null && detectorUnit != null) {
             Compartment compartment = compartmentRepository.getById(dto.getCompartmentId());
             detectorUnit.setCompartment(compartment);
         } else {

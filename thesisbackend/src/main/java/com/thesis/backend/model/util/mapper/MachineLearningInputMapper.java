@@ -1,7 +1,7 @@
 package com.thesis.backend.model.util.mapper;
 
 import com.thesis.backend.model.dto.MachineLearningInputDto;
-import com.thesis.backend.model.entity.MachineLearningInput;
+import com.thesis.backend.model.entity.ml.MachineLearningInput;
 
 public class MachineLearningInputMapper implements EntityMapper<MachineLearningInput, MachineLearningInputDto> {
     @Override

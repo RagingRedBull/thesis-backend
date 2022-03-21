@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Table(name = "sensor_log")
 public abstract class SensorLog implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     protected long id;
     @Column(name = "name", length = 15)
@@ -32,7 +32,9 @@ public abstract class SensorLog implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "detector_unit_log_id")
     private DetectorUnitLog detectorUnitLog;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_fire_report_id")
+    private PostFireReportLog postFireReportLog;
     public SensorLog(long id, SensorName name, SensorType type) {
         this.id = id;
         this.name = name;

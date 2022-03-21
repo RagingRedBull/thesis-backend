@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MMM-dd hh:mm:ss a } %level %c - %m %n" />
+        </Console>
+        <JDBC name="DB" tableName="logs">
+            <ConnectionFactory
+                    class="com.thesis.backend.config.LogConnectionConfig" method="getConnection" />
+            <Column name="LOG_ID" pattern="%u" />
+            <Column name="ENTRY_DATE" isEventTimestamp="true" />
+            <Column name="LOGGER" pattern="%logger" />
+            <Column name="LOG_LEVEL" pattern="%level" />
+            <Column name="MESSAGE" pattern="%m" />
+            <Column name="EXCEPTION" pattern="%throwable " />
+        </JDBC>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.thesis.backend" level="INFO"
+                additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="DB" />
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="DB" />
+        </Root>
+    </Loggers>
+
+</Configuration>

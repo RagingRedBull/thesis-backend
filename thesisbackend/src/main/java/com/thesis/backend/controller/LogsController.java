@@ -6,25 +6,28 @@ import com.thesis.backend.model.entity.Compartment;
 import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
+import com.thesis.backend.model.enums.ReportType;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
-import com.thesis.backend.service.CompartmentService;
-import com.thesis.backend.service.DetectorUnitLogService;
-import com.thesis.backend.service.SensorLogService;
+import com.thesis.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,9 +36,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/log")
 public class LogsController {
+    private final DetectorUnitService detectorUnitService;
     private final DetectorUnitLogService detectorUnitLogService;
     private final SensorLogService sensorLogService;
     private final CompartmentService compartmentService;
+    private final ReportService reportService;
+    private final PostFireReportService postFireReportService;
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitLogDto>> getAllLogsPaged(@RequestParam int pageNumber,
@@ -87,11 +93,61 @@ public class LogsController {
 
     @PostMapping(path = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> uploadLog(@RequestBody DetectorUnitLogDto detectorUnitLogDto) {
-        log.debug(detectorUnitLogDto.toString());
-        DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
-        detectorUnitLogService.checkReadings(detectorUnitLog);
+        DetectorUnit detectorUnit = detectorUnitService.findOneByPrimaryKey(detectorUnitLogDto.getMacAddress());
+        if (detectorUnit.getCompartment() != null && detectorUnitLogDto.getSensorLogSet() != null) {
+            if (detectorUnitLogDto.getSensorLogSet().size() > 0) {
+                DetectorUnitLog detectorUnitLog = detectorUnitLogService.saveOne(detectorUnitLogDto);
+                detectorUnitLogService.checkReadings(detectorUnitLog, detectorUnit);
+            }
+        }
         return ResponseEntity.ok(null);
     }
 
+    @GetMapping(path = "/status-report")
+    public ResponseEntity<Object> getStatusReportLogs(@RequestParam
+                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
+                                                      @RequestParam int pageSize,
+                                                      @RequestParam int pageNumber) {
+        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by("dateStart").ascending());
+        return ResponseEntity.ok(reportService.generateStatusReportLog(day, page));
+    }
 
+    @GetMapping(path = "/status-force")
+    public ResponseEntity<Object> forceGenStatusLogs(@RequestParam
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
+        reportService.generateStatusReportLog(day);
+        return ResponseEntity.ok("force gen by day");
+    }
+
+    @GetMapping(path = "/post-fire-report")
+    public ResponseEntity<Object> getPostFireReports(@RequestParam(required = false) Long pfrId,
+                                                     @RequestParam(required = false) Integer pageNumber,
+                                                     @RequestParam(required = false) Integer pageSize) {
+        if (pfrId != null && pageNumber != null && pageSize != null) {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            return ResponseEntity.ok(postFireReportService.getAffectedCompartmentsByPfrId(pfrId, pageable));
+        } else {
+            return ResponseEntity.ok(postFireReportService.getIdsAndDates());
+        }
+    }
+
+    @GetMapping(path = "/post-fire-report/pdf/{pfrId}")
+    public ResponseEntity<Resource> downloadPostFireReport(@PathVariable long pfrId, Authentication authentication) {
+        Resource pdf = reportService.buildPdf(ReportType.PFR, authentication, pfrId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Post-Fire-Report\"")
+                .body(pdf);
+    }
+
+    @GetMapping(path = "/status-report/pdf")
+    public ResponseEntity<Resource> downloadStatusReport(@RequestParam
+                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
+                                                       Authentication authentication) {
+        Resource pdf = reportService.buildPdf(ReportType.SR, authentication,day);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Status-Report-"+ day + "\"")
+                .body(pdf);
+    }
 }

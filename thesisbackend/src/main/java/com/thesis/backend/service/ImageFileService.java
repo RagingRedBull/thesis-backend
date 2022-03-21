@@ -10,8 +10,6 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -31,6 +30,9 @@ import java.util.UUID;
 public class ImageFileService implements FileService {
     @Override
     public Resource load(String fileName) throws FileNotFoundException {
+        if (Objects.equals(fileName, "undefined")) {
+            return null;
+        }
         String path = "/var/lib/prmts/images/" + fileName;
         Resource resource = new FileSystemResource(path);
         if (resource.exists() && resource.isFile()) {
@@ -40,6 +42,7 @@ public class ImageFileService implements FileService {
         }
     }
 
+
     @Override
     public String save(MultipartFile file) throws IOException, InvalidFileException{
         Tika tika = new Tika();
@@ -47,7 +50,7 @@ public class ImageFileService implements FileService {
             throw new InvalidFileException("Invalid File Type! File must be an image.");
         }
         if(!isValidResolution(file.getInputStream())){
-            throw new InvalidFileException("Image resolution must be atleast 1280x720! pixels");
+            throw new InvalidFileException("Image resolution must be atleast 1280x720 pixels!");
         }
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + file.getOriginalFilename();

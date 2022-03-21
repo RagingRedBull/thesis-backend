@@ -2,8 +2,8 @@ package com.thesis.backend.controller;
 
 import com.thesis.backend.model.dto.MachineLearningInputDto;
 import com.thesis.backend.model.dto.MachineLearningOutputDto;
-import com.thesis.backend.model.entity.MachineLearningInput;
-import com.thesis.backend.model.entity.MachineLearningOutput;
+import com.thesis.backend.model.entity.ml.MachineLearningInput;
+import com.thesis.backend.model.entity.ml.MachineLearningOutput;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.MachineLearningInputMapper;
 import com.thesis.backend.model.util.mapper.MachineLearningOutputMapper;
@@ -27,10 +27,16 @@ public class MachineLearningController {
     public ResponseEntity<Object> insertNewOutput(@RequestBody MachineLearningOutputDto dto) {
         return ResponseEntity.ok(machineLearningOutputService.saveOne(dto));
     }
-    @GetMapping(path = "/output")
-    public ResponseEntity<Object> getLatestOutput() {
+    @GetMapping(path = "/output/heat")
+    public ResponseEntity<Object> getLatestHeatOutput() {
         EntityMapper<MachineLearningOutput, MachineLearningOutputDto> mapper = new MachineLearningOutputMapper();
-        MachineLearningOutput entity = machineLearningOutputService.getLatestRow();
+        MachineLearningOutput entity = machineLearningOutputService.getLatestOutput("HEAT");
+        return ResponseEntity.ok(mapper.mapToDto(entity));
+    }
+    @GetMapping(path = "/output/smoke")
+    public ResponseEntity<Object> getLatestSmokeOutput() {
+        EntityMapper<MachineLearningOutput, MachineLearningOutputDto> mapper = new MachineLearningOutputMapper();
+        MachineLearningOutput entity = machineLearningOutputService.getLatestOutput("SMOKE");
         return ResponseEntity.ok(mapper.mapToDto(entity));
     }
     @GetMapping(path = "/input", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -11,12 +11,11 @@ import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.logs.DetectorUnitLog;
 import com.thesis.backend.model.entity.logs.SensorLog;
 import com.thesis.backend.model.util.mapper.DetectorUnitLogMapper;
+import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.SensorLogMapper;
 import com.thesis.backend.service.DetectorUnitLogService;
 import com.thesis.backend.service.DetectorUnitService;
-import com.thesis.backend.service.SensorLogService;
-import com.thesis.backend.service.SensorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,8 +37,6 @@ import java.util.stream.Collectors;
 public class DetectorUnitController {
     private final DetectorUnitService detectorUnitService;
     private final DetectorUnitLogService detectorUnitLogService;
-    private final SensorLogService sensorLogService;
-    private final SensorService sensorService;
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DetectorUnitDto>> getAllDetectorInfoByPage(@RequestParam int pageNumber,
@@ -50,10 +47,14 @@ public class DetectorUnitController {
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "macAddress"));
         return ResponseEntity.ok(detectorUnitService.findDetectorUnitsByPage(page));
     }
-    @GetMapping
-    public ResponseEntity<Object> getAllDetectorsByCompartment(@RequestParam(required = false) Integer compartmentId) {
-        
-        return null;
+    @GetMapping("/compartment")
+    public ResponseEntity<Object> getAllDetectorsByCompartment(@RequestParam int compartmentId) {
+        EntityMapper<DetectorUnit, DetectorUnitDto> mapper = new DetectorUnitMapper();
+        List<DetectorUnitDto> detectorUnitList = detectorUnitService.getAllUnitsByCompId(compartmentId)
+                .stream()
+                .map(mapper::mapToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(detectorUnitList);
     }
     @GetMapping(path = "/{macAddress}")
     public ResponseEntity<String> getSensorSetOfDetectorUnit(@PathVariable String macAddress,
@@ -90,9 +91,8 @@ public class DetectorUnitController {
         EntityMapper<DetectorUnitLog, DetectorUnitLogDto> mapper = new DetectorUnitLogMapper();
         EntityMapper<SensorLog, SensorLogDto> sensorLogMapper = new SensorLogMapper();
         DetectorUnitLog detectorUnitLog = detectorUnitLogService.findLatestLog(macAddress);
-        List<SensorLog> sensorLogs = sensorLogService.findLogsByDetectorLogId(detectorUnitLog.getId());
         DetectorUnitLogDto dto = mapper.mapToDto(detectorUnitLog);
-        dto.setSensorLogSet(sensorLogs.stream()
+        dto.setSensorLogSet(detectorUnitLog.getSensorLogSet().stream()
                 .map(sensorLogMapper::mapToDto)
                 .collect(Collectors.toSet()));
         return ResponseEntity.ok(dto);

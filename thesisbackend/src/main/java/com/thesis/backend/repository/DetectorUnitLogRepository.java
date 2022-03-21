@@ -18,4 +18,7 @@ public interface DetectorUnitLogRepository extends JpaRepository<DetectorUnitLog
             "ORDER BY `detector_unit_log`.`time_recorded` DESC LIMIT 1",
     nativeQuery = true)
     DetectorUnitLog findLatestLog(String macAddress);
+    @Query(value = "SELECT * FROM `detector_unit_log` WHERE `detector_unit_log`.`time_recorded` >= CURDATE() AND `detector_unit_log`.`time_recorded` < CURDATE() + INTERVAL 1 DAY",
+    nativeQuery = true)
+    List<DetectorUnitLog> findAllByDay();
 }

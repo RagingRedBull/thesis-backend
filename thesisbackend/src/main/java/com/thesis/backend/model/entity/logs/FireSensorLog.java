@@ -16,10 +16,10 @@ import javax.persistence.Entity;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
 @Entity
-@DiscriminatorValue(value = "FLAME")
+@DiscriminatorValue(value = "FIRE")
 public class FireSensorLog extends SensorLog{
     @Column(name = "flame_value")
-    private int sensorValue;
+    private float sensorValue;
 
     @PersistenceConstructor
     public FireSensorLog(long id, SensorType type, SensorName name) {

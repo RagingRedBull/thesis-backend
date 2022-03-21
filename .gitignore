@@ -61,3 +61,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/thesisbackend/src/main/java/com/thesis/backend/config/LogConnectionConfig.java

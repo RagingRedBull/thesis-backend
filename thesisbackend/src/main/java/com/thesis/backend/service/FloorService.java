@@ -1,14 +1,10 @@
 package com.thesis.backend.service;
 
 import com.thesis.backend.exception.PrmtsEntityNotFoundException;
-import com.thesis.backend.model.dto.DetectorUnitDto;
 import com.thesis.backend.model.dto.FloorDto;
-import com.thesis.backend.model.entity.DetectorUnit;
 import com.thesis.backend.model.entity.Floor;
-import com.thesis.backend.model.util.mapper.DetectorUnitMapper;
 import com.thesis.backend.model.util.mapper.EntityMapper;
 import com.thesis.backend.model.util.mapper.FloorMapper;
-import com.thesis.backend.repository.DetectorUnitRepository;
 import com.thesis.backend.repository.FloorRepository;
 import com.thesis.backend.service.interfaces.EntityService;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nullable;
-import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -43,6 +36,7 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
         }
     }
 
+    @Transactional
     @Override
     public Floor saveOne(FloorDto floorDto) {
         EntityMapper<Floor, FloorDto> mapper = new FloorMapper();
@@ -51,12 +45,14 @@ public class FloorService implements EntityService<Floor, FloorDto, Integer> {
         return entity;
     }
 
+    @Transactional
     @Override
     public void deleteOne(Integer primaryKey) {
         detectorUnitService.disassociateCompartment(detectorUnitService.getAllDetectorUnitsByFloorId(primaryKey));
         floorRepository.deleteById(primaryKey);
     }
 
+    @Transactional
     @Override
     public Floor updateOne(FloorDto dto) {
         Floor floor;

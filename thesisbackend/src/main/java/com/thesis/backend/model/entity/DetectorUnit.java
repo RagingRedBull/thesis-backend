@@ -3,10 +3,8 @@ package com.thesis.backend.model.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 @Entity
@@ -20,11 +18,7 @@ public class DetectorUnit {
     private String ipV4;
     @Column(name = "name")
     private String name;
-    @Column(name = "x_loc")
-    private int xpos;
-    @Column(name = "y_loc")
-    private int ypos;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "sensors_join_detector_unit",
             joinColumns = @JoinColumn(name = "detector_unit_id"),
