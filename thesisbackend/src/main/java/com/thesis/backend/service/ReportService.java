@@ -151,7 +151,7 @@ public class ReportService {
             e.printStackTrace();
         }
     }
-    @Scheduled(cron = "* 59 * * * *")
+    @Scheduled(cron = "59 59 * * * *")
     @Transactional
     public void generateHourlyLogs() {
         EntityMapper<SensorStatusReportLog, SensorStatusReportLogDto> sensorStatusMapper = new SensorStatusReportMapper();
@@ -161,6 +161,7 @@ public class ReportService {
                 0, 0, 0));
         LocalDateTime dateTimeEnd = LocalDateTime.of(LocalDate.now(), LocalTime.of(LocalTime.now().getHour(),
                 59, 59, 999999));
+        log.info("Detector Unit List: " + detectorUnitList.size());
         for (DetectorUnit unit : detectorUnitList) {
             StatusReportLog statusReportLog = new StatusReportLog();
             statusReportLog.setMacAddress(unit.getMacAddress());
@@ -179,7 +180,11 @@ public class ReportService {
             statusReportLog.setDateStart(dateTimeStart);
             statusReportLog.setDateEnd(dateTimeEnd);
             statusReportLogList.add(statusReportLog);
+            log.info("Mac Address: " + unit.getMacAddress());
+            log.info("Start Date: " + dateTimeStart);
+            log.info("End Date: " + dateTimeEnd);
         }
+        log.info("Status Report Log List: " + statusReportLogList.size());
         statusReportLogRepository.saveAll(statusReportLogList);
     }
 
