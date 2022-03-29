@@ -80,7 +80,7 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
             "AND du.compartment.id=comp.id " +
             "AND floor.id=comp.floor.id " +
             "AND slog.postFireReportLog.id=:pfrId " +
-            "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
+            "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300), dlog.macAddress " +
             "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
     Page<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrIdPaged(@Param("pfrId")Long pfrId, Pageable pageable);
     @Query(value = "SELECT new com.thesis.backend.model.dto.PostFireReportCompartmentDto(" +
@@ -100,7 +100,7 @@ public interface SensorLogRepository extends JpaRepository<SensorLog, Long> {
             "AND du.compartment.id=comp.id " +
             "AND floor.id=comp.floor.id " +
             "AND slog.postFireReportLog.id=:pfrId " +
-            "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) " +
+            "GROUP BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300), dlog.macAddress " +
             "ORDER BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(dlog.timeRecorded)/300)*300) ASC")
     List<PostFireReportCompartmentDto> getAffectedCompartmentsByPfrId(@Param("pfrId")Long pfrId);
 }
